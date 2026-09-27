@@ -1,14 +1,55 @@
 "use server";
 
 import { createStudentSchema } from "@/components/validations/student.validation";
+import { isAccessTokenExist } from "@/service/refreshToken";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 type CreateStudentState = {
   success: boolean;
   message: string;
   statusCode?: number;
   data?: Record<string, unknown> | null;
+};
+
+export type Student = {
+  id: string;
+  admissionYear?: number | null;
+  phone?: string | null;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+  } | null;
+  department?: {
+    code?: string | null;
+  } | null;
+  program?: {
+    code?: string | null;
+  } | null;
+};
+
+type GetAllStudentsState = {
+  success: boolean;
+  message: string;
+  statusCode?: number;
+  data?: Student[] | null;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  } | null;
+};
+
+type StudentQuery = {
+  [key: string]: string | string[] | undefined;
+};
+
+const getQueryValue = (value: string | string[] | undefined) => {
+  if (Array.isArray(value)) {
+    return value[0] || "";
+  }
+
+  return value || "";
 };
 
 export const createStudentAction = async (
@@ -52,18 +93,20 @@ export const createStudentAction = async (
   }
 
   try {
-    const response = await fetch(`${process.env.BACKEND_API_URL}/students/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/students/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(validation.data),
+        cache: "no-store",
       },
-      body: JSON.stringify(validation.data),
-      cache: "no-store",
-    });
+    );
 
     const result = await response.json();
-
 
     if (!response.ok || !result?.success) {
       return {
@@ -82,11 +125,89 @@ export const createStudentAction = async (
       statusCode: response.status,
       data: result?.data || null,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       statusCode: 500,
       message: "Something went wrong. Please try again.",
+      data: null,
+    };
+  }
+};
+
+export const getAllStudentsActionForAdmin = async ({
+  query,
+}: {
+  query?: StudentQuery;
+}): Promise<GetAllStudentsState | undefined> => {
+  const params = new URLSearchParams();
+
+  const searchTerm = getQueryValue(query?.searchTerm);
+  const page = getQueryValue(query?.page);
+  const limit = getQueryValue(query?.limit);
+  if (searchTerm) {
+    params.set("searchTerm", searchTerm);
+  }
+
+  if (page) {
+    params.set("page", page);
+  }
+
+  if (limit) {
+    params.set("limit", limit);
+  }
+
+  const queryString = params.toString();
+  try {
+    const accessToken = await isAccessTokenExist();
+    if (!accessToken) {
+      return {
+        success: false,
+        statusCode: 401,
+        message: "User not logged in",
+        data: null,
+      };
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/students${
+        queryString ? `?${queryString}` : ""
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result?.success) {
+      return {
+        success: false,
+        statusCode: response.status,
+        message: result?.message || "Failed to fetch students",
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: "Students fetched successfully",
+      statusCode: response.status,
+      data: result?.data?.data || null,
+      meta: result?.data?.meta || null,
+    };
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    return {
+      success: false,
+      statusCode: 500,
+      message: "Something went wrong. Please try again.",
+      data: null,
     };
   }
 };
