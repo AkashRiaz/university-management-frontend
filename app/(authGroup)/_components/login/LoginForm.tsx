@@ -15,14 +15,24 @@ type LoginFormValues = {
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
+  // defaultValues: {
+  //   email: "mdriaz191051@gmail.com",
+  //   password: "sUNPaZKVtr",
+  // },
+  // instructor default values
+  // defaultValues: {
+  //   email: "akash@orba-aise.com",
+  //   password: "EL6WgeZNmX",
+  // },
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: "superadmin@university.edu",
+      password: "SuperAdmin@123",
     },
   });
 

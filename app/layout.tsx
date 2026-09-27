@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Serif, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const robotoHeading = Roboto({
   subsets: ["latin"],
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <body className="min-h-full flex flex-col bg-background">
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
 
         <Toaster position="top-right" richColors />
       </body>

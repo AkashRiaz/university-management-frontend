@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -26,6 +27,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { logout } from "@/app/(authGroup)/_actions/authActions";
 
 import {
   GraduationCap,
@@ -36,9 +38,9 @@ import {
   User,
   X,
 } from "lucide-react";
+import { NavbarProps } from "@/lib/type";
 
 // import { IUser } from "@/lib/type";
-// import { logout } from "@/service/logout";
 
 // University Navigation Links
 const navItems = [
@@ -71,11 +73,6 @@ type UserMenuItem = {
   icon: typeof LayoutDashboard;
   action: UserMenuAction;
 };
-
-type NavbarProps = {
-  user?: unknown;
-};
-
 // Generate menu items based on university user roles (STUDENT, FACULTY, ADMIN)
 const getUserMenuItems = (role?: string): UserMenuItem[] => {
   const items: UserMenuItem[] = [
@@ -86,7 +83,7 @@ const getUserMenuItems = (role?: string): UserMenuItem[] => {
     },
   ];
 
-  if (role === "STUDENT" || role === "FACULTY") {
+  if (role === "STUDENT" || role === "INSTRUCTOR") {
     items.push({
       label: "My Profile",
       icon: User,
@@ -100,6 +97,7 @@ const getUserMenuItems = (role?: string): UserMenuItem[] => {
 export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  console.log("user in navbar", user);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
@@ -108,7 +106,9 @@ export function Navbar({ user }: NavbarProps) {
 
   // Active Link Detection
   const activeNavHref = [...navItems]
-    .sort((firstItem, secondItem) => secondItem.href.length - firstItem.href.length)
+    .sort(
+      (firstItem, secondItem) => secondItem.href.length - firstItem.href.length,
+    )
     .find((item) => {
       if (item.href === "/") {
         return pathname === "/";
@@ -144,9 +144,11 @@ export function Navbar({ user }: NavbarProps) {
 
       if (role === "STUDENT") {
         router.push("/student-dashboard");
-      } else if (role === "FACULTY") {
-        router.push("/faculty-dashboard");
+      } else if (role === "INSTRUCTOR") {
+        router.push("/instructor-dashboard");
       } else if (role === "ADMIN") {
+        router.push("/admin-dashboard");
+      }else if (role === "SUPER_ADMIN") {
         router.push("/admin-dashboard");
       } else {
         router.push("/dashboard");
@@ -163,27 +165,31 @@ export function Navbar({ user }: NavbarProps) {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95">
       <nav aria-label="Main Navigation">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-          
           {/* Mobile Menu Button & University Logo */}
           <div className="flex items-center gap-3">
             {/* Mobile Nav Sheet */}
             <div className="lg:hidden">
               <Sheet>
-                <SheetTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Open navigation menu"
-                    className="shrink-0"
-                  >
-                    <Menu className="h-6 w-6" />
-                  </Button>
-                </SheetTrigger>
+                <SheetTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Open navigation menu"
+                      className="shrink-0"
+                    >
+                      <Menu className="h-6 w-6" />
+                    </Button>
+                  }
+                />
 
-                <SheetContent side="left" className="w-[300px] p-0 sm:w-[340px]">
+                <SheetContent
+                  side="left"
+                  className="w-[300px] p-0 sm:w-[340px]"
+                >
                   <SheetHeader className="border-b px-5 py-5 text-left">
-                    <SheetTitle asChild>
+                    <SheetTitle>
                       <Link href="/" className="flex items-center gap-3">
                         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
                           <GraduationCap size={24} />
@@ -225,7 +231,7 @@ export function Navbar({ user }: NavbarProps) {
                         const isActive = isActiveMenu(item.href);
 
                         return (
-                          <SheetClose key={item.href} asChild>
+                          <SheetClose key={item.href}>
                             <Link
                               href={item.href}
                               aria-current={isActive ? "page" : undefined}
@@ -245,19 +251,22 @@ export function Navbar({ user }: NavbarProps) {
                     {/* Mobile Bottom User Status */}
                     {!user?.success ? (
                       <div className="space-y-2 border-t p-4 bg-slate-50 dark:bg-slate-900">
-                        <SheetClose asChild>
-                          <Button asChild className="w-full rounded-xl font-semibold">
-                            <Link href="/login">Portal Login</Link>
+                        <SheetClose>
+                          <Button
+                            render={<Link href="/login" />}
+                            className="w-full rounded-xl font-semibold"
+                          >
+                            Portal Login
                           </Button>
                         </SheetClose>
 
-                        <SheetClose asChild>
+                        <SheetClose>
                           <Button
-                            asChild
+                            render={<Link href="/admissions" />}
                             variant="outline"
                             className="w-full rounded-xl font-semibold"
                           >
-                            <Link href="/admissions">Apply Now</Link>
+                            Apply Now
                           </Button>
                         </SheetClose>
                       </div>
@@ -280,10 +289,12 @@ export function Navbar({ user }: NavbarProps) {
                             const Icon = item.icon;
 
                             return (
-                              <SheetClose key={item.action} asChild>
+                              <SheetClose key={item.action}>
                                 <button
                                   type="button"
-                                  onClick={() => handleUserMenuAction(item.action)}
+                                  onClick={() =>
+                                    handleUserMenuAction(item.action)
+                                  }
                                   className="flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-white hover:text-primary dark:text-slate-200 dark:hover:bg-slate-800"
                                 >
                                   <Icon className="mr-3 h-4 w-4" />
@@ -293,7 +304,7 @@ export function Navbar({ user }: NavbarProps) {
                             );
                           })}
 
-                          <SheetClose asChild>
+                          <SheetClose>
                             <button
                               type="button"
                               onClick={() => handleUserMenuAction("logout")}
@@ -379,50 +390,61 @@ export function Navbar({ user }: NavbarProps) {
               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
               className="rounded-full xl:hidden"
             >
-              {isMobileSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+              {isMobileSearchOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Search className="h-5 w-5" />
+              )}
             </Button>
 
             {/* Portal Login / User Menu */}
             {!user?.success ? (
               <Button
-                asChild
+                render={<Link href="/login" />}
                 size="sm"
                 className="rounded-full px-5 font-semibold shadow-sm transition-all hover:shadow"
               >
-                <Link href="/login">Portal Login</Link>
+                Portal Login
               </Button>
             ) : (
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    aria-label="Open user menu"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 transition hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    <User className="h-5 w-5 text-primary" />
-                  </button>
-                </DropdownMenuTrigger>
+                <DropdownMenuTrigger
+                  render={(props, state) => (
+                    <button
+                      {...props}
+                      type="button"
+                      aria-label="Open user menu"
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 transition hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                        state.open ? "ring-2 ring-primary" : ""
+                      }`}
+                    >
+                      <User className="h-5 w-5 text-primary" />
+                    </button>
+                  )}
+                ></DropdownMenuTrigger>
 
                 <DropdownMenuContent
                   align="end"
                   sideOffset={10}
                   className="w-64 rounded-xl p-2"
                 >
-                  <DropdownMenuLabel className="p-2">
-                    <div className="space-y-1">
-                      <p className="truncate font-semibold text-slate-900 dark:text-white">
-                        {user?.data?.name || "User"}
-                      </p>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="p-2">
+                      <div className="space-y-1">
+                        <p className="truncate font-semibold text-slate-900 dark:text-white">
+                          {user?.data?.name || "User"}
+                        </p>
 
-                      <p className="truncate text-xs font-normal text-muted-foreground">
-                        {user?.data?.email || ""}
-                      </p>
+                        <p className="truncate text-xs font-normal text-muted-foreground">
+                          {user?.data?.email || ""}
+                        </p>
 
-                      <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                        {user?.data?.role || "STUDENT"}
-                      </span>
-                    </div>
-                  </DropdownMenuLabel>
+                        <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                          {user?.data?.role || "STUDENT"}
+                        </span>
+                      </div>
+                    </DropdownMenuLabel>
+                  </DropdownMenuGroup>
 
                   <DropdownMenuSeparator />
 

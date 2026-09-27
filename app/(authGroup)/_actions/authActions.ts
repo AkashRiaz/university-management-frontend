@@ -81,7 +81,7 @@ export const loginActions = async (
       }
 
       if (role === "STUDENT") {
-        redirect("/dashboard");
+        redirect("/student-dashboard");
       }
 
       redirect("/home");
@@ -154,7 +154,7 @@ export const verifyStudentActions = async (
       }
 
       if (role === "STUDENT") {
-        redirect("/dashboard");
+        redirect("/student-dashboard");
       }
 
       redirect("/home");
@@ -162,4 +162,11 @@ export const verifyStudentActions = async (
   }
 
   redirect("/home");
+};
+
+export const logout = async (): Promise<void> => {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
 };
