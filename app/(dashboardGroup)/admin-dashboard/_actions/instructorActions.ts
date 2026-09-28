@@ -146,14 +146,17 @@ export const getAllInstructorsActionForAdmin = async ({
       };
     }
 
-    const response = await fetch(`${process.env.BACKEND_API_URL}/instructors`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/instructors${queryString ? `?${queryString}` : ""}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
       },
-      cache: "no-store",
-    });
+    );
 
     const result = await response.json();
 

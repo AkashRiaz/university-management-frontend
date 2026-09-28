@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import { Program } from "@/types/program.type";
 
 const convertToISODate = (date?: string): string | undefined => {
   if (!date) return undefined;
@@ -41,7 +42,8 @@ const convertToISODate = (date?: string): string | undefined => {
   return parsedDate.toISOString();
 };
 
-const StudentRegistrationForm = () => {
+const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
+  // console.log("Programs:", programs);
   const [state, formAction, loading] = useActionState(
     createStudentAction,
     null,
@@ -216,7 +218,9 @@ const StudentRegistrationForm = () => {
                       value={field.state.value ?? ""}
                       onValueChange={(value) =>
                         field.handleChange(
-                          value as createStudentInput["gender"],
+                          value
+                            ? (value as createStudentInput["gender"])
+                            : undefined,
                         )
                       }
                     >
@@ -310,42 +314,45 @@ const StudentRegistrationForm = () => {
 
               {/* Program */}
               <form.Field name="programId">
-                {(field) => (
-                  <div className="space-y-2">
-                    <Label>Program</Label>
+                {(field) => {
+                  const selectedProgram = programs.find(
+                    (program) => program.id === field.state.value,
+                  );
 
-                    {/* <Select
-                      value={field.state.value}
-                      onValueChange={field.handleChange}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select program" />
-                      </SelectTrigger>
+                  return (
+                    <div className="space-y-2">
+                      <Label>Program</Label>
 
-                      <SelectContent>
-                        {programs.map((program) => (
-                          <SelectItem key={program.id} value={program.id}>
-                            {program.name}
-                          </SelectItem>
+                      <Select
+                        value={field.state.value}
+                        onValueChange={(value) =>
+                          field.handleChange(value ?? "")
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select program">
+                            {selectedProgram?.name ?? "Select program"}
+                          </SelectValue>
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          {programs.map((program) => (
+                            <SelectItem key={program.id} value={program.id}>
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {field.state.meta.isTouched &&
+                        field.state.meta.errors.map((error, i) => (
+                          <p key={i} className="text-xs text-destructive">
+                            {String(error?.message ?? error)}
+                          </p>
                         ))}
-                      </SelectContent>
-                    </Select> */}
-                    <Input
-                      id={field.name}
-                      placeholder="Enter program ID"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-
-                    {field.state.meta.isTouched &&
-                      field.state.meta.errors.map((error, i) => (
-                        <p key={i} className="text-xs text-destructive">
-                          {String(error?.message ?? error)}
-                        </p>
-                      ))}
-                  </div>
-                )}
+                    </div>
+                  );
+                }}
               </form.Field>
 
               {/* Admission Date */}

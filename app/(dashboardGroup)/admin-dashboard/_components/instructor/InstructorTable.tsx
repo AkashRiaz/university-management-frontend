@@ -14,6 +14,7 @@ import { AlertCircle, DoorOpen, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { getAllProgramsAction } from "../../_actions/programActions";
 
 type InstructorTableProps = {
   searchParams?: {
@@ -23,7 +24,9 @@ type InstructorTableProps = {
 
 const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
   const result = await getAllInstructorsActionForAdmin({ query: searchParams });
+
   const instructors = result?.data || [];
+ 
 
   const currentPage = Math.max(1, Number(result?.meta?.page ?? 1));
 
