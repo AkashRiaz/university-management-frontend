@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useActionState, useEffect, useTransition } from "react";
+import React, {
+  useActionState,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { useSelector } from "@tanstack/react-form";
 import { createStudentAction } from "../../_actions/studentActions";
+import { getAllProgramsAction } from "../../_actions/programActions";
 import { useForm } from "@tanstack/react-form";
 import {
   createStudentInput,
@@ -29,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { Program } from "@/types/program.type";
+import { IDepartment } from "@/types/department.type";
 
 const convertToISODate = (date?: string): string | undefined => {
   if (!date) return undefined;
@@ -42,7 +50,13 @@ const convertToISODate = (date?: string): string | undefined => {
   return parsedDate.toISOString();
 };
 
-const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
+const StudentRegistrationForm = ({
+  programs,
+  departments,
+}: {
+  programs: Program[];
+  departments: IDepartment[];
+}) => {
   // console.log("Programs:", programs);
   const [state, formAction, loading] = useActionState(
     createStudentAction,
@@ -59,6 +73,8 @@ const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
   }, [state]);
 
   const [isPending, startTransition] = useTransition();
+  const [availablePrograms, setAvailablePrograms] = useState(programs);
+  const [isLoadingPrograms, setIsLoadingPrograms] = useState(false);
 
   const defaultValues: createStudentInput = {
     name: "",
@@ -126,6 +142,37 @@ const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
       });
     },
   });
+
+  const selectedDepartmentId = useSelector(
+    form.store,
+    (state) => state.values.departmentId,
+  );
+
+  useEffect(() => {
+    let isCurrentRequest = true;
+
+    const loadPrograms = async () => {
+      if (!selectedDepartmentId) {
+        setAvailablePrograms(programs);
+        return;
+      }
+
+      setIsLoadingPrograms(true);
+      const result = await getAllProgramsAction(selectedDepartmentId);
+
+      if (isCurrentRequest) {
+        setAvailablePrograms(result.data || []);
+        setIsLoadingPrograms(false);
+      }
+    };
+
+    void loadPrograms();
+
+    return () => {
+      isCurrentRequest = false;
+    };
+  }, [programs, selectedDepartmentId]);
+
   return (
     <Card>
       <CardHeader>
@@ -274,42 +321,48 @@ const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
             <div className="grid gap-4 md:grid-cols-2">
               {/* Department */}
               <form.Field name="departmentId">
-                {(field) => (
-                  <div className="space-y-2">
-                    <Label>Department</Label>
+                {(field) => {
+                  const selectedDepartment = departments.find(
+                    (department) => department.id === field.state.value,
+                  );
+                  return (
+                    <div className="space-y-2">
+                      <Label>Department</Label>
 
-                    {/* <Select
-                      value={field.state.value}
-                      onValueChange={field.handleChange}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
+                      <Select
+                        value={field.state.value}
+                        onValueChange={(value) => {
+                          field.handleChange(value ?? "");
+                          form.setFieldValue("programId", "");
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select department">
+                            {selectedDepartment?.name ?? "Select department"}
+                          </SelectValue>
+                        </SelectTrigger>
 
-                      <SelectContent>
-                        {departments.map((department) => (
-                          <SelectItem key={department.id} value={department.id}>
-                            {department.name}
-                          </SelectItem>
+                        <SelectContent>
+                          {departments.map((department) => (
+                            <SelectItem
+                              key={department.id}
+                              value={department.id}
+                            >
+                              {department.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {field.state.meta.isTouched &&
+                        field.state.meta.errors.map((error, i) => (
+                          <p key={i} className="text-xs text-destructive">
+                            {String(error?.message ?? error)}
+                          </p>
                         ))}
-                      </SelectContent>
-                    </Select> */}
-                    <Input
-                      id={field.name}
-                      placeholder="Enter department ID"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-
-                    {field.state.meta.isTouched &&
-                      field.state.meta.errors.map((error, i) => (
-                        <p key={i} className="text-xs text-destructive">
-                          {String(error?.message ?? error)}
-                        </p>
-                      ))}
-                  </div>
-                )}
+                    </div>
+                  );
+                }}
               </form.Field>
 
               {/* Program */}
@@ -328,6 +381,7 @@ const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
                         onValueChange={(value) =>
                           field.handleChange(value ?? "")
                         }
+                        disabled={isLoadingPrograms || !selectedDepartmentId}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select program">
@@ -336,7 +390,7 @@ const StudentRegistrationForm = ({ programs }: { programs: Program[] }) => {
                         </SelectTrigger>
 
                         <SelectContent>
-                          {programs.map((program) => (
+                          {availablePrograms.map((program) => (
                             <SelectItem key={program.id} value={program.id}>
                               {program.name}
                             </SelectItem>

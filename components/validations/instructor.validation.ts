@@ -19,8 +19,10 @@ export const CreateInstructorZodSchema = z.object({
     .string()
     .max(200, "Specialization cannot exceed 200 characters")
     .optional(),
-
-  phone: z.string().max(30, "Phone cannot exceed 30 characters").optional(),
+  phone: z
+    .string()
+    .regex(/^\+8801[3-9]\d{8}$/, "Enter a valid phone number")
+    .optional(),
 
   officeRoom: z
     .string()

@@ -29,8 +29,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
+import { IDepartment } from "@/types/department.type";
 
-const InstructorRegistrationForm = () => {
+const InstructorRegistrationForm = ({
+  departments,
+}: {
+  departments: IDepartment[];
+}) => {
   const [state, formAction, loading] = useActionState(
     createInstructorAction,
     null,
@@ -631,46 +636,23 @@ const InstructorRegistrationForm = () => {
               {/* Department */}
               <form.Field name="departmentId">
                 {(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-
+                  const selectedDepartment = departments.find(
+                    (department) => department.id === field.state.value,
+                  );
                   return (
                     <div className="space-y-2">
-                      <Label htmlFor={field.name}>
-                        Department <span className="text-destructive">*</span>
-                      </Label>
+                      <Label>Department</Label>
 
-                      <Input
-                        id={field.name}
-                        placeholder="Enter department ID"
+                      <Select
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        onBlur={field.handleBlur}
-                        aria-invalid={isInvalid}
-                        className={
-                          isInvalid
-                            ? "border-destructive focus-visible:ring-destructive/30"
-                            : ""
-                        }
-                      />
-
-                      {/* <Select<string>
-                        value={field.state.value}
-                        onValueChange={(value) =>
-                          field.handleChange(value ?? "")
-                        }
+                        onValueChange={(value) => {
+                          field.handleChange(value ?? "");
+                        }}
                       >
-                        <SelectTrigger
-                          id={field.name}
-                          className={`w-full ${
-                            isInvalid
-                              ? "border-destructive focus-visible:ring-destructive/30"
-                              : ""
-                          }`}
-                          aria-invalid={isInvalid}
-                          onBlur={field.handleBlur}
-                        >
-                          <SelectValue placeholder="Select department" />
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select department">
+                            {selectedDepartment?.name ?? "Select department"}
+                          </SelectValue>
                         </SelectTrigger>
 
                         <SelectContent>
@@ -683,11 +665,11 @@ const InstructorRegistrationForm = () => {
                             </SelectItem>
                           ))}
                         </SelectContent>
-                      </Select> */}
+                      </Select>
 
-                      {isInvalid &&
-                        field.state.meta.errors.map((error, index) => (
-                          <p key={index} className="text-xs text-destructive">
+                      {field.state.meta.isTouched &&
+                        field.state.meta.errors.map((error, i) => (
+                          <p key={i} className="text-xs text-destructive">
                             {String(error?.message ?? error)}
                           </p>
                         ))}

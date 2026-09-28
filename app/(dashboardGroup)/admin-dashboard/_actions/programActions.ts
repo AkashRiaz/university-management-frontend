@@ -1,3 +1,5 @@
+"use server";
+
 import { isAccessTokenExist } from "@/service/refreshToken";
 import { Program } from "@/types/program.type";
 
@@ -14,7 +16,9 @@ export type ProgramResponse = {
   } | null;
 };
 
-export const getAllProgramsAction = async (): Promise<ProgramResponse> => {
+export const getAllProgramsAction = async (
+  departmentId?: string,
+): Promise<ProgramResponse> => {
   try {
     const accessToken = await isAccessTokenExist();
 
@@ -27,13 +31,23 @@ export const getAllProgramsAction = async (): Promise<ProgramResponse> => {
       };
     }
 
-    const response = await fetch(`${process.env.BACKEND_API_URL}/programs`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const params = new URLSearchParams();
+
+    if (departmentId) {
+      params.set("departmentId", departmentId);
+    }
+
+    const queryString = params.toString();
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/programs${queryString ? `?${queryString}` : ""}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
       },
-      cache: "no-store",
-    });
+    );
 
     const result = await response.json();
 
