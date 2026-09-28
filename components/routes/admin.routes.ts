@@ -17,6 +17,21 @@ export const adminRoutes: ISidebarGroup[] = [
         href: `${prefix}/students`,
         icon: Users,
       },
+      {
+        label: "Instructors",
+        href: `${prefix}/instructors`,
+        icon: User,
+      },
+    ],
+  },
+  {
+    title: "App Settings",
+    items: [
+      {
+        label: "Approval",
+        href: `${prefix}`,
+        icon: LayoutDashboard,
+      },
     ],
   },
   {

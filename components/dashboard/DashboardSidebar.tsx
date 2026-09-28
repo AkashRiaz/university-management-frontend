@@ -90,8 +90,8 @@ export default function DashboardSidebar({ user }: NavbarProps) {
 
       {/* Sidebar Content */}
       <SidebarContent className="min-h-0 overflow-y-auto">
-        {navItems.map((group) => (
-          <SidebarGroup key={group.title}>
+        {navItems.map((group, index) => (
+          <SidebarGroup key={index}>
             {/* Group Title */}
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
 

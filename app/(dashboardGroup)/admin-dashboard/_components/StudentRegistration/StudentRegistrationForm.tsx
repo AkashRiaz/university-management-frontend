@@ -58,8 +58,6 @@ const StudentRegistrationForm = () => {
 
   const [isPending, startTransition] = useTransition();
 
-  const isSubmitting = loading || isPending;
-
   const defaultValues: createStudentInput = {
     name: "",
     email: "",

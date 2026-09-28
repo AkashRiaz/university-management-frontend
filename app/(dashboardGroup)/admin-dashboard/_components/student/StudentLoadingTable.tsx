@@ -10,7 +10,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchBar } from "@/components/ui/SearchBar";
 import Link from "next/link";
-import { CustomPagination } from "@/components/ui/CustomPagination";
 
 const StudentLoadingTable = () => {
   return (
@@ -27,13 +26,6 @@ const StudentLoadingTable = () => {
 
         <div className="flex items-center gap-4">
           <SearchBar />
-
-          <Link
-            href="/admin-dashboard/student-registration"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90"
-          >
-            Add Student
-          </Link>
         </div>
       </div>
 

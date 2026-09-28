@@ -1,6 +1,5 @@
 import { AuthProvider, Role, UserStatus } from "./common.type";
 
-
 export interface IUser {
   id: string;
   name: string;
@@ -11,17 +10,15 @@ export interface IUser {
   status: UserStatus;
   needPasswordChange: boolean;
   imageUrl: string | null;
+  deletedAt: string | null;
   lastLoginAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
-
 export interface IUserResponse {
-    success: boolean;
-    statusCode: number;
-    message: string;
-    data: IUser | null;
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: IUser | null;
 }
-
-
