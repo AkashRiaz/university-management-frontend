@@ -1,7 +1,7 @@
 "use server";
 
 import React from "react";
-import InstructorRegistrationForm from "../_components/InstructorRegistration/InstructorRegistrationForm";
+import InstructorRegistrationForm from "../_components/instructor/InstructorRegistrationForm";
 import { getAllDepartmentsAction } from "../_actions/departmentActions";
 
 const InstructorRegistrationPage = async () => {

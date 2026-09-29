@@ -1,5 +1,5 @@
 import React from "react";
-import CreateDepartmentForm from "../_components/CreateDepartment/CreateDepartmentForm";
+import CreateDepartmentForm from "../_components/Department/CreateDepartmentForm";
 import { getAllFaculties } from "../_actions/facultyActions";
 
 const DepartmentCreatePage = async () => {

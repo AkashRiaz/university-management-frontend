@@ -2,6 +2,7 @@
 
 import { AlertCircle, Building2, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
+import FacultyDescriptionCell from "../Faculty/FacultyDescriptionCell";
 import { getAllDepartmentsAction } from "../../_actions/departmentActions";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -70,7 +71,7 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+              <TableHead className="w-20 font-semibold text-gray-700">
                 #
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
@@ -107,7 +108,7 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
             ) : (
               departments.map((department, index) => (
                 <TableRow key={department.id} className="transition-colors">
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="w-20 font-medium text-gray-500">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>
@@ -115,9 +116,10 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
                       <Building2 className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">{department.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {department.description || "No description"}
-                        </p>
+                        <FacultyDescriptionCell
+                          description={department.description || undefined}
+                          limit={50}
+                        />
                       </div>
                     </div>
                   </TableCell>

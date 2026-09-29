@@ -1,8 +1,8 @@
 import React from "react";
-import CreateProgramForm from "../_components/ProgramCreate/CreateProgramForm";
+import CreateProgramForm from "../_components/Program/CreateProgramForm";
 import { getAllDepartmentsAction } from "../_actions/departmentActions";
 
-const ProgramCreatePage = async() => {
+const ProgramCreatePage = async () => {
   const departmentResult = await getAllDepartmentsAction();
   const departments = departmentResult?.data || [];
   return (

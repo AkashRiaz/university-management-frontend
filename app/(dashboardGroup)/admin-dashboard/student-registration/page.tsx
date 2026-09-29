@@ -1,7 +1,7 @@
 "use server";
 import Link from "next/link";
 import React from "react";
-import StudentRegistrationForm from "../_components/StudentRegistration/StudentRegistrationForm";
+import StudentRegistrationForm from "../_components/student/StudentRegistrationForm";
 import { getAllProgramsAction } from "../_actions/programActions";
 import { getAllDepartmentsAction } from "../_actions/departmentActions";
 
