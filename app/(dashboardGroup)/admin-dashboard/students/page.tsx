@@ -1,3 +1,4 @@
+"use server"
 import React, { Suspense } from "react";
 import StudentTable from "../_components/student/StudentTable";
 import StudentLoadingTable from "../_components/student/StudentLoadingTable";

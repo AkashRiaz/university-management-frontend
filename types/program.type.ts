@@ -5,8 +5,8 @@ export type Program = {
   name?: string | null;
   code?: string | null;
   description?: string | null;
-  duration?: number | null;
-  totalCredit?: string | null;
+  durationYears?: number | null;
+  totalCredits?: string | null;
   departmentId?: string | null;
   department?: IDepartment | null;
   createdAt: string;

@@ -16,6 +16,18 @@ export type DepartmentResponse = {
   } | null;
 };
 
+type DepartmentQuery = {
+  [key: string]: string | string[] | undefined;
+};
+
+const getQueryValue = (value: string | string[] | undefined) => {
+  if (Array.isArray(value)) {
+    return value[0] || "";
+  }
+
+  return value || "";
+};
+
 export type createDepartmentState = {
   success: boolean;
   message: string;
@@ -92,55 +104,83 @@ export const createDepartmentAction = async (
   }
 };
 
-export const getAllDepartmentsAction =
-  async (): Promise<DepartmentResponse> => {
-    try {
-      const accessToken = await isAccessTokenExist();
+export const getAllDepartmentsAction = async ({
+  query,
+}: {
+  query?: DepartmentQuery;
+} = {}): Promise<DepartmentResponse> => {
+  const params = new URLSearchParams();
+  const searchTerm = getQueryValue(query?.searchTerm);
+  const page = getQueryValue(query?.page);
+  const limit = getQueryValue(query?.limit);
 
-      if (!accessToken) {
-        return {
-          success: false,
-          message: "Access token not found",
-          statusCode: 401,
-          data: null,
-        };
-      }
+  if (searchTerm) {
+    params.set("searchTerm", searchTerm);
+  }
 
-      const response = await fetch(
-        `${process.env.BACKEND_API_URL}/departments`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          cache: "no-store",
-        },
-      );
+  if (page) {
+    params.set("page", page);
+  }
 
-      const result = await response.json();
+  if (limit) {
+    params.set("limit", limit);
+  }
 
-      if (!response.ok || !result?.success) {
-        return {
-          success: false,
-          message: result?.message || "Failed to fetch departments",
-          statusCode: response.status,
-          data: null,
-        };
-      }
+  const queryString = params.toString();
 
-      return {
-        success: true,
-        message: "Departments fetched successfully",
-        statusCode: response.status,
-        data: result?.data?.data || null,
-      };
-    } catch (error) {
-      console.error("Error fetching departments:", error);
+  try {
+    const accessToken = await isAccessTokenExist();
+
+    if (!accessToken) {
       return {
         success: false,
-        message: "An error occurred while fetching departments",
-        statusCode: 500,
+        message: "Access token not found",
+        statusCode: 401,
         data: null,
       };
     }
-  };
+
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/departments${queryString ? `?${queryString}` : ""}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
+      },
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result?.success) {
+      return {
+        success: false,
+        message: result?.message || "Failed to fetch departments",
+        statusCode: response.status,
+        data: null,
+      };
+    }
+
+    const responseData = result?.data;
+    const departments = Array.isArray(responseData)
+      ? responseData
+      : responseData?.data;
+
+    return {
+      success: true,
+      message: "Departments fetched successfully",
+      statusCode: response.status,
+      data: departments || null,
+      meta: result?.meta || responseData?.meta || null,
+    };
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    return {
+      success: false,
+      message: "An error occurred while fetching departments",
+      statusCode: 500,
+      data: null,
+    };
+  }
+};

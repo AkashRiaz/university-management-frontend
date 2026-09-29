@@ -158,7 +158,9 @@ const StudentRegistrationForm = ({
       }
 
       setIsLoadingPrograms(true);
-      const result = await getAllProgramsAction(selectedDepartmentId);
+      const result = await getAllProgramsAction({
+        query: { departmentId: selectedDepartmentId },
+      });
 
       if (isCurrentRequest) {
         setAvailablePrograms(result.data || []);

@@ -1,3 +1,5 @@
+import { IFaculty } from "./faculty.type";
+
 export type IDepartment = {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export type IDepartment = {
   phone: string | null;
   email: string | null;
   facultyId: string;
+  faculty?: IFaculty;
   createdAt: string;
   updatedAt: string;
 };

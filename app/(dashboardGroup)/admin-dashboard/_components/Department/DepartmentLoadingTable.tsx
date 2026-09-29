@@ -10,16 +10,16 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchBar } from "@/components/ui/SearchBar";
 
-const InstructorLoadingTable = () => {
+const DepartmentLoadingTable = () => {
   return (
     <div className="overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between border-b py-4">
         <div>
-          <h2 className="text-lg font-semibold">Instructors</h2>
+          <h2 className="text-lg font-semibold">Departments</h2>
 
           <p className="text-sm text-muted-foreground">
-            Manage all registered instructors
+            Manage all registered departments
           </p>
         </div>
 
@@ -37,19 +37,19 @@ const InstructorLoadingTable = () => {
                 #
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
-                Instructor
+                Department
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
-                Contact
+                Code
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
                 Designation
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
-                Department
+                Email
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
-                Office Room
+                Faculty
               </TableHead>
               <TableHead className="text-right font-semibold text-gray-700">
                 Action
@@ -122,4 +122,4 @@ const InstructorLoadingTable = () => {
   );
 };
 
-export default InstructorLoadingTable;
+export default DepartmentLoadingTable;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useTransition } from "react";
+import React, { useActionState, useEffect, useTransition } from "react";
 import { createDepartmentAction } from "../../_actions/departmentActions";
 import {
   CreateDepartmentInput,
@@ -13,17 +13,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Building } from "lucide-react";
+import { Building, Building2, Loader2, UserPlus } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { IFaculty } from "@/types/faculty.type";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
-const CreateDepartmentForm = () => {
+const CreateDepartmentForm = ({ faculties }: { faculties: IFaculty[] }) => {
   const [state, formAction, loading] = useActionState(
     createDepartmentAction,
     null,
   );
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success("Department created successfully");
+      redirect("/admin-dashboard/departments");
+    } else if (state?.error) {
+      toast.error(state?.error || "Failed to create department");
+    }
+  }, [state]);
 
   const defaultValues: CreateDepartmentInput = {
     name: "",
@@ -271,7 +291,111 @@ const CreateDepartmentForm = () => {
               }}
             </form.Field>
 
-            
+            {/* Email */}
+            <form.Field name="email">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>Email Address</Label>
+
+                  <Input
+                    id={field.name}
+                    type="email"
+                    placeholder="student@example.com"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                  />
+
+                  {field.state.meta.isTouched &&
+                    field.state.meta.errors.map((error, i) => (
+                      <p key={i} className="text-xs text-destructive">
+                        {String(error?.message ?? error)}
+                      </p>
+                    ))}
+                </div>
+              )}
+            </form.Field>
+
+            {/* Faculty */}
+            <form.Field name="facultyId">
+              {(field) => {
+                const selectedFaculty = faculties.find(
+                  (faculty) => faculty.id === field.state.value,
+                );
+                return (
+                  <div className="space-y-2">
+                    <Label>
+                      Faculty 
+                      <span className="text-destructive">*</span>
+                    </Label>
+
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(value) => {
+                        field.handleChange(value ?? "");
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select faculty">
+                          {selectedFaculty?.name ?? "Select faculty"}
+                        </SelectValue>
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {faculties.map((faculty) => (
+                          <SelectItem key={faculty.id} value={faculty.id}>
+                            {faculty.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {field.state.meta.isTouched &&
+                      field.state.meta.errors.map((error, i) => (
+                        <p key={i} className="text-xs text-destructive">
+                          {String(error?.message ?? error)}
+                        </p>
+                      ))}
+                  </div>
+                );
+              }}
+            </form.Field>
+          </div>
+
+          {/* Submit */}
+          <div className="flex justify-end gap-3 border-t pt-5">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || isSubmitting || isPending}
+                  className="min-w-40"
+                >
+                  {isSubmitting || isPending ? (
+                    <>
+                      <Loader2 className="mr-2 size-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Building2 className="mr-2 size-4" />
+                      Create Department
+                    </>
+                  )}
+                </Button>
+              )}
+            </form.Subscribe>
           </div>
         </form>
       </CardContent>

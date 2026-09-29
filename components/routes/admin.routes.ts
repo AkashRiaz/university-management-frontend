@@ -1,5 +1,5 @@
 import { ISidebarGroup } from "@/lib/type";
-import { Building, LayoutDashboard, User, Users } from "lucide-react";
+import { BookOpen, Building, LayoutDashboard, User, Users } from "lucide-react";
 
 const prefix = "/admin-dashboard";
 
@@ -24,8 +24,13 @@ export const adminRoutes: ISidebarGroup[] = [
       },
       {
         label: "Departments",
-        href: `${prefix}/create-department`,
+        href: `${prefix}/departments`,
         icon: Building,
+      },
+       {
+        label: "Programs",
+        href: `${prefix}/programs`,
+        icon: BookOpen,
       },
     ],
   },

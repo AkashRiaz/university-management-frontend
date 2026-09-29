@@ -1,3 +1,6 @@
+
+"use server";
+
 import { Suspense } from "react";
 import InstructorTable from "../_components/instructor/InstructorTable";
 import InstructorLoadingTable from "../_components/instructor/InstructorLoadingTable";
