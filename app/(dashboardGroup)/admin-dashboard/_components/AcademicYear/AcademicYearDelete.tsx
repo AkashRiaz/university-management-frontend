@@ -6,21 +6,24 @@ import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { Button } from "@/components/ui/button";
-import { deleteFacultyAction } from "../../_actions/facultyActions";
+import { deleteAcademicYearAction } from "../../_actions/academicYearActions";
 
-type FacultyDeleteProps = {
-  facultyId: string;
-  facultyName: string;
+type AcademicYearDeleteProps = {
+  academicYearId: string;
+  academicYearName: string;
 };
 
-const FacultyDelete = ({ facultyId, facultyName }: FacultyDeleteProps) => {
+const AcademicYearDelete = ({
+  academicYearId,
+  academicYearName,
+}: AcademicYearDeleteProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
     const confirmation = await Swal.fire({
-      title: "Delete faculty?",
-      text: `You are about to delete ${facultyName}. This action cannot be undone.`,
+      title: "Delete academic year?",
+      text: `You are about to delete ${academicYearName}. This action cannot be undone.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it",
@@ -34,7 +37,7 @@ const FacultyDelete = ({ facultyId, facultyName }: FacultyDeleteProps) => {
     }
 
     startTransition(async () => {
-      const result = await deleteFacultyAction(facultyId);
+      const result = await deleteAcademicYearAction(academicYearId);
 
       if (result.success) {
         toast.success(result.message);
@@ -53,12 +56,12 @@ const FacultyDelete = ({ facultyId, facultyName }: FacultyDeleteProps) => {
       size="icon-sm"
       onClick={handleDelete}
       disabled={isPending}
-      aria-label={`Delete ${facultyName}`}
-      title={`Delete ${facultyName}`}
+      aria-label={`Delete ${academicYearName}`}
+      title={`Delete ${academicYearName}`}
     >
       {isPending ? <Loader2 className="animate-spin" /> : <Trash2 />}
     </Button>
   );
 };
 
-export default FacultyDelete;
+export default AcademicYearDelete;
