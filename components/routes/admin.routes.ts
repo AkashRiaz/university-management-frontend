@@ -6,6 +6,7 @@ import {
   Building2Icon,
   Calendar,
   CalendarRange,
+  DoorOpen,
   LayoutDashboard,
   ListTree,
   User,
@@ -52,6 +53,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Program Courses",
         href: `${prefix}/program-courses`,
         icon: ListTree,
+      },
+      {
+        label: "Rooms",
+        href: `${prefix}/rooms`,
+        icon: DoorOpen,
       },
       {
         label: "Faculties",
