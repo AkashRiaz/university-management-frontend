@@ -7,6 +7,7 @@ import {
   Calendar,
   CalendarRange,
   LayoutDashboard,
+  ListTree,
   User,
   Users,
 } from "lucide-react";
@@ -46,6 +47,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Courses",
         href: `${prefix}/courses`,
         icon: BookOpenCheck,
+      },
+      {
+        label: "Program Courses",
+        href: `${prefix}/program-courses`,
+        icon: ListTree,
       },
       {
         label: "Faculties",
