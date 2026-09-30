@@ -10,26 +10,33 @@ import {
 import { SearchBar } from "@/components/ui/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const GradeScaleLoadingTable = () => (
+const FeeStructureItemLoadingTable = () => (
   <div className="min-w-0 overflow-hidden shadow-sm">
-    <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
+    <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:mx-0">
       <div>
         <h2 className="text-lg font-semibold">
           <TableBackButton />
-          Grade Scales
+          Fee Structure Items
         </h2>
-        <p className="text-sm text-muted-foreground">Manage all grade scales</p>
+        <p className="text-sm text-muted-foreground">Manage fee items</p>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex w-full items-center gap-4 sm:w-auto">
         <SearchBar />
-        <Skeleton className="h-8 w-36 rounded-md" />
+        <Skeleton className="h-8 w-32 rounded-md" />
       </div>
     </div>
     <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
-      <Table className="min-w-[700px]">
+      <Table className="w-full min-w-225 table-fixed">
+        <colgroup>
+          <col className="w-16" />
+          <col className="w-64" />
+          <col className="w-96" />
+          <col className="w-40" />
+          <col className="w-40" />
+        </colgroup>
         <TableHeader>
           <TableRow className="bg-gray-50 hover:bg-gray-50">
-            {["#", "Grade Scale", "Description", "Action"].map((heading) => (
+            {["#", "Name", "Description", "Amount", "Action"].map((heading) => (
               <TableHead key={heading} className="font-semibold text-gray-700">
                 {heading}
               </TableHead>
@@ -39,7 +46,7 @@ const GradeScaleLoadingTable = () => (
         <TableBody>
           {Array.from({ length: 8 }).map((_, index) => (
             <TableRow key={index}>
-              {Array.from({ length: 4 }).map((__, cellIndex) => (
+              {Array.from({ length: 5 }).map((__, cellIndex) => (
                 <TableCell key={cellIndex}>
                   <Skeleton className="h-4 w-28" />
                 </TableCell>
@@ -57,4 +64,4 @@ const GradeScaleLoadingTable = () => (
   </div>
 );
 
-export default GradeScaleLoadingTable;
+export default FeeStructureItemLoadingTable;

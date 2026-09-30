@@ -1,8 +1,7 @@
 "use server";
 import TableBackButton from "@/components/ui/TableBackButton";
 
-import Link from "next/link";
-import { AlertCircle, Eye, FileText } from "lucide-react";
+import { AlertCircle, ClipboardList } from "lucide-react";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { SearchBar } from "@/components/ui/SearchBar";
 import {
@@ -13,17 +12,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAllGradeScalesAction } from "../../_actions/gradeScaleActions";
-import GradeScaleCreate from "./GradeScaleCreate";
-import GradeScaleDelete from "./GradeScaleDelete";
+import { getFeeStructureItemsByFeeStructureAction } from "../../_actions/feeStructureItemActions";
+import FeeStructureItemCreate from "./FeeStructureItemCreate";
+import FeeStructureItemDelete from "./FeeStructureItemDelete";
 
-const GradeScaleTable = async ({
+const formatAmount = (amount: number | string | null | undefined) => {
+  const value = Number(amount);
+  return Number.isFinite(value) ? value.toFixed(2) : "-";
+};
+
+const FeeStructureItemTable = async ({
+  feeStructureId,
   searchParams,
 }: {
+  feeStructureId: string;
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const result = await getAllGradeScalesAction({ query: searchParams });
-  const gradeScales = result.data || [];
+  const result = await getFeeStructureItemsByFeeStructureAction(
+    feeStructureId,
+    {
+      query: searchParams,
+    },
+  );
+  const items = result.data || [];
   const currentPage = Math.max(1, Number(result.meta?.page ?? 1));
   const limit = Math.max(1, Number(result.meta?.limit ?? 10));
   const totalPages = Math.max(1, Number(result.meta?.totalPages ?? 1));
@@ -35,7 +46,7 @@ const GradeScaleTable = async ({
           <AlertCircle className="size-5" />
         </div>
         <h3 className="mt-4 font-semibold text-destructive">
-          Failed to load grade scales
+          Failed to load fee items
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">{result.message}</p>
       </div>
@@ -44,31 +55,39 @@ const GradeScaleTable = async ({
 
   return (
     <div className="min-w-0 overflow-hidden shadow-sm">
-      <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
+      <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
-            Grade Scales
+            Fee Structure Items
           </h2>
-          <p className="text-sm">Manage all registered grade scales</p>
+          <p className="text-sm">Manage items in this fee structure</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           <SearchBar />
-          <GradeScaleCreate />
+          <FeeStructureItemCreate feeStructureId={feeStructureId} />
         </div>
       </div>
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
-        <Table className="min-w-175">
+        <Table className="w-full min-w-225 table-fixed">
+          <colgroup>
+            <col className="w-16" />
+            <col className="w-64" />
+            <col className="w-96" />
+            <col className="w-40" />
+            <col className="w-40" />
+          </colgroup>
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
-                #
-              </TableHead>
+              <TableHead className="font-semibold text-gray-700">#</TableHead>
               <TableHead className="font-semibold text-gray-700">
-                Grade Scale
+                Name
               </TableHead>
               <TableHead className="font-semibold text-gray-700">
                 Description
+              </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                Amount
               </TableHead>
               <TableHead className="text-right font-semibold text-gray-700">
                 Action
@@ -76,47 +95,45 @@ const GradeScaleTable = async ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {gradeScales.length === 0 ? (
+            {items.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No grade scales found.
+                  No fee structure items found.
                 </TableCell>
               </TableRow>
             ) : (
-              gradeScales.map((gradeScale, index) => (
-                <TableRow key={gradeScale.id}>
+              items.map((item, index) => (
+                <TableRow key={item.id}>
                   <TableCell className="font-medium text-gray-500">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <FileText className="size-4 text-muted-foreground" />
-                      <span className="font-medium">{gradeScale.name}</span>
+                    <div className="flex min-w-0 items-center gap-2">
+                      <ClipboardList className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="min-w-0 truncate font-medium">
+                        {item.name}
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="max-w-md truncate text-muted-foreground">
-                    {gradeScale.description || "-"}
+                  <TableCell className="text-muted-foreground">
+                    <div className="truncate">{item.description || "-"}</div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="whitespace-nowrap">
+                    {formatAmount(item.amount)}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right">
                     <div className="flex justify-end gap-2">
-                      <GradeScaleCreate
-                        gradeScale={gradeScale}
+                      <FeeStructureItemCreate
+                        feeStructureId={feeStructureId}
+                        item={item}
                         trigger="edit"
                       />
-                      <Link
-                        href={`/admin-dashboard/grade-scales/${gradeScale.id}`}
-                        aria-label={`View grades for ${gradeScale.name}`}
-                        title={`View grades for ${gradeScale.name}`}
-                        className="inline-flex size-7 items-center justify-center rounded-md border border-input text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-                      >
-                        <Eye className="size-4" />
-                      </Link>
-                      <GradeScaleDelete
-                        gradeScaleId={gradeScale.id}
-                        gradeScaleName={gradeScale.name}
+                      <FeeStructureItemDelete
+                        itemId={item.id}
+                        itemName={item.name}
                       />
                     </div>
                   </TableCell>
@@ -131,4 +148,4 @@ const GradeScaleTable = async ({
   );
 };
 
-export default GradeScaleTable;
+export default FeeStructureItemTable;

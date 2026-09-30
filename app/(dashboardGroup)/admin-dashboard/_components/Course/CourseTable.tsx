@@ -1,4 +1,5 @@
 "use server";
+import TableBackButton from "@/components/ui/TableBackButton";
 
 import { AlertCircle, BookOpenCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +53,10 @@ const CourseTable = async ({ searchParams }: CourseTableProps) => {
     <div className="min-w-0 overflow-hidden shadow-sm">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:items-center sm:justify-between md:mx-0">
         <div>
-          <h2 className="text-lg font-semibold">Courses</h2>
+          <h2 className="text-lg font-semibold">
+            <TableBackButton />
+            Courses
+          </h2>
           <p className="text-sm">Manage all registered courses</p>
         </div>
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">

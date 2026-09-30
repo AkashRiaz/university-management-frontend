@@ -12,6 +12,7 @@ import {
   ListTree,
   User,
   Users,
+  WalletCards,
 } from "lucide-react";
 
 const prefix = "/admin-dashboard";
@@ -79,6 +80,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Grade Scales",
         href: `${prefix}/grade-scales`,
         icon: GraduationCap,
+      },
+      {
+        label: "Fee Structures",
+        href: `${prefix}/fee-structures`,
+        icon: WalletCards,
       },
     ],
   },

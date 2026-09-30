@@ -1,4 +1,5 @@
 "use server";
+import TableBackButton from "@/components/ui/TableBackButton";
 
 import { AlertCircle, DoorOpen } from "lucide-react";
 import { CustomPagination } from "@/components/ui/CustomPagination";
@@ -57,7 +58,10 @@ const RoomTable = async ({ searchParams }: RoomTableProps) => {
     <div className="min-w-0 overflow-hidden shadow-sm">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
-          <h2 className="text-lg font-semibold">Rooms</h2>
+          <h2 className="text-lg font-semibold">
+            <TableBackButton />
+            Rooms
+          </h2>
           <p className="text-sm">Manage all registered rooms</p>
         </div>
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
