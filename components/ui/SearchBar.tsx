@@ -5,7 +5,7 @@ import { SearchIcon, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-export function SearchBar() {
+export function SearchBar({ compact = false }: { compact?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -64,7 +64,13 @@ export function SearchBar() {
   };
 
   return (
-    <div className="relative w-full lg:max-w-md">
+    <div
+      className={
+        compact
+          ? "relative min-w-0 flex-1 sm:w-52 sm:flex-none"
+          : "relative w-full lg:max-w-md"
+      }
+    >
       <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
       <Input
@@ -72,7 +78,7 @@ export function SearchBar() {
         defaultValue={currentSearchTerm}
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Search here..."
-        className="pl-9 pr-10"
+        className={compact ? "h-8 pl-9 pr-10" : "pl-9 pr-10"}
       />
 
       {currentSearchTerm && (

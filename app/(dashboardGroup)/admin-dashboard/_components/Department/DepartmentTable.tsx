@@ -45,21 +45,21 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
   }
 
   return (
-    <div className="overflow-hidden shadow-sm">
-      <div className="flex items-center justify-between border-b py-4">
+    <div className="min-w-0 overflow-hidden shadow-sm">
+      <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">Departments</h2>
           <p className="text-sm">Manage all registered departments</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
           <div>
-            <SearchBar />
+            <SearchBar compact />
           </div>
           <div>
             <Link
               href="/admin-dashboard/create-department"
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90"
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-white transition hover:bg-primary/90"
             >
               Add Department
             </Link>
@@ -67,8 +67,8 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <Table>
+      <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
               <TableHead className="w-20 font-semibold text-gray-700">

@@ -13,7 +13,7 @@ const FacultyLoadingTable = () => {
   return (
     <div className="overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between border-b py-4">
+      <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">Instructors</h2>
 
@@ -26,8 +26,8 @@ const FacultyLoadingTable = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <Table>
+      <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
               <TableHead className="w-15 font-semibold text-gray-700">

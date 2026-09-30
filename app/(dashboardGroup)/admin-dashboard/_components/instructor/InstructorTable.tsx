@@ -26,7 +26,6 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
   const result = await getAllInstructorsActionForAdmin({ query: searchParams });
 
   const instructors = result?.data || [];
- 
 
   const currentPage = Math.max(1, Number(result?.meta?.page ?? 1));
 
@@ -51,21 +50,21 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
   }
 
   return (
-    <div className="overflow-hidden shadow-sm">
-      <div className="flex items-center justify-between border-b py-4">
+    <div className="min-w-0 overflow-hidden shadow-sm">
+      <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">Instructors</h2>
           <p className="text-sm">Manage all registered instructors</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
           <div>
-            <SearchBar />
+            <SearchBar compact />
           </div>
           <div>
             <Link
               href="/admin-dashboard/instructor-registration"
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90"
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-white transition hover:bg-primary/90"
             >
               Add Instructor
             </Link>
@@ -73,8 +72,8 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <Table>
+      <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
               <TableHead className="w-15 font-semibold text-gray-700">

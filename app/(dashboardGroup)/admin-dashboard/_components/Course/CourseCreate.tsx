@@ -54,6 +54,7 @@ const CourseCreate = ({
         variant={isEdit ? "outline" : "default"}
         size={isEdit ? "sm" : "default"}
         onClick={() => setOpen(true)}
+        className="shrink-0 whitespace-nowrap"
       >
         {isEdit ? <Pencil /> : <Plus />}
         {isEdit ? "Edit" : "Add Course"}
@@ -301,9 +302,9 @@ const CourseForm = ({
           </form.Field>
           <form.Field name="departmentId">
             {(field) => {
-                const selectedDepartment = departments.find(
-                  (dept) => dept.id === field.state.value,
-                );
+              const selectedDepartment = departments.find(
+                (dept) => dept.id === field.state.value,
+              );
               return (
                 <div className="space-y-2">
                   <Label>
