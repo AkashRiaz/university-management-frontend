@@ -142,7 +142,7 @@ const FacultyForm = ({
               {field.state.meta.isTouched &&
                 field.state.meta.errors.map((error, index) => (
                   <p key={index} className="text-xs text-destructive">
-                    {String(error)}
+                    {String(error?.message)}
                   </p>
                 ))}
             </div>
@@ -167,7 +167,7 @@ const FacultyForm = ({
               {field.state.meta.isTouched &&
                 field.state.meta.errors.map((error, index) => (
                   <p key={index} className="text-xs text-destructive">
-                    {String(error)}
+                    {String(error?.message)}
                   </p>
                 ))}
             </div>

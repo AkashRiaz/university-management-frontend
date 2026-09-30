@@ -157,7 +157,7 @@ const AcademicYearForm = ({
               {field.state.meta.isTouched &&
                 field.state.meta.errors.map((error, index) => (
                   <p key={index} className="text-xs text-destructive">
-                    {String(error)}
+                    {String(error?.message)}
                   </p>
                 ))}
             </div>
@@ -184,7 +184,7 @@ const AcademicYearForm = ({
                 {field.state.meta.isTouched &&
                   field.state.meta.errors.map((error, index) => (
                     <p key={index} className="text-xs text-destructive">
-                      {String(error)}
+                      {String(error?.message)}
                     </p>
                   ))}
               </div>
@@ -192,29 +192,31 @@ const AcademicYearForm = ({
           </form.Field>
 
           <form.Field name="endDate">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor={field.name}>
-                  End Date <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id={field.name}
-                  type="date"
-                  value={field.state.value}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                  aria-invalid={
-                    field.state.meta.isTouched && !field.state.meta.isValid
-                  }
-                />
-                {field.state.meta.isTouched &&
-                  field.state.meta.errors.map((error, index) => (
-                    <p key={index} className="text-xs text-destructive">
-                      {String(error)}
-                    </p>
-                  ))}
-              </div>
-            )}
+            {(field) => {
+              const isValid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>
+                    End Date <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id={field.name}
+                    type="date"
+                    value={field.state.value}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    onBlur={field.handleBlur}
+                    aria-invalid={isValid}
+                  />
+                  {isValid &&
+                    field.state.meta.errors.map((error, index) => (
+                      <p key={index} className="text-xs text-destructive">
+                        {String(error?.message)}
+                      </p>
+                    ))}
+                </div>
+              );
+            }}
           </form.Field>
         </div>
 
