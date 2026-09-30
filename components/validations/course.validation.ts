@@ -16,10 +16,9 @@ export const CreateCourseZodSchema = z.object({
   description: z
     .string()
     .max(1000, "Description cannot exceed 1000 characters")
-    .trim()
-    .optional(),
+    .trim(),
 
-  credit: z.coerce
+  credit: z
     .number()
     .positive("Credit must be greater than 0")
     .max(99.99, "Credit cannot exceed 99.99"),
@@ -28,5 +27,7 @@ export const CreateCourseZodSchema = z.object({
 
   courseLevel: z.enum(["UNDERGRADUATE", "POSTGRADUATE", "PHD"]),
 
-  departmentId: z.uuid(),
+  departmentId: z.uuid("Department ID must be a valid UUID"),
 });
+
+export type CreateCourseInput = z.input<typeof CreateCourseZodSchema>;

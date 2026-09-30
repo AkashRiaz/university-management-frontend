@@ -1,6 +1,7 @@
 import { ISidebarGroup } from "@/lib/type";
 import {
   BookOpen,
+  BookOpenCheck,
   Building,
   Building2Icon,
   Calendar,
@@ -40,6 +41,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Programs",
         href: `${prefix}/programs`,
         icon: BookOpen,
+      },
+      {
+        label: "Courses",
+        href: `${prefix}/courses`,
+        icon: BookOpenCheck,
       },
       {
         label: "Faculties",
