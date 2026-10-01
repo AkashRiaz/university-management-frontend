@@ -345,7 +345,10 @@ const SectionForm = ({
                     <SelectContent>
                       {semesters.map((semester) => (
                         <SelectItem key={semester.id} value={semester.id}>
-                          {semester.name} semester
+                          {semester.name} semester (
+                          {semester.academicYear?.name ||
+                            semester.academicYearId}
+                          )
                         </SelectItem>
                       ))}
                     </SelectContent>

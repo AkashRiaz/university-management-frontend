@@ -6,6 +6,7 @@ import {
   Building2Icon,
   Calendar,
   CalendarRange,
+  CalendarDays,
   BadgePercent,
   DoorOpen,
   GraduationCap,
@@ -67,6 +68,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Sections",
         href: `${prefix}/sections`,
         icon: ClipboardList,
+      },
+      {
+        label: "Class Schedules",
+        href: `${prefix}/class-schedules`,
+        icon: CalendarDays,
       },
       {
         label: "Faculties",
