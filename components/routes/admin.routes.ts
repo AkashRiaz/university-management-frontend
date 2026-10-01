@@ -6,12 +6,15 @@ import {
   Building2Icon,
   Calendar,
   CalendarRange,
+  BadgePercent,
   DoorOpen,
+  GraduationCap,
   LayoutDashboard,
   ListTree,
   ClipboardList,
   User,
   Users,
+  WalletCards,
 } from "lucide-react";
 
 const prefix = "/admin-dashboard";
@@ -79,6 +82,21 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Semesters",
         href: `${prefix}/semesters`,
         icon: CalendarRange,
+      },
+      {
+        label: "Grade Scales",
+        href: `${prefix}/grade-scales`,
+        icon: GraduationCap,
+      },
+      {
+        label: "Fee Structures",
+        href: `${prefix}/fee-structures`,
+        icon: WalletCards,
+      },
+      {
+        label: "Scholarships",
+        href: `${prefix}/scholarships`,
+        icon: BadgePercent,
       },
     ],
   },
