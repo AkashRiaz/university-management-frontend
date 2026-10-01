@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateSectionZodSchema } from "@/components/validations/section.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -43,6 +44,7 @@ export const createSectionAction = async (
   _previousState: SectionActionState | null,
   formData: FormData,
 ): Promise<SectionActionState> => {
+  revalidateTag("sections", { expire: 0 });
   const validation = CreateSectionZodSchema.safeParse(
     getSectionPayload(formData),
   );
@@ -107,6 +109,7 @@ export const updateSectionAction = async (
   _previousState: SectionActionState | null,
   formData: FormData,
 ): Promise<SectionActionState> => {
+  revalidateTag("sections", { expire: 0 });
   const sectionId = formData.get("id");
   const validation = CreateSectionZodSchema.safeParse(
     getSectionPayload(formData),
@@ -187,6 +190,7 @@ export type SectionDeleteState = {
 export const deleteSectionAction = async (
   sectionId: string,
 ): Promise<SectionDeleteState> => {
+  revalidateTag("sections", { expire: 0 });
   if (!sectionId)
     return {
       success: false,
@@ -263,7 +267,8 @@ export const getAllSectionsAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["sections"] },
       },
     );
     const result = await response.json();

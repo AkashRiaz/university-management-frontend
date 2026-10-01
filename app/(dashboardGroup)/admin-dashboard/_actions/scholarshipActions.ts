@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { createScholarshipZodSchema } from "@/components/validations/scholarship.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -50,6 +51,7 @@ export const createScholarshipAction = async (
   _previousState: ScholarshipActionState | null,
   formData: FormData,
 ): Promise<ScholarshipActionState> => {
+  revalidateTag("scholarships", { expire: 0 });
   const validation = createScholarshipZodSchema.safeParse(
     getScholarshipPayload(formData),
   );
@@ -116,6 +118,7 @@ export const updateScholarshipAction = async (
   _previousState: ScholarshipActionState | null,
   formData: FormData,
 ): Promise<ScholarshipActionState> => {
+  revalidateTag("scholarships", { expire: 0 });
   const scholarshipId = formData.get("id");
   const validation = createScholarshipZodSchema.safeParse(
     getScholarshipPayload(formData),
@@ -190,6 +193,7 @@ export const updateScholarshipAction = async (
 export const deleteScholarshipAction = async (
   scholarshipId: string,
 ): Promise<Omit<ScholarshipActionState, "data">> => {
+  revalidateTag("scholarships", { expire: 0 });
   if (!scholarshipId) {
     return {
       success: false,
@@ -270,7 +274,8 @@ export const getAllScholarshipsAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["scholarships"] },
       },
     );
     const result = await response.json().catch(() => null);

@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 import { CreateDepartmentZodSchema } from "@/components/validations/department.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
 import { IDepartment } from "@/types/department.type";
@@ -39,6 +40,7 @@ export const createDepartmentAction = async (
   prevState: createDepartmentState,
   formData: FormData,
 ) => {
+  revalidateTag("departments", { expire: 0 });
   try {
     const accessToken = await isAccessTokenExist();
 
@@ -147,7 +149,8 @@ export const getAllDepartmentsAction = async ({
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["departments"] },
       },
     );
 

@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 import { isAccessTokenExist } from "@/service/refreshToken";
 import { IFaculty } from "@/types/faculty.type";
 import { FacultySchema } from "@/components/validations/faculty.validation";
@@ -39,6 +40,7 @@ const saveFaculty = async (
   formData: FormData,
   method: "POST" | "PATCH",
 ): Promise<FacultyActionState> => {
+  revalidateTag("faculties", { expire: 0 });
   const payload = {
     name: formData.get("name"),
     code: formData.get("code"),
@@ -131,6 +133,7 @@ export type FacultyDeleteState = {
 export const deleteFacultyAction = async (
   facultyId: string,
 ): Promise<FacultyDeleteState> => {
+  revalidateTag("faculties", { expire: 0 });
   if (!facultyId) {
     return {
       success: false,
@@ -148,13 +151,16 @@ export const deleteFacultyAction = async (
       };
     }
 
-    const response = await fetch(`${process.env.BACKEND_API_URL}/faculties/${facultyId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/faculties/${facultyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
       },
-      cache: "no-store",
-    });
+    );
     const result = await response.json().catch(() => null);
 
     if (!response.ok || result?.success === false) {
@@ -214,7 +220,8 @@ export const getAllFaculties = async ({
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["faculties"] },
       },
     );
     const result = await response.json().catch(() => null);

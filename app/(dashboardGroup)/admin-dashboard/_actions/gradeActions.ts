@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { createGradeZodSchema } from "@/components/validations/grade.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -46,6 +47,7 @@ export const createGradeAction = async (
   _previousState: GradeActionState | null,
   formData: FormData,
 ): Promise<GradeActionState> => {
+  revalidateTag("grades", { expire: 0 });
   const validation = createGradeZodSchema.safeParse(getGradePayload(formData));
 
   if (!validation.success) {
@@ -106,6 +108,7 @@ export const updateGradeAction = async (
   _previousState: GradeActionState | null,
   formData: FormData,
 ): Promise<GradeActionState> => {
+  revalidateTag("grades", { expire: 0 });
   const gradeId = formData.get("id");
   const validation = createGradeZodSchema.safeParse(getGradePayload(formData));
 
@@ -177,6 +180,7 @@ export const updateGradeAction = async (
 export const deleteGradeAction = async (
   gradeId: string,
 ): Promise<Omit<GradeActionState, "data">> => {
+  revalidateTag("grades", { expire: 0 });
   if (!gradeId) {
     return {
       success: false,
@@ -267,7 +271,8 @@ export const getGradesByGradeScaleAction = async (
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["grades"] },
       },
     );
     const result = await response.json().catch(() => null);

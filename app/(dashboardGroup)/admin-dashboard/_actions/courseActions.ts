@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateCourseZodSchema } from "@/components/validations/course.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -47,6 +48,7 @@ export const createCourseAction = async (
   _previousState: CourseActionState | null,
   formData: FormData,
 ): Promise<CourseActionState> => {
+  revalidateTag("courses", { expire: 0 });
   const validation = CreateCourseZodSchema.safeParse(
     getCoursePayload(formData),
   );
@@ -109,6 +111,7 @@ export const updateCourseAction = async (
   _previousState: CourseActionState | null,
   formData: FormData,
 ): Promise<CourseActionState> => {
+  revalidateTag("courses", { expire: 0 });
   const courseId = formData.get("id");
   const validation = CreateCourseZodSchema.safeParse(
     getCoursePayload(formData),
@@ -188,6 +191,7 @@ export type CourseDeleteState = {
 export const deleteCourseAction = async (
   courseId: string,
 ): Promise<CourseDeleteState> => {
+  revalidateTag("courses", { expire: 0 });
   if (!courseId) {
     return {
       success: false,
@@ -268,7 +272,8 @@ export const getAllCoursesAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["courses"] },
       },
     );
     const result = await response.json();

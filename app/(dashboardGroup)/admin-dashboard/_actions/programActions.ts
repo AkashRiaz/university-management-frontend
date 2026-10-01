@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateProgramZodSchema } from "@/components/validations/program.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -40,6 +41,7 @@ export const createProgramAction = async (
   prevState: ProgramPrevState | null,
   formData: FormData,
 ): Promise<ProgramPrevState> => {
+  revalidateTag("programs", { expire: 0 });
   try {
     const accessToken = await isAccessTokenExist();
 
@@ -149,7 +151,8 @@ export const getAllProgramsAction = async ({
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["programs"] },
       },
     );
 

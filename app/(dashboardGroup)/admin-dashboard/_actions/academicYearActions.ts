@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 import { isAccessTokenExist } from "@/service/refreshToken";
 import { IAcademicYear } from "@/types/academic-year.type";
 import { CreateAcademicYearZodSchema } from "@/components/validations/academic-year.validation";
@@ -88,6 +89,10 @@ export const createAcademicYearAction = async (
       };
     }
 
+    revalidateTag("academic-years", { expire: 0 });
+    revalidateTag("semesters", { expire: 0 });
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: result.message || "Academic year created successfully",
@@ -166,6 +171,10 @@ export const updateAcademicYearAction = async (
       };
     }
 
+    revalidateTag("academic-years", { expire: 0 });
+    revalidateTag("semesters", { expire: 0 });
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: result.message || "Academic year updated successfully",
@@ -229,6 +238,10 @@ export const deleteAcademicYearAction = async (
       };
     }
 
+    revalidateTag("academic-years", { expire: 0 });
+    revalidateTag("semesters", { expire: 0 });
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: result?.message || "Academic year deleted successfully",
@@ -287,7 +300,8 @@ export const getAllAcademicYearsAction = async ({
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["academic-years"] },
       },
     );
 

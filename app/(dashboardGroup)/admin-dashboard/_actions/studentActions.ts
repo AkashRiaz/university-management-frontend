@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { createStudentSchema } from "@/components/validations/student.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -56,6 +57,7 @@ export const createStudentAction = async (
   prevState: CreateStudentState | null,
   formData: FormData,
 ): Promise<CreateStudentState> => {
+  revalidateTag("students", { expire: 0 });
   const payload = {
     name: formData.get("name"),
     email: formData.get("email"),
@@ -82,7 +84,7 @@ export const createStudentAction = async (
   }
 
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
+  const accessToken: string | undefined = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
     return {
@@ -179,7 +181,8 @@ export const getAllStudentsActionForAdmin = async ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["students"] },
       },
     );
 

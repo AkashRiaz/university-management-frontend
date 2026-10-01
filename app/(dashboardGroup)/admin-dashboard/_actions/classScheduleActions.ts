@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateClassScheduleZodSchema } from "@/components/validations/class-schedule.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -101,6 +102,8 @@ export const createClassScheduleAction = async (
       };
     }
 
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: `${validation.data.dayOfWeek.length} class schedule${validation.data.dayOfWeek.length === 1 ? "" : "s"} created successfully`,
@@ -179,6 +182,8 @@ export const updateClassScheduleAction = async (
       };
     }
 
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: result.message || "Class schedule updated successfully",
@@ -240,6 +245,8 @@ export const deleteClassScheduleAction = async (
       };
     }
 
+    revalidateTag("class-schedules", { expire: 0 });
+
     return {
       success: true,
       message: result?.message || "Class schedule deleted successfully",
@@ -283,7 +290,11 @@ export const getAllClassSchedulesAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: {
+          revalidate: 60 * 60,
+          tags: ["class-schedules"],
+        },
       },
     );
     const result = await response.json();

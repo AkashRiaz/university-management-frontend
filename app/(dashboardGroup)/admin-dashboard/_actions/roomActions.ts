@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateRoomZodSchema } from "@/components/validations/room.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -43,6 +44,7 @@ export const createRoomAction = async (
   _previousState: RoomActionState | null,
   formData: FormData,
 ): Promise<RoomActionState> => {
+  revalidateTag("rooms", { expire: 0 });
   const validation = CreateRoomZodSchema.safeParse(getRoomPayload(formData));
 
   if (!validation.success) {
@@ -103,6 +105,7 @@ export const updateRoomAction = async (
   _previousState: RoomActionState | null,
   formData: FormData,
 ): Promise<RoomActionState> => {
+  revalidateTag("rooms", { expire: 0 });
   const roomId = formData.get("id");
   const validation = CreateRoomZodSchema.safeParse(getRoomPayload(formData));
 
@@ -180,6 +183,7 @@ export type RoomDeleteState = {
 export const deleteRoomAction = async (
   roomId: string,
 ): Promise<RoomDeleteState> => {
+  revalidateTag("rooms", { expire: 0 });
   if (!roomId) {
     return {
       success: false,
@@ -260,7 +264,8 @@ export const getAllRoomsAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["rooms"] },
       },
     );
     const result = await response.json();

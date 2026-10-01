@@ -56,8 +56,10 @@ export const getNewAccessToken = async (): Promise<RefreshTokenResponse> => {
 
 export const isAccessTokenExist = async (): Promise<string | null> => {
   const cookieStore = await cookies();
-  let accessToken = cookieStore.get("accessToken")?.value || null;
-  const refreshToken = cookieStore.get("refreshToken")?.value || null;
+  let accessToken: string | null =
+    cookieStore.get("accessToken")?.value || null;
+  const refreshToken: string | null =
+    cookieStore.get("refreshToken")?.value || null;
 
   if (!accessToken && !refreshToken) {
     return null;

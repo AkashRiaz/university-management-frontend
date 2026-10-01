@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateInstructorZodSchema } from "@/components/validations/instructor.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -40,6 +41,7 @@ export const createInstructorAction = async (
   prevState: createInstructorState,
   formData: FormData,
 ) => {
+  revalidateTag("instructors", { expire: 0 });
   try {
     const accessToken = await isAccessTokenExist();
 
@@ -154,7 +156,8 @@ export const getAllInstructorsActionForAdmin = async ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["instructors"] },
       },
     );
 
