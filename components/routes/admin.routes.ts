@@ -9,6 +9,7 @@ import {
   DoorOpen,
   LayoutDashboard,
   ListTree,
+  ClipboardList,
   User,
   Users,
 } from "lucide-react";
@@ -58,6 +59,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Rooms",
         href: `${prefix}/rooms`,
         icon: DoorOpen,
+      },
+      {
+        label: "Sections",
+        href: `${prefix}/sections`,
+        icon: ClipboardList,
       },
       {
         label: "Faculties",
