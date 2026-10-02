@@ -56,4 +56,17 @@ export const CreateInstructorZodSchema = z.object({
   departmentId: z.uuid("Invalid department ID"),
 });
 
+export const UpdateInstructorAdminZodSchema = z.object({
+  name: z.string().min(2).max(100).optional(),
+
+  designation: z.enum(InstructorDesignation).optional(),
+
+  joiningDate: z.coerce.date().optional(),
+
+  departmentId: z.uuid().optional(),
+
+  status: z.enum(["ACTIVE", "INACTIVE", "SUSPENDED", "PENDING"]).optional(),
+});
+
 export type createInstructorInput = z.input<typeof CreateInstructorZodSchema>;
+export type updateInstructorAdminInput = z.input<typeof UpdateInstructorAdminZodSchema>;

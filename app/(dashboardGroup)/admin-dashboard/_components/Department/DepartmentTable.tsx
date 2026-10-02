@@ -7,6 +7,7 @@ import FacultyDescriptionCell from "../Faculty/FacultyDescriptionCell";
 import { getAllDepartmentsAction } from "../../_actions/departmentActions";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { SearchBar } from "@/components/ui/SearchBar";
+import DepartmentDelete from "./DepartmentDelete";
 import {
   Table,
   TableBody,
@@ -150,9 +151,18 @@ const DepartmentTable = async ({ searchParams }: DepartmentTableProps) => {
                   </TableCell>
                   <TableCell>{department.faculty?.name || "-"}</TableCell>
                   <TableCell className="text-right">
-                    <button className="rounded-md border px-3 py-1.5 text-sm font-medium transition">
-                      View
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/admin-dashboard/departments/${department.id}`}
+                        className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-muted"
+                      >
+                        Edit
+                      </Link>
+                      <DepartmentDelete
+                        departmentId={department.id}
+                        departmentName={department.name}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

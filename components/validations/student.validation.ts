@@ -31,4 +31,36 @@ export const createStudentSchema = z.object({
     .optional(),
 });
 
+export const UpdateStudentAdminZodSchema = z.object({
+  name: z.string().trim().min(1, "Name cannot be empty").optional(),
+
+  email: z.email("Invalid email address").optional(),
+
+  departmentId: z
+    .string()
+    .trim()
+    .min(1, "Department ID cannot be empty")
+    .optional(),
+
+  programId: z.string().trim().min(1, "Program ID cannot be empty").optional(),
+
+  admissionDate: z.coerce.date().optional(),
+
+  admissionYear: z.coerce
+    .number()
+    .int("Admission year must be an integer")
+    .min(2000)
+    .max(new Date().getFullYear() + 1)
+    .optional(),
+
+  currentSemesterNumber: z.coerce.number().int().min(1).optional(),
+
+  status: z.enum(["ACTIVE", "INACTIVE", "GRADUATED", "SUSPENDED"]).optional(),
+
+  academicStatus: z
+    .enum(["GOOD_STANDING", "PROBATION", "SUSPENDED", "DISMISSED"])
+    .optional(),
+});
+
 export type createStudentInput = z.infer<typeof createStudentSchema>;
+export type updateStudentInput = z.input<typeof UpdateStudentAdminZodSchema>;

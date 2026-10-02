@@ -15,6 +15,9 @@ import { Mail, Phone } from "lucide-react";
 import { SearchBar } from "@/components/ui/SearchBar";
 import Link from "next/link";
 import { CustomPagination } from "@/components/ui/CustomPagination";
+import StudentDelete from "./StudentDelete";
+import StudentRestore from "./StudentRestore";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type StudentTableProps = {
   searchParams?: {
@@ -25,6 +28,34 @@ type StudentTableProps = {
 const StudentTable = async ({ searchParams }: StudentTableProps) => {
   const query = await searchParams;
   const result = await getAllStudentsActionForAdmin({ query });
+  const isDeleted = query?.isDeleted === "true";
+  const tabUrl = (deleted: boolean) => {
+    const params = new URLSearchParams();
+    const searchTerm = query?.searchTerm;
+
+    if (typeof searchTerm === "string" && searchTerm) {
+      params.set("searchTerm", searchTerm);
+    }
+
+    const sortBy = query?.sortBy;
+    const sortOrder = query?.sortOrder;
+
+    if (typeof sortBy === "string" && sortBy) {
+      params.set("sortBy", sortBy);
+    }
+
+    if (
+      typeof sortOrder === "string" &&
+      (sortOrder === "asc" || sortOrder === "desc")
+    ) {
+      params.set("sortOrder", sortOrder);
+    }
+
+    params.set("isDeleted", deleted ? "true" : "false");
+    params.set("page", "1");
+
+    return `/admin-dashboard/students?${params.toString()}`;
+  };
 
   const students = result?.data || [];
 
@@ -53,9 +84,13 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
-            Students
+            {isDeleted ? "Deleted Students" : "Students"}
           </h2>
-          <p className="text-sm">Manage all registered students</p>
+          <p className="text-sm">
+            {isDeleted
+              ? "View deleted student records"
+              : "Manage all registered students"}
+          </p>
         </div>
 
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-4 sm:w-auto sm:justify-end">
@@ -71,6 +106,19 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
             </Link>
           </div>
         </div>
+      </div>
+
+      <div className="mx-1 my-4 sm:mx-2 md:mx-0">
+        <Tabs>
+        <TabsList className="p-1 flex gap-2">
+          <TabsTrigger href={tabUrl(false)} active={!isDeleted}>
+            Active Students
+          </TabsTrigger>
+          <TabsTrigger href={tabUrl(true)} active={isDeleted}>
+            Deleted Students
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       </div>
 
       {/* Responsive Table */}
@@ -165,9 +213,25 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
 
                   {/* Action */}
                   <TableCell className="text-right">
-                    <button className="rounded-md border px-3 py-1.5 text-sm font-medium  transition ">
-                      View
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/admin-dashboard/students/${student.id}`}
+                        className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-muted"
+                      >
+                        Edit
+                      </Link>
+                      {isDeleted ? (
+                        <StudentRestore
+                          studentId={student.id}
+                          studentName={name}
+                        />
+                      ) : (
+                        <StudentDelete
+                          studentId={student.id}
+                          studentName={name}
+                        />
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               );

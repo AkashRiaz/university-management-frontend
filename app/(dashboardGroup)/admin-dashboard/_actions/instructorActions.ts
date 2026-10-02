@@ -1,15 +1,25 @@
 "use server";
-import { revalidateTag } from "next/cache";
 
-import { CreateInstructorZodSchema } from "@/components/validations/instructor.validation";
+import {
+  CreateInstructorZodSchema,
+  UpdateInstructorAdminZodSchema,
+} from "@/components/validations/instructor.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
 import { IInstructor } from "@/types/instructor.type";
+import { revalidateTag } from "next/cache";
 
 export type createInstructorState = {
   success: boolean;
   message: string;
   statusCode?: number;
   data?: Record<string, unknown> | null;
+};
+
+export type InstructorActionState = {
+  success: boolean;
+  message: string;
+  statusCode?: number;
+  data?: IInstructor | null;
 };
 
 type InstructorQuery = {
@@ -110,6 +120,206 @@ export const createInstructorAction = async (
       message: "An error occurred while creating the instructor",
       statusCode: 500,
       data: null,
+    };
+  }
+};
+
+export const getInstructorByIdAction = async (
+  instructorId: string,
+): Promise<InstructorActionState> => {
+  try {
+    const accessToken = await isAccessTokenExist();
+
+    if (!accessToken) {
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+        data: null,
+      };
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/instructors/${instructorId}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        cache: "no-store",
+      },
+    );
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || !result?.success) {
+      return {
+        success: false,
+        message: result?.message || "Failed to fetch instructor",
+        statusCode: response.status,
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: "Instructor fetched successfully",
+      statusCode: response.status,
+      data: result.data || null,
+    };
+  } catch (error) {
+    console.error("Error fetching instructor:", error);
+    return {
+      success: false,
+      message: "An error occurred while fetching the instructor",
+      statusCode: 500,
+      data: null,
+    };
+  }
+};
+
+export const updateInstructorAdminAction = async (
+  _previousState: InstructorActionState | null,
+  formData: FormData,
+): Promise<InstructorActionState> => {
+  revalidateTag("instructors", { expire: 0 });
+  const instructorId = formData.get("id");
+
+  if (!instructorId || typeof instructorId !== "string") {
+    return {
+      success: false,
+      message: "Instructor ID is required to update an instructor",
+      statusCode: 400,
+      data: null,
+    };
+  }
+
+  const payload = {
+    name: formData.get("name") || undefined,
+    designation: formData.get("designation") || undefined,
+    joiningDate: formData.get("joiningDate") || undefined,
+    departmentId: formData.get("departmentId") || undefined,
+    status: formData.get("status") || undefined,
+  };
+  const validation = UpdateInstructorAdminZodSchema.safeParse(payload);
+
+  if (!validation.success) {
+    return {
+      success: false,
+      message:
+        validation.error.issues[0]?.message || "Invalid instructor information",
+      statusCode: 400,
+      data: null,
+    };
+  }
+
+  try {
+    const accessToken = await isAccessTokenExist();
+
+    if (!accessToken) {
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+        data: null,
+      };
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/instructors/${instructorId}/admin`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(validation.data),
+        cache: "no-store",
+      },
+    );
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || !result?.success) {
+      return {
+        success: false,
+        message: result?.message || "Failed to update instructor",
+        statusCode: response.status,
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message || "Instructor updated successfully",
+      statusCode: response.status,
+      data: result.data || null,
+    };
+  } catch (error) {
+    console.error("Error updating instructor:", error);
+    return {
+      success: false,
+      message: "An error occurred while updating the instructor",
+      statusCode: 500,
+      data: null,
+    };
+  }
+};
+
+export type InstructorDeleteState = {
+  success: boolean;
+  message: string;
+  statusCode?: number;
+};
+
+export const deleteInstructorAction = async (
+  instructorId: string,
+): Promise<InstructorDeleteState> => {
+  revalidateTag("instructors", { expire: 0 });
+  if (!instructorId) {
+    return {
+      success: false,
+      message: "Instructor ID is required to delete an instructor",
+      statusCode: 400,
+    };
+  }
+
+  try {
+    const accessToken = await isAccessTokenExist();
+
+    if (!accessToken) {
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+      };
+    }
+
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/instructors/${instructorId}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        cache: "no-store",
+      },
+    );
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || result?.success === false) {
+      return {
+        success: false,
+        message: result?.message || "Failed to delete instructor",
+        statusCode: response.status,
+      };
+    }
+
+    return {
+      success: true,
+      message: result?.message || "Instructor deleted successfully",
+      statusCode: response.status,
+    };
+  } catch (error) {
+    console.error("Error deleting instructor:", error);
+    return {
+      success: false,
+      message: "An error occurred while deleting the instructor",
+      statusCode: 500,
     };
   }
 };

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table";
 import { getAllProgramsAction } from "../../_actions/programActions";
 import Link from "next/link";
+import ProgramDelete from "./ProgramDelete";
 
 type ProgramTableProps = {
   searchParams?: {
@@ -154,9 +155,18 @@ const ProgramTable = async ({ searchParams }: ProgramTableProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <button className="rounded-md border px-3 py-1.5 text-sm font-medium transition">
-                      View
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/admin-dashboard/programs/${program.id}`}
+                        className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-muted"
+                      >
+                        Edit
+                      </Link>
+                      <ProgramDelete
+                        programId={program.id}
+                        programName={program.name || "this program"}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
