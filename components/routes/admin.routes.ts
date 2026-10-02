@@ -16,6 +16,7 @@ import {
   User,
   Users,
   WalletCards,
+  ReceiptText,
 } from "lucide-react";
 
 const prefix = "/admin-dashboard";
@@ -98,6 +99,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Fee Structures",
         href: `${prefix}/fee-structures`,
         icon: WalletCards,
+      },
+      {
+        label: "Invoices",
+        href: `${prefix}/invoices`,
+        icon: ReceiptText,
       },
       {
         label: "Scholarships",
