@@ -62,5 +62,15 @@ export const UpdateStudentAdminZodSchema = z.object({
     .optional(),
 });
 
+export const UpdateStudentSelfZodSchema = z.object({
+  name: z.string().trim().min(1, "Name cannot be empty").optional(),
+  dateOfBirth: z.coerce.date().optional(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
+  phone: z.string().trim().optional(),
+  address: z.string().trim().optional(),
+  emergencyContactName: z.string().trim().optional(),
+  emergencyContactPhone: z.string().trim().optional(),
+});
+
 export type createStudentInput = z.infer<typeof createStudentSchema>;
 export type updateStudentInput = z.input<typeof UpdateStudentAdminZodSchema>;

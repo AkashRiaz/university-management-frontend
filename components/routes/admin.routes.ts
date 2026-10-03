@@ -17,6 +17,7 @@ import {
   Users,
   WalletCards,
   ReceiptText,
+  ClipboardCheck,
 } from "lucide-react";
 
 const prefix = "/admin-dashboard";
@@ -104,6 +105,11 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Invoices",
         href: `${prefix}/invoices`,
         icon: ReceiptText,
+      },
+      {
+        label: "Registrations",
+        href: `${prefix}/registrations`,
+        icon: ClipboardCheck,
       },
       {
         label: "Scholarships",

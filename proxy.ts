@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./utils/jwt";
 import { JwtPayload } from "jsonwebtoken";
 
-const AUTH_ROUTES = ["/login", "/reset-password"];
+const AUTH_ROUTES = ["/login", "/reset-password", "/verify-student"];
 
 const PUBLIC_ROUTES = ["/"];
 

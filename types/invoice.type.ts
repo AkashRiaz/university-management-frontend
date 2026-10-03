@@ -10,7 +10,10 @@ export type IInvoice = {
   discount?: number | null;
   tax?: number | null;
   subtotal?: number | null;
+  total?: number | string | null;
   totalAmount?: number | null;
+  dueAmount?: number | string | null;
+  paidAmount?: number | string | null;
   status?: string | null;
   student?: Student | null;
   semester?: ISemester | null;

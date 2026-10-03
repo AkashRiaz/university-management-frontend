@@ -168,15 +168,17 @@ const ProgramCourseForm = ({
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select program">
-                      {selectedProgram?.name ||
-                        selectedProgram?.code ||
-                        "Select program"}
+                      {selectedProgram
+                        ? `${selectedProgram.name || selectedProgram.code || selectedProgram.id}${selectedProgram.department?.code ? ` (${selectedProgram.department.code})` : ""}`
+                        : "Select program"}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {programs.map((program) => (
                       <SelectItem key={program.id} value={program.id}>
-                        {program.name || program.code || program.id}
+                        {program.department?.code
+                          ? `${program.name || program.code || program.id} (${program.department.code})`
+                          : program.name || program.code || program.id}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -210,14 +212,16 @@ const ProgramCourseForm = ({
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select course">
                       {selectedCourse
-                        ? `${selectedCourse.code} - ${selectedCourse.title}`
+                        ? `${selectedCourse.code} - ${selectedCourse.title}${selectedCourse.department?.code ? ` (${selectedCourse.department.code})` : ""}`
                         : "Select course"}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {courses.map((course) => (
                       <SelectItem key={course.id} value={course.id}>
-                        {course.code} - {course.title}
+                        {course.department?.code
+                          ? `${course.code} - ${course.title} (${course.department.code})`
+                          : `${course.code} - ${course.title}`}
                       </SelectItem>
                     ))}
                   </SelectContent>

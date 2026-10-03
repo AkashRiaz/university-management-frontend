@@ -293,7 +293,7 @@ const SectionForm = ({
                       }
                     >
                       {selectedCourse
-                        ? `${selectedCourse.code} - ${selectedCourse.title}`
+                        ? `${selectedCourse.code} - ${selectedCourse.title}${selectedCourse.department?.code ? ` (${selectedCourse.department.code})` : ""}`
                         : !selectedDepartmentId
                           ? "Select department first"
                           : availableCourses.length === 0
@@ -304,7 +304,9 @@ const SectionForm = ({
                   <SelectContent>
                     {availableCourses.map((course) => (
                       <SelectItem key={course.id} value={course.id}>
-                        {course.code} - {course.title}
+                        {course.department?.code
+                          ? `${course.code} - ${course.title} (${course.department.code})`
+                          : `${course.code} - ${course.title}`}
                       </SelectItem>
                     ))}
                   </SelectContent>
