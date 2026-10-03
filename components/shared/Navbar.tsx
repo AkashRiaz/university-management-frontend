@@ -254,15 +254,37 @@ export function Navbar({ user }: NavbarProps) {
                         <SheetClose>
                           <Button
                             render={<Link href="/login" />}
+                            nativeButton={false}
                             className="w-full rounded-xl font-semibold"
                           >
                             Portal Login
+                          </Button>
+                        </SheetClose>
+                        <SheetClose>
+                          <Button
+                            render={<Link href="/verify-student" />}
+                            nativeButton={false}
+                            variant="outline"
+                            className="w-full rounded-xl font-semibold"
+                          >
+                            Verify Student
+                          </Button>
+                        </SheetClose>
+                        <SheetClose>
+                          <Button
+                            render={<Link href="/verify-instructor" />}
+                            nativeButton={false}
+                            variant="outline"
+                            className="w-full rounded-xl font-semibold"
+                          >
+                            Verify Instructor
                           </Button>
                         </SheetClose>
 
                         <SheetClose>
                           <Button
                             render={<Link href="/admissions" />}
+                            nativeButton={false}
                             variant="outline"
                             className="w-full rounded-xl font-semibold"
                           >
@@ -399,13 +421,46 @@ export function Navbar({ user }: NavbarProps) {
 
             {/* Portal Login / User Menu */}
             {!user?.success ? (
-              <Button
-                render={<Link href="/login" />}
-                size="sm"
-                className="rounded-full px-5 font-semibold shadow-sm transition-all hover:shadow"
-              >
-                Portal Login
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  render={<Link href="/login" />}
+                  nativeButton={false}
+                  size="sm"
+                  className="rounded-full px-5 font-semibold shadow-sm transition-all hover:shadow"
+                >
+                  Portal Login
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={(props, state) => (
+                      <button
+                        {...props}
+                        type="button"
+                        aria-label="Open verification menu"
+                        className={`flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 transition hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                          state.open ? "ring-2 ring-primary" : ""
+                        }`}
+                      >
+                        <User className="h-5 w-5 text-primary" />
+                      </button>
+                    )}
+                  />
+                  <DropdownMenuContent align="end" sideOffset={10} className="w-52 rounded-xl p-2">
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Account verification</DropdownMenuLabel>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem render={<Link href="/verify-student" />} className="cursor-pointer rounded-lg">
+                      <GraduationCap className="mr-2.5 h-4 w-4" />
+                      Verify Student
+                    </DropdownMenuItem>
+                    <DropdownMenuItem render={<Link href="/verify-instructor" />} className="cursor-pointer rounded-lg">
+                      <User className="mr-2.5 h-4 w-4" />
+                      Verify Instructor
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger

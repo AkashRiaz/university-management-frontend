@@ -11,16 +11,18 @@ export type RefreshTokenResponse = {
   };
 };
 
+const isJwt = (value: string) =>
+  /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(value);
+
 export const getNewAccessToken = async (): Promise<RefreshTokenResponse> => {
   try {
     const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refreshToken")?.value;
+    const refreshToken = cookieStore
+      .get("refreshToken")
+      ?.value.replace(/^Bearer\s+/i, "");
 
-    if (!refreshToken) {
-      return {
-        success: false,
-        message: "Refresh token not found",
-      };
+    if (!refreshToken || !isJwt(refreshToken)) {
+      return { success: false, message: "Refresh token is invalid" };
     }
 
     const response = await fetch(
@@ -29,22 +31,44 @@ export const getNewAccessToken = async (): Promise<RefreshTokenResponse> => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${refreshToken}`,
+          Cookie: `refreshToken=${refreshToken}`,
         },
         cache: "no-store",
       },
     );
+    const result = await response.json().catch(() => null);
 
-    const result = await response.json();
-
-    if (!response.ok) {
+    if (!response.ok || !result?.success) {
       return {
         success: false,
-        message: result.message || "Failed to refresh access token",
+        message: result?.message || "Failed to refresh access token",
       };
     }
 
-    return result;
+    const accessToken = result?.data?.accessToken;
+    const newRefreshToken = result?.data?.refreshToken;
+    if (typeof accessToken !== "string" || !isJwt(accessToken)) {
+      return {
+        success: false,
+        message: "Refresh endpoint returned an invalid access token",
+      };
+    }
+
+    if (typeof newRefreshToken === "string" && isJwt(newRefreshToken)) {
+      cookieStore.set("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+      });
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      data: { accessToken },
+    };
   } catch (error) {
     console.error("Error refreshing access token:", error);
     return {
@@ -56,30 +80,30 @@ export const getNewAccessToken = async (): Promise<RefreshTokenResponse> => {
 
 export const isAccessTokenExist = async (): Promise<string | null> => {
   const cookieStore = await cookies();
-  let accessToken: string | null =
-    cookieStore.get("accessToken")?.value || null;
-  const refreshToken: string | null =
-    cookieStore.get("refreshToken")?.value || null;
+  let accessToken =
+    cookieStore.get("accessToken")?.value.replace(/^Bearer\s+/i, "") || null;
+  const refreshToken =
+    cookieStore.get("refreshToken")?.value.replace(/^Bearer\s+/i, "") || null;
 
-  if (!accessToken && !refreshToken) {
-    return null;
-  }
+  if (!accessToken && !refreshToken) return null;
 
-  const decodedAccessToken = accessToken
-    ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string)
-    : null;
+  const decodedAccessToken =
+    accessToken && isJwt(accessToken)
+      ? jwtUtils.verifyToken(
+          accessToken,
+          process.env.JWT_ACCESS_SECRET as string,
+        )
+      : null;
 
-  // Current access token is valid.
-  if (decodedAccessToken?.success) {
-    return accessToken;
-  }
+  if (decodedAccessToken?.success) return accessToken;
 
-  const decodedRefreshToken = refreshToken
-    ? jwtUtils.verifyToken(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET as string,
-      )
-    : null;
+  const decodedRefreshToken =
+    refreshToken && isJwt(refreshToken)
+      ? jwtUtils.verifyToken(
+          refreshToken,
+          process.env.JWT_REFRESH_SECRET as string,
+        )
+      : null;
 
   if (!decodedRefreshToken?.success) {
     cookieStore.delete("accessToken");
@@ -87,15 +111,12 @@ export const isAccessTokenExist = async (): Promise<string | null> => {
     return null;
   }
 
-  // Refresh token is valid, request a new access token.
   const result = await getNewAccessToken();
+  const newAccessToken = result.data?.accessToken;
 
-  const newAccessToken = result?.data?.accessToken;
-
-  if (!result?.success || !newAccessToken) {
+  if (!result.success || !newAccessToken) {
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
-
     return null;
   }
 
@@ -108,6 +129,5 @@ export const isAccessTokenExist = async (): Promise<string | null> => {
   });
 
   accessToken = newAccessToken;
-
   return accessToken;
 };

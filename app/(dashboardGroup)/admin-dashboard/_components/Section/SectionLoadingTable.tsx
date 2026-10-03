@@ -24,7 +24,7 @@ const SectionLoadingTable = () => (
       </div>
     </div>
     <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
-      <Table className="min-w-[980px]">
+      <Table className="min-w-245">
         <TableHeader>
           <TableRow className="bg-gray-50 hover:bg-gray-50">
             {[
@@ -36,6 +36,7 @@ const SectionLoadingTable = () => (
               "Room",
               "Capacity",
               "Status",
+              "Instructors",
               "Action",
             ].map((heading) => (
               <TableHead key={heading} className="font-semibold text-gray-700">
@@ -47,7 +48,7 @@ const SectionLoadingTable = () => (
         <TableBody>
           {Array.from({ length: 8 }).map((_, index) => (
             <TableRow key={index}>
-              {Array.from({ length: 9 }).map((__, cellIndex) => (
+              {Array.from({ length: 10 }).map((__, cellIndex) => (
                 <TableCell key={cellIndex}>
                   <Skeleton className="h-4 w-24" />
                 </TableCell>

@@ -17,27 +17,42 @@ import { getAllDepartmentsAction } from "../../_actions/departmentActions";
 import { getAllRoomsAction } from "../../_actions/roomActions";
 import { getAllSectionsAction } from "../../_actions/sectionActions";
 import { getAllSemestersAction } from "../../_actions/semesterActions";
+import { getAllSectionInstructorsAction } from "../../_actions/sectionInstructorActions";
+import { getAllInstructorsActionForAdmin } from "../../_actions/instructorActions";
 import SectionCreate from "./SectionCreate";
 import SectionDelete from "./SectionDelete";
+import SectionInstructorTable from "../SectionInstructor/SectionInstructorTable";
 
 type SectionTableProps = {
   searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 const SectionTable = async ({ searchParams }: SectionTableProps) => {
-  const [result, departmentResult, courseResult, semesterResult, roomResult] =
+  const [
+    result,
+    departmentResult,
+    courseResult,
+    semesterResult,
+    roomResult,
+    sectionInstructorResult,
+    instructorResult,
+  ] =
     await Promise.all([
       getAllSectionsAction({ query: searchParams }),
       getAllDepartmentsAction({ query: { limit: "100" } }),
       getAllCoursesAction({ query: { limit: "100" } }),
       getAllSemestersAction({ query: { limit: "100" } }),
       getAllRoomsAction({ query: { limit: "100" } }),
+      getAllSectionInstructorsAction(),
+      getAllInstructorsActionForAdmin({ query: { limit: "100" } }),
     ]);
   const sections = result.data || [];
   const departments = departmentResult.data || [];
   const courses = courseResult.data || [];
   const semesters = semesterResult.data || [];
   const rooms = roomResult.data || [];
+  const sectionInstructors = sectionInstructorResult.data || [];
+  const instructors = instructorResult?.data || [];
   const currentPage = Math.max(1, Number(result.meta?.page ?? 1));
   const limit = Math.max(1, Number(result.meta?.limit ?? 10));
   const totalPages = Math.max(1, Number(result.meta?.totalPages ?? 1));
@@ -75,7 +90,7 @@ const SectionTable = async ({ searchParams }: SectionTableProps) => {
       </div>
 
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
-        <Table className="min-w-[980px]">
+        <Table className="min-w-245">
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
               <TableHead className="w-15 font-semibold text-gray-700">
@@ -102,6 +117,9 @@ const SectionTable = async ({ searchParams }: SectionTableProps) => {
               <TableHead className="font-semibold text-gray-700">
                 Status
               </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                Instructors
+              </TableHead>
               <TableHead className="text-right font-semibold text-gray-700">
                 Action
               </TableHead>
@@ -111,7 +129,7 @@ const SectionTable = async ({ searchParams }: SectionTableProps) => {
             {sections.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={9}
+                  colSpan={10}
                   className="h-24 text-center text-muted-foreground"
                 >
                   No sections found.
@@ -154,6 +172,14 @@ const SectionTable = async ({ searchParams }: SectionTableProps) => {
                     >
                       {section.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <SectionInstructorTable
+                      sectionId={section.id}
+                      sectionName={section.name}
+                      assignments={sectionInstructors}
+                      instructors={instructors}
+                    />
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

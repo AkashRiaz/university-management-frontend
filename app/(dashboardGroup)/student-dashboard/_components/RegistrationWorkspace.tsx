@@ -13,8 +13,8 @@ import {
   dropCourseRegistrationAction,
   getAvailableCoursesAction,
   getCourseRegistrationsAction,
-} from "../../_actions/courseRegistrationActions";
-import { createRegistrationAction, submitRegistrationAction } from "../../_actions/registrationActions";
+} from "../_actions/courseRegistrationActions";
+import { createRegistrationAction, submitRegistrationAction } from "../_actions/registrationActions";
 import { createBkashPaymentAction } from "../_actions/paymentActions";
 
 type AvailableData = {

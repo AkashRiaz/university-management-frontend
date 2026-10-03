@@ -1,11 +1,11 @@
 import { ISidebarGroup } from "@/lib/type";
-import { LayoutDashboard } from "lucide-react";
+import { BookOpen, CalendarCheck, LayoutDashboard, UserRound } from "lucide-react";
 
 const prefix = "/instructor-dashboard";
 
 export const instructorRoutes: ISidebarGroup[] = [
   {
-    title: "Instructor Management",
+    title: "Instructor Dashboard",
     items: [
       {
         label: "Overview",
@@ -13,24 +13,24 @@ export const instructorRoutes: ISidebarGroup[] = [
         icon: LayoutDashboard,
       },
       {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
+        label: "My Sections",
+        href: `${prefix}/sections`,
+        icon: BookOpen,
       },
     ],
   },
   {
-    title: "Management",
+    title: "Teaching",
     items: [
       {
-        label: "Overview",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
+        label: "Attendance",
+        href: `${prefix}/attendance`,
+        icon: CalendarCheck,
       },
       {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
+        label: "My Profile",
+        href: `${prefix}/profile`,
+        icon: UserRound,
       },
     ],
   },
