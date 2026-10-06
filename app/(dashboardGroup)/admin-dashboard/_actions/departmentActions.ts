@@ -10,7 +10,12 @@ export type DepartmentResponse = {
   message: string;
   statusCode?: number;
   data?: IDepartment[] | null;
-  meta?: { page: number; limit: number; total: number; totalPages: number } | null;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  } | null;
 };
 
 export type DepartmentActionState = {
@@ -50,7 +55,8 @@ const saveDepartment = async (
   if (!validation.success) {
     return {
       success: false,
-      message: validation.error.issues[0]?.message || "Invalid department information",
+      message:
+        validation.error.issues[0]?.message || "Invalid department information",
       statusCode: 400,
       data: null,
     };
@@ -59,7 +65,12 @@ const saveDepartment = async (
   try {
     const accessToken = await isAccessTokenExist();
     if (!accessToken) {
-      return { success: false, message: "Access token not found", statusCode: 401, data: null };
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+        data: null,
+      };
     }
 
     const endpoint =
@@ -80,7 +91,9 @@ const saveDepartment = async (
     if (!response.ok || !result?.success) {
       return {
         success: false,
-        message: result?.message || `Failed to ${method === "POST" ? "create" : "update"} department`,
+        message:
+          result?.message ||
+          `Failed to ${method === "POST" ? "create" : "update"} department`,
         statusCode: response.status,
         data: null,
       };
@@ -88,13 +101,23 @@ const saveDepartment = async (
 
     return {
       success: true,
-      message: result.message || `Department ${method === "POST" ? "created" : "updated"} successfully`,
+      message:
+        result.message ||
+        `Department ${method === "POST" ? "created" : "updated"} successfully`,
       statusCode: response.status,
       data: result.data || null,
     };
   } catch (error) {
-    console.error(`Error ${method === "POST" ? "creating" : "updating"} department:`, error);
-    return { success: false, message: "Something went wrong. Please try again.", statusCode: 500, data: null };
+    console.error(
+      `Error ${method === "POST" ? "creating" : "updating"} department:`,
+      error,
+    );
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+      statusCode: 500,
+      data: null,
+    };
   }
 };
 
@@ -111,23 +134,53 @@ export const updateDepartmentAction = async (
 export const getDepartmentByIdAction = async (
   departmentId: string,
 ): Promise<DepartmentActionState> => {
-  if (!departmentId) return { success: false, message: "Department ID is required", statusCode: 400, data: null };
+  if (!departmentId)
+    return {
+      success: false,
+      message: "Department ID is required",
+      statusCode: 400,
+      data: null,
+    };
 
   try {
     const accessToken = await isAccessTokenExist();
-    if (!accessToken) return { success: false, message: "Access token not found", statusCode: 401, data: null };
-    const response = await fetch(`${process.env.BACKEND_API_URL}/departments/${departmentId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      cache: "no-store",
-    });
+    if (!accessToken)
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+        data: null,
+      };
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/departments/${departmentId}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        cache: "no-store",
+      },
+    );
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.success) {
-      return { success: false, message: result?.message || "Failed to fetch department", statusCode: response.status, data: null };
+      return {
+        success: false,
+        message: result?.message || "Failed to fetch department",
+        statusCode: response.status,
+        data: null,
+      };
     }
-    return { success: true, message: "Department fetched successfully", statusCode: response.status, data: result.data || null };
+    return {
+      success: true,
+      message: "Department fetched successfully",
+      statusCode: response.status,
+      data: result.data || null,
+    };
   } catch (error) {
     console.error("Error fetching department:", error);
-    return { success: false, message: "An error occurred while fetching the department", statusCode: 500, data: null };
+    return {
+      success: false,
+      message: "An error occurred while fetching the department",
+      statusCode: 500,
+      data: null,
+    };
   }
 };
 
@@ -141,24 +194,49 @@ export const deleteDepartmentAction = async (
   departmentId: string,
 ): Promise<DepartmentDeleteState> => {
   revalidateTag("departments", { expire: 0 });
-  if (!departmentId) return { success: false, message: "Department ID is required to delete a department", statusCode: 400 };
+  if (!departmentId)
+    return {
+      success: false,
+      message: "Department ID is required to delete a department",
+      statusCode: 400,
+    };
 
   try {
     const accessToken = await isAccessTokenExist();
-    if (!accessToken) return { success: false, message: "Access token not found", statusCode: 401 };
-    const response = await fetch(`${process.env.BACKEND_API_URL}/departments/${departmentId}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${accessToken}` },
-      cache: "no-store",
-    });
+    if (!accessToken)
+      return {
+        success: false,
+        message: "Access token not found",
+        statusCode: 401,
+      };
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/departments/${departmentId}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        cache: "no-store",
+      },
+    );
     const result = await response.json().catch(() => null);
     if (!response.ok || result?.success === false) {
-      return { success: false, message: result?.message || "Failed to delete department", statusCode: response.status };
+      return {
+        success: false,
+        message: result?.message || "Failed to delete department",
+        statusCode: response.status,
+      };
     }
-    return { success: true, message: result?.message || "Department deleted successfully", statusCode: response.status };
+    return {
+      success: true,
+      message: result?.message || "Department deleted successfully",
+      statusCode: response.status,
+    };
   } catch (error) {
     console.error("Error deleting department:", error);
-    return { success: false, message: "Something went wrong while deleting the department.", statusCode: 500 };
+    return {
+      success: false,
+      message: "Something went wrong while deleting the department.",
+      statusCode: 500,
+    };
   }
 };
 
@@ -174,21 +252,40 @@ export const getAllDepartmentsAction = async ({
   if (limit) params.set("limit", limit);
 
   try {
-    const accessToken = await isAccessTokenExist();
-    if (!accessToken) return { success: false, message: "Access token not found", statusCode: 401, data: null };
     const queryString = params.toString();
-    const response = await fetch(`${process.env.BACKEND_API_URL}/departments${queryString ? `?${queryString}` : ""}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      cache: "force-cache",
-      next: { revalidate: 60 * 60, tags: ["departments"] },
-    });
+    const response = await fetch(
+      `${process.env.BACKEND_API_URL}/departments${queryString ? `?${queryString}` : ""}`,
+      {
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["departments"] },
+      },
+    );
     const result = await response.json();
-    if (!response.ok || !result?.success) return { success: false, message: result?.message || "Failed to fetch departments", statusCode: response.status, data: null };
+    if (!response.ok || !result?.success)
+      return {
+        success: false,
+        message: result?.message || "Failed to fetch departments",
+        statusCode: response.status,
+        data: null,
+      };
     const responseData = result.data;
-    const departments = Array.isArray(responseData) ? responseData : responseData?.data;
-    return { success: true, message: "Departments fetched successfully", statusCode: response.status, data: departments || null, meta: result?.meta || responseData?.meta || null };
+    const departments = Array.isArray(responseData)
+      ? responseData
+      : responseData?.data;
+    return {
+      success: true,
+      message: "Departments fetched successfully",
+      statusCode: response.status,
+      data: departments || null,
+      meta: result?.meta || responseData?.meta || null,
+    };
   } catch (error) {
     console.error("Error fetching departments:", error);
-    return { success: false, message: "An error occurred while fetching departments", statusCode: 500, data: null };
+    return {
+      success: false,
+      message: "An error occurred while fetching departments",
+      statusCode: 500,
+      data: null,
+    };
   }
 };

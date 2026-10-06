@@ -2,9 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./utils/jwt";
 import { JwtPayload } from "jsonwebtoken";
 
-const AUTH_ROUTES = ["/login", "/reset-password", "/verify-student", "/verify-instructor"];
+const AUTH_ROUTES = [
+  "/login",
+  "/reset-password",
+  "/verify-student",
+  "/verify-instructor",
+];
 
-const PUBLIC_ROUTES = ["/"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/academics",
+  "/departments",
+  "/courses",
+  "/programs",
+  "/campus-life",
+  "/about",
+  "/admissions",
+  "/research",
+  "/semesters",
+];
 
 type RefreshTokenResponse = {
   success?: boolean;
@@ -174,12 +190,12 @@ export async function proxy(request: NextRequest) {
 
   let userRole: string | null = null;
 
-//   console.log("Decoded access token:", decodedAccessToken);
+  //   console.log("Decoded access token:", decodedAccessToken);
 
   if (decodedAccessToken?.success && decodedAccessToken.data) {
     userRole = (decodedAccessToken.data as JwtPayload).role || null;
   }
-//   console.log("User role:", userRole);
+  //   console.log("User role:", userRole);
 
   const isPublicRoute = isMatchingRoute(pathname, PUBLIC_ROUTES);
 

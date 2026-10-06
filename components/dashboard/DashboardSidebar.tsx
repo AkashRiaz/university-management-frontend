@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { ISidebarGroup, NavbarProps } from "@/lib/type";
-import { Wrench } from "lucide-react";
+import { GraduationCap, Wrench } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { adminRoutes, instructorRoutes, studentRoutes } from "../routes";
@@ -73,12 +73,12 @@ export default function DashboardSidebar({ user }: NavbarProps) {
           className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-sidebar-accent"
         >
           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Wrench className="size-5" />
+            <GraduationCap size={24} />
           </div>
 
           <div className="min-w-0">
             <p className="truncate text-base font-bold text-sidebar-foreground">
-              My University
+              Apex University
             </p>
 
             <p className="truncate text-xs text-muted-foreground">

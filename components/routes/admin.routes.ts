@@ -118,19 +118,4 @@ export const adminRoutes: ISidebarGroup[] = [
       },
     ],
   },
-  {
-    title: "App Settings",
-    items: [
-      {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
-      },
-      {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
-      },
-    ],
-  },
 ];

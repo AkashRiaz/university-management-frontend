@@ -148,7 +148,7 @@ export function Navbar({ user }: NavbarProps) {
         router.push("/instructor-dashboard");
       } else if (role === "ADMIN") {
         router.push("/admin-dashboard");
-      }else if (role === "SUPER_ADMIN") {
+      } else if (role === "SUPER_ADMIN") {
         router.push("/admin-dashboard");
       } else {
         router.push("/dashboard");
@@ -157,7 +157,15 @@ export function Navbar({ user }: NavbarProps) {
     }
 
     if (action === "profile") {
-      router.push("/profile");
+      const role = user?.data?.role;
+
+      if (role === "STUDENT") {
+        router.push("/student-dashboard/profile");
+      } else if (role === "INSTRUCTOR") {
+        router.push("/instructor-dashboard/profile");
+      }
+
+      return;
     }
   };
 
@@ -445,16 +453,28 @@ export function Navbar({ user }: NavbarProps) {
                       </button>
                     )}
                   />
-                  <DropdownMenuContent align="end" sideOffset={10} className="w-52 rounded-xl p-2">
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={10}
+                    className="w-52 rounded-xl p-2"
+                  >
                     <DropdownMenuGroup>
-                      <DropdownMenuLabel>Account verification</DropdownMenuLabel>
+                      <DropdownMenuLabel>
+                        Account verification
+                      </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem render={<Link href="/verify-student" />} className="cursor-pointer rounded-lg">
+                    <DropdownMenuItem
+                      render={<Link href="/verify-student" />}
+                      className="cursor-pointer rounded-lg"
+                    >
                       <GraduationCap className="mr-2.5 h-4 w-4" />
                       Verify Student
                     </DropdownMenuItem>
-                    <DropdownMenuItem render={<Link href="/verify-instructor" />} className="cursor-pointer rounded-lg">
+                    <DropdownMenuItem
+                      render={<Link href="/verify-instructor" />}
+                      className="cursor-pointer rounded-lg"
+                    >
                       <User className="mr-2.5 h-4 w-4" />
                       Verify Instructor
                     </DropdownMenuItem>
