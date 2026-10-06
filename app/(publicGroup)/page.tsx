@@ -1,9 +1,24 @@
 import { Button } from "@/components/ui/button";
+import Hero from "./_components/HomePage/hero/Hero";
+import StatsSection from "./_components/HomePage/StatsSection";
+import FeaturesSection from "./_components/HomePage/FeaturesSection";
+import HowItWorks from "./_components/HomePage/HowItWorks";
+import RolesSection from "./_components/HomePage/RolesSection";
+import CTASection from "./_components/HomePage/CTASection";
+import StudentExperience from "./_components/HomePage/StudentExperience";
+import CampusPreview from "./_components/HomePage/campus/CampusPreview";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-background font-sans text-foreground">
-      <Button>This is test button for the public group</Button>
-    </div>
+     <main className="min-h-screen">
+      <Hero />
+      <StatsSection />
+      <FeaturesSection />
+      <HowItWorks />
+      <StudentExperience />
+      <RolesSection />
+      <CampusPreview />
+      <CTASection />
+    </main>
   );
 }
