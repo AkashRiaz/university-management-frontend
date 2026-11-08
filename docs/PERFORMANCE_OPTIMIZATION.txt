@@ -1,0 +1,707 @@
+===============================================================================
+             DASHBOARD PERFORMANCE & OPTIMIZATION REPORT
+       Apex University - University Management System (Frontend)
+===============================================================================
+
+Status : Optimization implemented. Bundle results are measured from real
+         production builds. Lighthouse, React Profiler and Core Web Vitals
+         values are recorded in the browser while logged in
+         (places marked [FILL IN]).
+
+
+-------------------------------------------------------------------------------
+1. PROJECT INFORMATION
+-------------------------------------------------------------------------------
+
+Project name        : Apex University - University Management System (Frontend)
+Live URL            : [FILL IN]
+GitHub repository   : https://github.com/AkashRiaz/university-management-frontend
+Framework           : Next.js 16.3.5 (App Router, Turbopack), React 19.2.8
+Styling / UI        : Tailwind CSS v4, shadcn/ui, Base UI, lucide-react
+Forms / validation  : @tanstack/react-form, react-hook-form, zod
+Feedback / dialogs  : sonner, sweetalert2
+Public 3D / motion  : three, @react-three/fiber, @react-three/drei, framer-motion
+Virtualization      : @tanstack/react-virtual (new)
+Dashboards in scope : Admin      (/admin-dashboard/*)
+                      Student    (/student-dashboard/*)
+                      Instructor (/instructor-dashboard/*)
+Baseline commit     : eb7f8f0
+
+
+Dashboard architecture - before and after
+-----------------------------------------
+
+* Dashboard layout
+    Before : Server Component, calls getMe().
+    After  : Unchanged.
+
+* Sidebar
+    Before : The whole sidebar was a Client Component. Menus and icons for
+             all 3 roles were sent to every user.
+    After  : Server Component. Only the current role's menu is sent. Only the
+             "active link" logic runs in the browser.
+
+* Admin tables
+    Before : Server Components, but the table building block (table.tsx) was
+             marked "use client", so every table was hydrated in the browser.
+    After  : The table building block is server-only. Tables arrive as plain
+             HTML.
+
+* Create / Edit dialogs
+    Before : The form, the form library and zod were loaded with the page.
+    After  : The form is lazy-loaded when the dialog opens (a skeleton is
+             shown while it loads).
+
+* Delete buttons
+    Before : sweetalert2 was loaded with every table page.
+    After  : sweetalert2 is loaded on the first click (preloaded on hover).
+
+* Search bar
+    Before : Debounced 500 ms, but the input lost focus after every search.
+    After  : Debounced 500 ms, focus bug fixed, low-priority update, skips
+             searches where the text did not change.
+
+
+-------------------------------------------------------------------------------
+2. HOW THE BASELINE WAS MEASURED
+-------------------------------------------------------------------------------
+
+Every measurement was taken BEFORE any optimization and again AFTER it,
+under the same conditions:
+
+  - A production build (npm run build). The development server was never
+    used for measuring.
+  - Same pages, same user role, same data.
+  - Bundle sizes come from the Next.js build report
+    (.next/diagnostics/route-bundle-stats.json) and the Turbopack bundle
+    analyzer (npx next experimental-analyze --output). Compressed (gzip)
+    sizes were measured from the real output files.
+  - Lighthouse: Mobile, Navigation mode, Performance category, default
+    throttling, 3 runs, median value reported.
+
+
+2.1 Pages measured (fixed test set)
+-----------------------------------
+
+  P1  /admin-dashboard                             Overview / stat cards
+  P2  /admin-dashboard/students                    Largest table (search, tabs, pagination)
+  P3  /admin-dashboard/invoices                    Second large table, heavy create form
+  P4  /student-dashboard/course-registration       Most interactive screen
+  P5  /instructor-dashboard/attendance/[sessionId] Attendance roster list
+  P6  /admin-dashboard/sections                    Heaviest dashboard page in the baseline
+
+
+2.2 Where the evidence is stored
+--------------------------------
+
+  docs/reports/bundle/before/                  baseline bundle snapshot + treemap
+  docs/reports/bundle/after/                   optimized bundle snapshot + treemap
+  docs/reports/bundle/build-after.txt          production build output
+  docs/reports/bundle/compare-before-vs-after.md   full table for all 58 routes
+  docs/reports/lighthouse/                     Lighthouse reports      [FILL IN]
+  docs/reports/profiler/                       React Profiler exports  [FILL IN]
+  docs/screenshots/                            screenshots             [FILL IN]
+
+
+-------------------------------------------------------------------------------
+3. INITIAL PERFORMANCE BOTTLENECKS AND WHAT HAPPENED TO EACH
+-------------------------------------------------------------------------------
+
+The candidates came from reading the code. Each one was then confirmed or
+rejected with the bundle analysis and testing.
+
+B1  Large tables rendered fully into the page
+    Problem  : No list could handle 1,000+ records; every row would be put
+               into the page at once.
+    Where    : Students table, AttendanceRoster.tsx
+    Result   : CONFIRMED -> FIXED (virtualization on 2 lists, section 6.2)
+
+B2  Heavy client component with broad state
+    Problem  : RegistrationWorkspace kept all state in one place, so every
+               small change re-rendered the whole workspace.
+    Where    : RegistrationWorkspace.tsx
+    Result   : CONFIRMED -> FIXED (split into 6 memoized parts, section 6.1)
+
+B3  Large forms bundled with the page
+    Problem  : Dialog forms, including zod (381 KB), were downloaded with
+               their table pages even when the dialog was never opened.
+    Where    : All *Create.tsx dialogs
+    Result   : CONFIRMED (biggest problem) -> FIXED for 16 dialogs
+               (section 6.4). Full-page forms remain (section 8).
+
+B4  sweetalert2 imported directly in 21 delete buttons
+    Problem  : 74 KB loaded on every table page, only needed after Delete.
+    Where    : All *Delete.tsx components
+    Result   : CONFIRMED -> FIXED (loaded on first click, section 6.4)
+
+B5  Unused / misused dependencies
+    Problem  : @tanstack/react-table and dotenv never used; "cn" package
+               suspected; two form libraries.
+    Where    : package.json
+    Result   : PARTLY CONFIRMED
+               - FIXED    : removed @tanstack/react-table and dotenv.
+               - REJECTED : "cn" is shadcn's own small replacement for
+                            clsx + tailwind-merge. Replacing it would save
+                            nothing, so it was kept.
+               - KEPT     : react-hook-form is only used on login/verify
+                            pages, not in the dashboard.
+
+B6  Sidebar re-renders on every navigation and ships as client code
+    Where    : DashboardSidebar.tsx
+    Result   : CONFIRMED -> FIXED (Server Component + memoized menu items,
+               sections 6.1 and 6.5)
+
+B7  Only one debounced input, and the search box loses focus
+    Where    : SearchBar.tsx, RegistrationWorkspace.tsx, AttendanceRoster.tsx
+    Result   : CONFIRMED -> FIXED / IMPROVED (4 debounced inputs, focus bug
+               fixed, section 6.3)
+
+B8  High-frequency events not throttled (scroll, screen-size check)
+    Where    : DashboardMainContent.tsx, use-mobile.ts
+    Result   : CONFIRMED -> IMPROVED (requestAnimationFrame + useRef for
+               scroll, useSyncExternalStore for screen size, section 6.3)
+
+B9  Heavy public-page libraries (three, framer-motion) leaking into the
+    dashboard
+    Where    : Home page components
+    Result   : REJECTED. The analyzer shows they are in NO dashboard page and
+               are already lazy-loaded on the home page. No change needed.
+
+N1  NEW FINDING: table.tsx marked "use client" without any interactivity
+    Problem  : All 38 tables were hydrated in the browser for no reason.
+    Result   : CONFIRMED -> FIXED (section 6.5)
+
+N2  NEW FINDING: search input lost focus after each debounced search
+    Problem  : The input was re-created (key={searchTerm}) after every
+               search, so the cursor jumped out while typing.
+    Result   : CONFIRMED (bug) -> FIXED (section 6.3)
+
+Summary: at least 3 bottlenecks were required. 9 were confirmed
+(B1-B4, B6-B8, N1, N2), 1 was partly confirmed (B5), 1 was rejected (B9).
+
+
+-------------------------------------------------------------------------------
+4. INITIAL METRICS (BASELINE / BEFORE)
+-------------------------------------------------------------------------------
+
+4.1 Lighthouse - BEFORE (Mobile, median of 3)
+---------------------------------------------
+
+  Page    Score    FCP      LCP      TBT      CLS      Speed Index
+  P1      [FILL IN]
+  P2      [FILL IN]
+  P3      [FILL IN]
+  P4      [FILL IN]
+  P5      [FILL IN]
+
+
+4.2 React Profiler - BEFORE
+---------------------------
+
+  Interaction                          Commits / slowest commit / observation
+  P2 search "rah" + clear              [FILL IN]  - input remounts, focus lost
+  P2 tab switch + pagination           [FILL IN]
+  P4 add / drop course                 [FILL IN]  - whole workspace re-renders
+  P4 tick checkbox / change semester   [FILL IN]  - whole workspace re-renders
+  P5 change one attendance status      [FILL IN]  - every row re-renders
+  Sidebar navigation                   [FILL IN]  - every menu item re-renders
+
+
+4.3 Bundle - BEFORE (measured)
+------------------------------
+
+First-load JavaScript per page
+(Raw = minified size, Gzip = what the browser actually downloads)
+
+  Page                                              Raw          Gzip
+  Shared by all pages (framework, React, UI kit)    644 KB       201 KB
+  /admin-dashboard                                  740 KB       232 KB
+  /admin-dashboard/students                         825 KB       255 KB
+  /admin-dashboard/invoices                         947 KB       291 KB
+  /admin-dashboard/sections (largest)             1,339 KB       382 KB
+  /student-dashboard/course-registration            752 KB       236 KB
+  /instructor-dashboard/attendance/[sessionId]      792 KB       250 KB
+  Average of all 41 dashboard pages                   -          311 KB
+
+Largest client libraries (from the bundle analyzer)
+
+  Library                         Size (minified)   Loaded on
+  zod (167 KB of it translations) 381 KB            18 admin pages with dialogs
+  Next.js runtime + polyfills     359 KB            every page (framework)
+  react-dom                       200 KB            every page (framework)
+  @base-ui/react                  127-175 KB        every page
+  sweetalert2                      74 KB            every admin table page
+  @tanstack/form-core              51 KB            pages with dialogs
+  sonner                           35 KB            every page
+  three + @react-three/fiber      723 + 161 KB      home page only, already lazy
+
+
+4.4 Core Web Vitals - BEFORE
+----------------------------
+
+  Metric   Target       P1          P2          P4
+  LCP      <= 2.5 s     [FILL IN]
+  INP      <= 200 ms    [FILL IN]
+  CLS      <= 0.1       [FILL IN]
+
+
+-------------------------------------------------------------------------------
+5. OPTIMIZATION PLAN - WHAT WAS DONE
+-------------------------------------------------------------------------------
+
+[DONE]    Split RegistrationWorkspace into memoized parts with useMemo /
+          useCallback. (6 parts instead of the planned 3.)
+
+[DONE]    React.memo for sidebar menu items. (The role lookup moved to the
+          server instead of being memoized on the client.)
+
+[DONE]    TanStack Virtual on a 1,000+ row student list, overscan 8.
+          (New "All (scroll view)" tab.)
+
+[DONE]    TanStack Virtual on the attendance roster.
+
+[DONE]    Debounced filter for available courses in course registration.
+
+[DONE]    Debounced filter in the virtualized lists; existing SearchBar
+          debounce kept, and its focus bug fixed.
+
+[DONE]    Scroll position in useRef + requestAnimationFrame;
+          useSyncExternalStore for the mobile breakpoint. Also added a
+          per-row external store in the attendance roster.
+
+[DONE]    Lazy-load the large dialogs (16 dialogs, including Invoice).
+[CHANGED] StudentRegistrationForm was NOT lazy-loaded: the form IS the page,
+          so deferring it would not reduce what the page needs.
+
+[DONE]    sweetalert2 loaded with await import() on Delete click, plus
+          preload on hover/focus.
+
+[PARTLY]  Dependencies: removed @tanstack/react-table and dotenv. "cn" kept
+          (it is not a mistake, see B5). react-hook-form kept (auth pages
+          only).
+
+[DONE]    Sidebar header/footer as Server Components (the whole sidebar
+          shell is now a Server Component).
+
+[DONE]    Table parts as Server Components (removed "use client" from
+          table.tsx, which affects all 38 tables).
+
+
+-------------------------------------------------------------------------------
+6. OPTIMIZATIONS IMPLEMENTED
+-------------------------------------------------------------------------------
+
+For each change: what was fixed or improved, which files, and why it helps.
+
+
+6.1 RENDERING & COMPONENT OPTIMIZATION  (Requirement 2)
+-------------------------------------------------------
+
+(1) Course Registration workspace  - fixes B2
+
+  Problem:
+    One 212-line component held all the state. Choosing a semester, ticking
+    the terms checkbox, adding or dropping a course: every change redrew the
+    entire screen, including every section card.
+
+  What changed:
+    - Split into 6 small memoized components: Semester picker, Registration
+      switcher, Available sections (with memoized section cards), Selected
+      courses, Payment status and Submit panel.
+    - State colocation: the semester dropdown value, the terms checkbox and
+      the course filter text now live inside the component that uses them.
+    - useCallback for the Create, Add, Drop, Submit and Pay handlers, so
+      memoized children receive the same function on every render.
+    - useMemo for the matching invoice, the set of added sections and the
+      filtered section list.
+
+  File:
+    app/(dashboardGroup)/student-dashboard/_components/RegistrationWorkspace.tsx
+
+  Improvement:
+    Ticking the checkbox now redraws only the Submit panel; changing the
+    semester redraws only the Semester picker, instead of the whole
+    workspace.
+
+
+(2) Sidebar menu items  - fixes B6
+
+  Problem:
+    Every navigation re-rendered every menu item in every group.
+
+  What changed:
+    Each item is a React.memo component with a stable onNavigate handler
+    (useCallback). Items are keyed by their link instead of the array index.
+
+  File:
+    components/dashboard/DashboardSidebarNav.tsx
+
+  Improvement:
+    On navigation only 2 items re-render (the old active link and the new
+    one).
+
+
+(3) Attendance rows - see 6.3, "selective subscriptions".
+
+
+6.2 DOM VIRTUALIZATION & LARGE DATA  (Requirement 3, fixes B1)
+---------------------------------------------------------------
+
+Virtualization means only the rows that are visible (plus a small buffer)
+exist in the page. When you scroll, rows are reused. A list of 1,000 students
+keeps about 20-35 rows in the page instead of 1,000.
+
+(1) Instructor > Attendance roster
+    - Virtualized with TanStack Virtual, overscan of 8 rows. Rows are
+      measured after they render, so different heights stay aligned.
+    - New filter box (name, e-mail, roll number).
+    - Files: instructor-dashboard/_components/AttendanceRoster.tsx
+             instructor-dashboard/attendance/[sessionId]/page.tsx
+
+(2) Admin > Students > "All (scroll view)" tab
+    (new tab; the existing Active / Deleted tabs are unchanged)
+    - Loads up to 1,000 students and shows them in a virtualized grid with
+      a sticky header and horizontal scrolling on small screens.
+    - Edit, Delete and Restore still work on every row.
+    - The list code is lazy-loaded, so the normal paginated page does not
+      pay for it.
+    - Files: admin-dashboard/_components/student/VirtualStudentList.tsx
+             admin-dashboard/_components/student/VirtualStudentListLazy.tsx
+             admin-dashboard/_components/student/StudentTable.tsx
+
+Representative data (1,000+ records)
+    The real database does not yet contain 1,000 records, so both lists
+    accept "?demo=1000" (up to 5,000), which adds generated, realistic rows.
+    The rows are the same every time, so before/after tests are comparable.
+    Saving and row actions are disabled for generated rows, and a notice is
+    shown. Without the parameter nothing changes.
+
+      /instructor-dashboard/attendance/<sessionId>?demo=1000
+      /admin-dashboard/students?view=all&demo=1000
+
+    File: lib/demo-data.ts
+
+Improvement:
+    With 1,000 records the page holds about 20-35 row elements instead of
+    1,000+, so scrolling stays smooth and memory use stays flat.
+
+
+6.3 STATE DECOUPLING & EVENT OPTIMIZATION  (Requirement 4, fixes B7, B8, N2)
+----------------------------------------------------------------------------
+
+(1) Debounced server search - kept and improved   [components/ui/SearchBar.tsx]
+    - FIXED: the input no longer remounts after each search, so focus and
+      cursor stay in place while typing (bug N2).
+    - IMPROVED: skips the request when the text did not really change, and
+      runs the URL update as a low-priority transition so typing never
+      stutters.
+
+(2) Debounced filter (250 ms) - Attendance roster
+    Filtering 1,000+ rows waits until the user stops typing.
+
+(3) Debounced filter (250 ms) - Students "All" view
+    Same pattern for the virtualized student list.
+
+(4) Debounced filter (250 ms) - Course Registration
+    Filter available sections by course code, title or room.
+
+(5) Selective subscriptions (external store) - Attendance roster
+    Each student's status lives in a small store outside React. Each row
+    subscribes only to its own student (useSyncExternalStore), so changing
+    one status re-renders ONE row instead of the roster and all its rows.
+
+(6) External store for screen size - hooks/use-mobile.ts
+    Subscribes directly to the browser's media query. It is only notified
+    when the mobile breakpoint is crossed, and it avoids an extra render
+    when the page loads.
+
+(7) useRef + requestAnimationFrame - components/dashboard/DashboardMainContent.tsx
+    The scroll position is kept in a ref (no re-render). Scroll events are
+    processed at most once per frame, and React state only changes when the
+    new "Back to top" button needs to appear or disappear.
+
+(8) useRef for mutable values - SearchBar.tsx
+    The debounce timer and the input element are refs and never trigger
+    renders.
+
+Shared helper: hooks/useDebouncedValue.ts
+
+Requirement check: at least 2 debounced interactions and 1 state/update
+optimization were required. Delivered: 4 debounced inputs and 4 state
+optimizations.
+
+
+6.4 BUNDLE SIZE & CODE SPLITTING  (Requirement 5, fixes B3, B4, B5)
+-------------------------------------------------------------------
+
+(1) 16 Create/Edit dialogs lazy-loaded  - fixes B3
+    - Each dialog was split into a small button + dialog shell (loads with
+      the page) and the form (form library + zod schema + fields) in its
+      own file, loaded with next/dynamic (React.lazy + Suspense).
+    - Loading fallback: the dialog opens immediately with a skeleton shaped
+      like the form, so the dialog does not jump in size (no layout shift).
+    - Preloading: the form starts downloading when the mouse is over the
+      button or it gets keyboard focus, so it is usually ready before the
+      click.
+    - Dialogs: Academic Year, Class Schedule, Course, Faculty, Fee Structure,
+      Fee Structure Item, Grade, Grade Scale, Invoice, Program Course, Room,
+      Scholarship, Section, Section Instructor, Semester, Student
+      Scholarship.
+    - Files: each *Create.tsx with its new *Form.tsx, and
+      components/shared/DialogFormSkeleton.tsx
+
+(2) sweetalert2 loaded on demand  - fixes B4
+    - The 21 Delete/Restore buttons use confirmDialog(), which downloads
+      sweetalert2 the first time a confirmation is needed. It is preloaded
+      on hover/focus, so the dialog still opens instantly.
+    - Files: lib/confirm.ts and all *Delete.tsx components
+
+(3) Virtual student list lazy-loaded
+    Only downloaded when the "All (scroll view)" tab is opened.
+    File: VirtualStudentListLazy.tsx
+
+(4) Dependency clean-up  - B5
+    - Removed @tanstack/react-table and dotenv (never imported).
+    - The monospace font is no longer preloaded on every page (it is used in
+      one place only). File: app/layout.tsx
+    - "cn" kept (see B5).
+
+Requirement check: at least 2 lazy-loaded components and a bundle comparison
+were required. Delivered: 18 lazy-loaded components/libraries; the
+comparison is in section 7.3.
+
+
+6.5 SERVER / CLIENT COMPONENT BOUNDARIES  (Requirement 6, fixes B6, N1)
+-----------------------------------------------------------------------
+
+(1) Dashboard sidebar -> Server Component
+    Before : Client code. Every user downloaded the menu definitions and
+             icons for all three roles, and the static header and footer
+             (logo, user name, e-mail) were hydrated in the browser.
+    After  : The server picks the user's role and sends only that role's
+             menu, with icons already rendered as HTML. Header and footer
+             are plain server HTML. Only the active-link highlight and
+             closing the mobile menu run in the browser.
+    Files  : components/dashboard/DashboardSidebar.tsx   (server)
+             components/dashboard/DashboardSidebarNav.tsx (small client part)
+
+(2) Table building block is no longer client code
+    Before : components/ui/table.tsx had "use client", so all 38
+             server-rendered tables sent the table code to the browser and
+             hydrated every row and cell.
+    After  : The directive was removed. Tables are plain HTML; only the
+             interactive pieces inside them (Edit, Delete, Restore buttons)
+             are client components.
+
+(3) Dialog shell vs. form
+    The page table stays a Server Component, the button/dialog shell is a
+    tiny Client Component, and the heavy form is a separately loaded Client
+    Component.
+
+How this reduces client-side JavaScript:
+    Code for static parts is no longer sent to or executed in the browser,
+    and fewer components need hydration. The JavaScript shared by every
+    dashboard page went from 232 KB to 229 KB (gzip). The bigger benefit is
+    less hydration work on table pages, because table rows are no longer
+    client components.
+
+
+-------------------------------------------------------------------------------
+7. RESULTS - BEFORE vs AFTER
+-------------------------------------------------------------------------------
+
+7.1 Lighthouse (Mobile, median of 3)
+------------------------------------
+
+  Page   Score (before -> after)   LCP          TBT          CLS
+  P1     [FILL IN]
+  P2     [FILL IN]
+  P3     [FILL IN]
+  P4     [FILL IN]
+  P5     [FILL IN]
+  P6     [FILL IN]
+
+
+7.2 React Profiler
+------------------
+
+  Interaction                        Before      After       Expected after
+  P2 search "rah" + clear            [FILL IN]   [FILL IN]   input keeps focus
+  P4 tick terms checkbox             [FILL IN]   [FILL IN]   only Submit panel
+  P4 change semester                 [FILL IN]   [FILL IN]   only Semester picker
+  P4 add / drop course               [FILL IN]   [FILL IN]   unchanged cards skip
+  P5 (?demo=1000) change one status  [FILL IN]   [FILL IN]   exactly 1 row
+  P5 (?demo=1000) scroll             [FILL IN]   [FILL IN]   ~20-35 rows in DOM
+  Sidebar navigation                 [FILL IN]   [FILL IN]   2 menu items
+
+
+7.3 Bundle size - first-load JavaScript, gzip (MEASURED)
+--------------------------------------------------------
+
+  Page                                          Before    After    Change
+  Shared by all pages                           201 KB    201 KB      0.0%
+  P1 /admin-dashboard                           232 KB    229 KB     -1.3%
+  P2 /admin-dashboard/students                  255 KB    234 KB     -8.6%
+  P3 /admin-dashboard/invoices                  291 KB    234 KB    -19.4%
+  P4 /student-dashboard/course-registration     236 KB    234 KB     -0.9%
+  P5 /instructor-dashboard/attendance/[id]      250 KB    258 KB     +3.2%  (*)
+  P6 /admin-dashboard/sections                  382 KB    236 KB    -38.2%
+     /admin-dashboard/courses                   380 KB    235 KB    -38.3%
+     /admin-dashboard/semesters                 380 KB    235 KB    -38.3%
+     /admin-dashboard/class-schedules           381 KB    235 KB    -38.4%
+     /admin-dashboard/rooms                     362 KB    234 KB    -35.1%
+     /admin-dashboard/faculties                 362 KB    235 KB    -35.2%
+     /admin-dashboard/instructors, departments,
+       programs                                 255 KB    232 KB     -9.1%
+  AVERAGE of all 41 dashboard pages             311 KB    258 KB    -17.0%
+
+  (*) The attendance page grew by 8 KB because it now includes the
+      virtualization library. This is a deliberate trade: 8 KB of code in
+      exchange for ~20 rows in the page instead of 1,000+.
+
+What was removed from the first load (verified in the built files):
+
+  - zod + TanStack Form + dialog form code
+      Before : in the first load of 18 admin pages
+      After  : separate file, downloaded only when a dialog opens
+
+  - sweetalert2
+      Before : in the first load of every admin table page
+      After  : separate file, downloaded on the first Delete/Restore
+
+  - Sidebar menus and icons for all 3 roles
+      Before : in every dashboard page
+      After  : only the current role, rendered on the server
+
+  - table.tsx client code
+      Before : in every admin table page
+      After  : not sent at all (server-only)
+
+  - @tanstack/react-virtual (new)
+      Only on the attendance page and the "All students" tab
+
+The full table for all 58 routes is in
+docs/reports/bundle/compare-before-vs-after.md
+Treemap screenshots: [FILL IN] bundle-before.png, bundle-after.png
+
+
+7.4 Core Web Vitals
+-------------------
+
+  Metric   Target       P1 (before -> after)   P2          P4
+  LCP      <= 2.5 s     [FILL IN]
+  INP      <= 200 ms    [FILL IN]
+  CLS      <= 0.1       [FILL IN]
+
+  INP is measured with the DevTools Performance panel (live metrics) while
+  doing the interactions, because a normal Lighthouse page-load run does not
+  measure INP.
+
+
+7.5 Functionality & UX check  (Requirement 8)
+---------------------------------------------
+
+  Production build ............................ passes
+  TypeScript check ............................ 0 errors
+  ESLint ...................................... 0 errors (only warnings that
+                                                existed before, plus TanStack
+                                                Virtual's "compiler skipped"
+                                                notice)
+  Routes, tabs, search, pagination, dialogs,
+  delete/restore, attendance save,
+  course registration ......................... [FILL IN after manual test]
+  Loading fallbacks ........................... dialog skeleton, virtual-list
+                                                skeleton, existing table
+                                                skeletons kept
+  Layout shift ................................ dialog skeleton matches the
+                                                form size; "Back to top"
+                                                button does not move content
+  Light / dark mode ........................... new UI uses existing theme
+                                                colors
+  Mobile / tablet / desktop ................... virtual lists scroll
+                                                horizontally on small
+                                                screens; filters go
+                                                full-width on mobile
+
+  Intentional small behavior changes:
+  - New "Back to top" button after scrolling 600 px.
+  - New filter boxes: attendance roster, "All students" view, available
+    sections in course registration.
+  - New "All (scroll view)" tab on the Students page.
+  - The "I confirm..." checkbox in Course Registration now resets when
+    switching to another registration.
+
+
+-------------------------------------------------------------------------------
+8. REMAINING LIMITATIONS / BOTTLENECKS
+-------------------------------------------------------------------------------
+
+1. Full-page forms are still heavy (about 354 KB gzip).
+   Student Registration, Instructor Registration, Create Department/Program
+   and the edit-profile pages need the form immediately because the form IS
+   the page, so lazy-loading would not help. A future fix is moving to
+   zod/mini or loading only English zod messages, which requires rewriting
+   every schema.
+
+2. Framework baseline (about 201 KB gzip on every page).
+   Next.js, React and Base UI are shared and cached between pages, but
+   cannot be reduced without changing libraries.
+
+3. Fonts.
+   The design uses four font families. They are self-hosted and only the
+   Latin subset is preloaded; using fewer families would need a design
+   decision.
+
+4. "All students" loads up to 1,000 records in one request.
+   Larger datasets should use infinite loading (fetch the next page while
+   scrolling).
+
+5. The attendance page is 8 KB bigger because of the virtualization library
+   (accepted trade-off).
+
+6. Backend response time affects real page speed. Slow API calls show as
+   skeletons and are outside the scope of this frontend work.
+
+7. Lighthouse, React Profiler and Core Web Vitals values still need to be
+   recorded in a browser with a logged-in user (sections 4 and 7).
+
+
+-------------------------------------------------------------------------------
+9. DEMO VIDEO OUTLINE (3-5 minutes)
+-------------------------------------------------------------------------------
+
+1. Project intro and live URL (20 s)
+2. Baseline: bundle analyzer "before" treemap (zod and sweetalert2 on the
+   Sections page), Lighthouse and Profiler "before" (40 s)
+3. Rendering: Profiler on Course Registration - tick the checkbox
+   (before: whole workspace, after: only the Submit panel) (45 s)
+4. Virtualization: open ?demo=1000 on the attendance roster and the
+   "All students" tab, scroll, and show in the Elements panel that only
+   about 20-35 rows exist (45 s)
+5. Debounced filters, the search focus fix and the "Back to top" scroll
+   handler (30 s)
+6. Code splitting: Network tab showing the form file loading on hover/open
+   of "Add Section", the sweetalert2 file on Delete, and the before/after
+   bundle table (45 s)
+7. Server/Client boundaries: sidebar and tables now server-rendered,
+   smaller first-load JavaScript (30 s)
+8. Final Lighthouse and Core Web Vitals, plus remaining limitations (30 s)
+
+
+-------------------------------------------------------------------------------
+APPENDIX - HOW TO REPRODUCE THE BUNDLE COMPARISON
+-------------------------------------------------------------------------------
+
+  npm run build
+  npx next experimental-analyze --output
+  node scripts/bundle-report.mjs snapshot after
+  node scripts/bundle-report.mjs compare before after
+
+  To view the treemaps:
+  npx serve docs/reports/bundle/before/analyze
+  npx serve docs/reports/bundle/after/analyze
+  (choose the "Client" filter and a route)
+
+===============================================================================
+                                END OF REPORT
+===============================================================================

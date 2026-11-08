@@ -1,0 +1,88 @@
+
+> university-management-frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.3.5 (Turbopack)
+- Environments: .env
+✓ Running next.config.ts took 23ms
+- Experiments (use with caution):
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.4s
+  Running TypeScript ...
+  Finished TypeScript in 4.5s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/16) ...
+  Generating static pages using 11 workers (4/16) 
+  Generating static pages using 11 workers (8/16) 
+  Generating static pages using 11 workers (12/16) 
+✓ Generating static pages using 11 workers (16/16) in 501ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /about
+├ ƒ /academic-calendar
+├ ƒ /academics
+├ ƒ /admin-dashboard
+├ ƒ /admin-dashboard/academic-years
+├ ƒ /admin-dashboard/class-schedules
+├ ƒ /admin-dashboard/courses
+├ ƒ /admin-dashboard/create-department
+├ ƒ /admin-dashboard/create-program
+├ ƒ /admin-dashboard/departments
+├ ƒ /admin-dashboard/departments/[departmentId]
+├ ƒ /admin-dashboard/faculties
+├ ƒ /admin-dashboard/fee-structures
+├ ƒ /admin-dashboard/fee-structures/[feeStructureId]/items
+├ ƒ /admin-dashboard/grade-scales
+├ ƒ /admin-dashboard/grade-scales/[gradeScaleId]
+├ ƒ /admin-dashboard/instructor-registration
+├ ƒ /admin-dashboard/instructors
+├ ƒ /admin-dashboard/instructors/[instructorId]
+├ ƒ /admin-dashboard/invoices
+├ ƒ /admin-dashboard/invoices/[invoiceId]
+├ ƒ /admin-dashboard/program-courses
+├ ƒ /admin-dashboard/programs
+├ ƒ /admin-dashboard/programs/[programId]
+├ ƒ /admin-dashboard/registrations
+├ ƒ /admin-dashboard/rooms
+├ ƒ /admin-dashboard/scholarships
+├ ƒ /admin-dashboard/sections
+├ ƒ /admin-dashboard/semesters
+├ ƒ /admin-dashboard/student-registration
+├ ƒ /admin-dashboard/student-scholarships
+├ ƒ /admin-dashboard/students
+├ ƒ /admin-dashboard/students/[studentId]
+├ ƒ /admissions
+├ ƒ /campus-life
+├ ƒ /courses
+├ ƒ /departments
+├ ƒ /instructor-dashboard
+├ ƒ /instructor-dashboard/attendance
+├ ƒ /instructor-dashboard/attendance/[sessionId]
+├ ƒ /instructor-dashboard/profile
+├ ƒ /instructor-dashboard/sections
+├ ƒ /instructor-dashboard/sections/[sectionId]
+├ ○ /login
+├ ƒ /payment/cancel
+├ ƒ /payment/failed
+├ ƒ /payment/success
+├ ƒ /programs
+├ ƒ /research
+├ ƒ /student-dashboard
+├ ƒ /student-dashboard/course-registration
+├ ƒ /student-dashboard/payment-history
+├ ƒ /student-dashboard/profile
+├ ƒ /student-dashboard/registration-status
+├ ○ /verify-instructor
+└ ○ /verify-student
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
+import { confirmDialog, preloadConfirmDialog } from "@/lib/confirm";
 import { Button } from "@/components/ui/button";
 import { deleteFacultyAction } from "../../_actions/facultyActions";
 
@@ -18,7 +18,7 @@ const FacultyDelete = ({ facultyId, facultyName }: FacultyDeleteProps) => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
-    const confirmation = await Swal.fire({
+    const confirmation = await confirmDialog({
       title: "Delete faculty?",
       text: `You are about to delete ${facultyName}. This action cannot be undone.`,
       icon: "warning",
@@ -52,6 +52,8 @@ const FacultyDelete = ({ facultyId, facultyName }: FacultyDeleteProps) => {
       variant="destructive"
       size="icon-sm"
       onClick={handleDelete}
+      onPointerEnter={preloadConfirmDialog}
+      onFocus={preloadConfirmDialog}
       disabled={isPending}
       aria-label={`Delete ${facultyName}`}
       title={`Delete ${facultyName}`}

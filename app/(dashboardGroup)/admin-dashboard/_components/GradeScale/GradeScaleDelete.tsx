@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
+import { confirmDialog, preloadConfirmDialog } from "@/lib/confirm";
 import { Button } from "@/components/ui/button";
 import { deleteGradeScaleAction } from "../../_actions/gradeScaleActions";
 
@@ -19,7 +19,7 @@ const GradeScaleDelete = ({
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
-    const confirmation = await Swal.fire({
+    const confirmation = await confirmDialog({
       title: "Delete grade scale?",
       text: `You are about to delete ${gradeScaleName}. This action cannot be undone.`,
       icon: "warning",
@@ -48,6 +48,8 @@ const GradeScaleDelete = ({
       variant="destructive"
       size="icon-sm"
       onClick={handleDelete}
+      onPointerEnter={preloadConfirmDialog}
+      onFocus={preloadConfirmDialog}
       disabled={isPending}
       aria-label={`Delete ${gradeScaleName}`}
       title={`Delete ${gradeScaleName}`}

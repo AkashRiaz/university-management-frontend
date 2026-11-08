@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
-import Swal from "sweetalert2";
+import { confirmDialog, preloadConfirmDialog } from "@/lib/confirm";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteInvoiceAction } from "../../_actions/invoiceActions";
@@ -12,7 +12,7 @@ const InvoiceDelete = ({ invoiceId, invoiceName }: { invoiceId: string; invoiceN
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const handleDelete = async () => {
-    const confirmation = await Swal.fire({
+    const confirmation = await confirmDialog({
       title: "Delete invoice?",
       text: `You are about to delete ${invoiceName}. This action cannot be undone.`,
       icon: "warning",
@@ -32,7 +32,7 @@ const InvoiceDelete = ({ invoiceId, invoiceName }: { invoiceId: string; invoiceN
     });
   };
   return (
-    <Button type="button" variant="destructive" size="icon-sm" onClick={handleDelete} disabled={isPending} aria-label={`Delete ${invoiceName}`} title={`Delete ${invoiceName}`}>
+    <Button type="button" variant="destructive" size="icon-sm" onClick={handleDelete} onPointerEnter={preloadConfirmDialog} onFocus={preloadConfirmDialog} disabled={isPending} aria-label={`Delete ${invoiceName}`} title={`Delete ${invoiceName}`}>
       {isPending ? <Loader2 className="animate-spin" /> : <Trash2 />}
     </Button>
   );

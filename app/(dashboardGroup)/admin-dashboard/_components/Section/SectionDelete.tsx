@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
+import { confirmDialog, preloadConfirmDialog } from "@/lib/confirm";
 import { Button } from "@/components/ui/button";
 import { deleteSectionAction } from "../../_actions/sectionActions";
 
@@ -18,7 +18,7 @@ const SectionDelete = ({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const handleDelete = async () => {
-    const confirmation = await Swal.fire({
+    const confirmation = await confirmDialog({
       title: "Delete section?",
       text: `You are about to delete ${sectionName}. This action cannot be undone.`,
       icon: "warning",
@@ -43,6 +43,8 @@ const SectionDelete = ({
       variant="destructive"
       size="icon-sm"
       onClick={handleDelete}
+      onPointerEnter={preloadConfirmDialog}
+      onFocus={preloadConfirmDialog}
       disabled={isPending}
       aria-label={`Delete ${sectionName}`}
       title={`Delete ${sectionName}`}

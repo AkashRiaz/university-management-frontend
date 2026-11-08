@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Saved bundle-analyzer output (minified build files, not source code).
+    "docs/reports/**",
+    "bundle-before/**",
   ]),
 ]);
 

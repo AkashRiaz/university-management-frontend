@@ -17,7 +17,9 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+// Monospace is only used in one place, so don't preload it on every page.
 const geistMono = Geist_Mono({
+  preload: false,
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });

@@ -18,6 +18,12 @@ import { CustomPagination } from "@/components/ui/CustomPagination";
 import StudentDelete from "./StudentDelete";
 import StudentRestore from "./StudentRestore";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VirtualStudentList from "./VirtualStudentListLazy";
+import type { VirtualStudent } from "./VirtualStudentList";
+import { makeDemoStudents, parseDemoCount } from "@/lib/demo-data";
+
+// "All students" view: loads up to this many records into a virtualized list.
+const ALL_VIEW_LIMIT = "1000";
 
 type StudentTableProps = {
   searchParams?: {
@@ -27,9 +33,14 @@ type StudentTableProps = {
 
 const StudentTable = async ({ searchParams }: StudentTableProps) => {
   const query = await searchParams;
-  const result = await getAllStudentsActionForAdmin({ query });
+  const isAllView = query?.view === "all";
+  // `?view=all&demo=1000` adds representative rows to test virtualization.
+  const demoCount = isAllView ? parseDemoCount(query?.demo) : 0;
+  const result = await getAllStudentsActionForAdmin({
+    query: isAllView ? { ...query, page: "1", limit: ALL_VIEW_LIMIT } : query,
+  });
   const isDeleted = query?.isDeleted === "true";
-  const tabUrl = (deleted: boolean) => {
+  const tabUrl = (deleted: boolean, all = false) => {
     const params = new URLSearchParams();
     const searchTerm = query?.searchTerm;
 
@@ -53,6 +64,7 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
 
     params.set("isDeleted", deleted ? "true" : "false");
     params.set("page", "1");
+    if (all) params.set("view", "all");
 
     return `/admin-dashboard/students?${params.toString()}`;
   };
@@ -111,16 +123,32 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
       <div className="mx-1 my-4 sm:mx-2 md:mx-0">
         <Tabs>
         <TabsList className="p-1 flex gap-2">
-          <TabsTrigger href={tabUrl(false)} active={!isDeleted}>
+          <TabsTrigger href={tabUrl(false)} active={!isDeleted && !isAllView}>
             Active Students
           </TabsTrigger>
-          <TabsTrigger href={tabUrl(true)} active={isDeleted}>
+          <TabsTrigger href={tabUrl(true)} active={isDeleted && !isAllView}>
             Deleted Students
+          </TabsTrigger>
+          <TabsTrigger href={tabUrl(isDeleted, true)} active={isAllView}>
+            All (scroll view)
           </TabsTrigger>
         </TabsList>
       </Tabs>
       </div>
 
+      {isAllView ? (
+        <div className="mx-1 sm:mx-2 md:mx-0">
+          <VirtualStudentList
+            students={[
+              ...(students as VirtualStudent[]),
+              ...makeDemoStudents(demoCount),
+            ]}
+            isDeleted={isDeleted}
+            totalOnServer={Number(result?.meta?.total ?? 0) || undefined}
+          />
+        </div>
+      ) : (
+      <>
       {/* Responsive Table */}
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
@@ -244,6 +272,8 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
       <div>
         <CustomPagination currentPage={currentPage} totalPages={totalPages} />
       </div>
+      </>
+      )}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { Loader2, Trash2 } from "lucide-react";
-import Swal from "sweetalert2";
+import { confirmDialog, preloadConfirmDialog } from "@/lib/confirm";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { deleteSectionInstructorAction } from "../../_actions/sectionInstructorActions";
@@ -19,7 +19,7 @@ const SectionInstructorDelete = ({
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
-    const confirmation = await Swal.fire({
+    const confirmation = await confirmDialog({
       title: "Remove instructor?",
       text: `${instructorName} will be removed from this section.`,
       icon: "warning",
@@ -40,7 +40,7 @@ const SectionInstructorDelete = ({
   };
 
   return (
-    <Button type="button" variant="destructive" size="icon-sm" onClick={handleDelete} disabled={isPending} aria-label={`Remove ${instructorName}`} title={`Remove ${instructorName}`}>
+    <Button type="button" variant="destructive" size="icon-sm" onClick={handleDelete} onPointerEnter={preloadConfirmDialog} onFocus={preloadConfirmDialog} disabled={isPending} aria-label={`Remove ${instructorName}`} title={`Remove ${instructorName}`}>
       {isPending ? <Loader2 className="animate-spin" /> : <Trash2 />}
     </Button>
   );

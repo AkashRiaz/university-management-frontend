@@ -1,77 +1,54 @@
-"use client";
-
+// Server Component.
+// Before: the whole sidebar was a Client Component, so the route tables and
+// lucide icons for *all three* roles (admin, student, instructor) were shipped
+// to the browser, and the static header/footer were hydrated for nothing.
+// Now the role is resolved on the server, only that role's menu is sent (with
+// icons pre-rendered as HTML), and only the active-link logic runs on the client.
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
-
 import { ISidebarGroup, NavbarProps } from "@/lib/type";
-import { GraduationCap, Wrench } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { GraduationCap } from "lucide-react";
 import { adminRoutes, instructorRoutes, studentRoutes } from "../routes";
+import DashboardSidebarNav, {
+  SidebarHomeLink,
+  type SidebarNavGroupData,
+} from "./DashboardSidebarNav";
+
+const routesForRole = (role?: string): ISidebarGroup[] => {
+  if (role === "ADMIN" || role === "SUPER_ADMIN") return adminRoutes;
+  if (role === "STUDENT") return studentRoutes;
+  if (role === "INSTRUCTOR") return instructorRoutes;
+  return [];
+};
+
+const homePathForRole = (role?: string) =>
+  role === "STUDENT"
+    ? "/student-dashboard"
+    : role === "INSTRUCTOR"
+      ? "/instructor-dashboard"
+      : "/admin-dashboard";
 
 export default function DashboardSidebar({ user }: NavbarProps) {
-  const pathname = usePathname();
+  const role = user?.data?.role;
 
-  const { isMobile, setOpenMobile } = useSidebar();
-
-  let navItems: ISidebarGroup[] = [];
-
-  if (user?.data?.role === "ADMIN") {
-    navItems = adminRoutes;
-  } else if (user?.data?.role === "SUPER_ADMIN") {
-    navItems = adminRoutes;
-  } else if (user?.data?.role === "STUDENT") {
-    navItems = studentRoutes;
-  } else if (user?.data?.role === "INSTRUCTOR") {
-    navItems = instructorRoutes;
-  }
-
-  const dashboardHomePath =
-    user?.data?.role === "STUDENT"
-      ? "/student-dashboard"
-      : user?.data?.role === "INSTRUCTOR"
-        ? "/instructor-dashboard"
-        : "/admin-dashboard";
-
-  const isItemActive = (href: string) => {
-    if (href === "#" || !href) return false;
-
-    if (href === dashboardHomePath) {
-      return pathname === href;
-    }
-
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
-
-  const handleNavigation = () => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
+  const groups: SidebarNavGroupData[] = routesForRole(role).map((group) => ({
+    title: group.title,
+    items: group.items.map(({ href, label, icon: Icon }) => ({
+      href,
+      label,
+      icon: <Icon className="size-4" />,
+    })),
+  }));
 
   return (
-    <Sidebar
-      collapsible="offcanvas"
-      className="border-r border-sidebar-border "
-    >
+    <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border ">
       {/* Sidebar Header */}
       <SidebarHeader className="border-b border-sidebar-border p-4">
-        <Link
-          href="/"
-          onClick={handleNavigation}
-          className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-sidebar-accent"
-        >
+        <SidebarHomeLink className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-sidebar-accent">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <GraduationCap size={24} />
           </div>
@@ -82,53 +59,18 @@ export default function DashboardSidebar({ user }: NavbarProps) {
             </p>
 
             <p className="truncate text-xs text-muted-foreground">
-              {user?.data?.role ? `${user.data.role} Dashboard` : "Dashboard"}
+              {role ? `${role} Dashboard` : "Dashboard"}
             </p>
           </div>
-        </Link>
+        </SidebarHomeLink>
       </SidebarHeader>
 
       {/* Sidebar Content */}
       <SidebarContent className="min-h-0 overflow-y-auto">
-        {navItems.map((group, index) => (
-          <SidebarGroup key={index}>
-            {/* Group Title */}
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item, index) => {
-                  const isActive = isItemActive(item.href);
-
-                  const Icon = item.icon;
-
-                  return (
-                    <SidebarMenuItem key={index} className="py-0.5">
-                      <SidebarMenuButton
-                        isActive={isActive}
-                        tooltip={item.label}
-                        className="h-10 text-sm"
-                      >
-                        <Link
-                          href={item.href}
-                          onClick={handleNavigation}
-                          className="flex items-center gap-3"
-                        >
-                          <Icon className="size-4" />
-
-                          <span>{item.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <DashboardSidebarNav groups={groups} homePath={homePathForRole(role)} />
       </SidebarContent>
 
-      {/* Sidebar Footer */}
+      {/* Sidebar Footer (static user info, rendered on the server) */}
       <SidebarFooter className="border-t border-sidebar-border p-4">
         <div className="rounded-xl bg-sidebar-accent p-3">
           <p className="truncate text-sm font-semibold text-sidebar-foreground">
