@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateSemesterZodSchema } from "@/components/validations/semester.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -50,6 +51,7 @@ export const createSemesterAction = async (
   _previousState: SemesterActionState | null,
   formData: FormData,
 ): Promise<SemesterActionState> => {
+  revalidateTag("semesters", { expire: 0 });
   const validation = CreateSemesterZodSchema.safeParse(
     getSemesterPayload(formData),
   );
@@ -112,6 +114,7 @@ export const updateSemesterAction = async (
   _previousState: SemesterActionState | null,
   formData: FormData,
 ): Promise<SemesterActionState> => {
+  revalidateTag("semesters", { expire: 0 });
   const semesterId = formData.get("id");
   const validation = CreateSemesterZodSchema.safeParse(
     getSemesterPayload(formData),
@@ -191,6 +194,7 @@ export type SemesterDeleteState = {
 export const deleteSemesterAction = async (
   semesterId: string,
 ): Promise<SemesterDeleteState> => {
+  revalidateTag("semesters", { expire: 0 });
   if (!semesterId) {
     return {
       success: false,
@@ -255,23 +259,14 @@ export const getAllSemestersAction = async ({
   if (limit) params.set("limit", limit);
 
   try {
-    const accessToken = await isAccessTokenExist();
-    if (!accessToken) {
-      return {
-        success: false,
-        message: "Access token not found",
-        statusCode: 401,
-        data: null,
-      };
-    }
 
     const queryString = params.toString();
     const response = await fetch(
       `${process.env.BACKEND_API_URL}/semesters${queryString ? `?${queryString}` : ""}`,
       {
         method: "GET",
-        headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["semesters"] },
       },
     );
     const result = await response.json();

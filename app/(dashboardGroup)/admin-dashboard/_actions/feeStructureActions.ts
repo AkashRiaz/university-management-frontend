@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateFeeStructureZodSchema } from "@/components/validations/fee-structure.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -44,6 +45,7 @@ export const createFeeStructureAction = async (
   _previousState: FeeStructureActionState | null,
   formData: FormData,
 ): Promise<FeeStructureActionState> => {
+  revalidateTag("fee-structures", { expire: 0 });
   const validation = CreateFeeStructureZodSchema.safeParse(
     getFeeStructurePayload(formData),
   );
@@ -110,6 +112,7 @@ export const updateFeeStructureAction = async (
   _previousState: FeeStructureActionState | null,
   formData: FormData,
 ): Promise<FeeStructureActionState> => {
+  revalidateTag("fee-structures", { expire: 0 });
   const feeStructureId = formData.get("id");
   const validation = CreateFeeStructureZodSchema.safeParse(
     getFeeStructurePayload(formData),
@@ -184,6 +187,7 @@ export const updateFeeStructureAction = async (
 export const deleteFeeStructureAction = async (
   feeStructureId: string,
 ): Promise<Omit<FeeStructureActionState, "data">> => {
+  revalidateTag("fee-structures", { expire: 0 });
   if (!feeStructureId) {
     return {
       success: false,
@@ -264,7 +268,8 @@ export const getAllFeeStructuresAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["fee-structures"] },
       },
     );
     const result = await response.json().catch(() => null);

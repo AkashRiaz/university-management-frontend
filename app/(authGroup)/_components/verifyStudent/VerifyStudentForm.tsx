@@ -4,7 +4,10 @@ import React, { useState, useRef, useEffect, useActionState, useTransition } fro
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { GraduationCap, Mail, CheckCircle2, RotateCcw } from "lucide-react";
-import { verifyStudentActions } from "../../_actions/authActions";
+import {
+  resendStudentVerificationOtpAction,
+  verifyStudentActions,
+} from "../../_actions/authActions";
 
 type VerifyStudentFormValues = {
   email: string;
@@ -105,10 +108,15 @@ export default function VerifyStudentForm({
     if (resendTimer > 0 || !emailValue) return;
     updateOtpValue(new Array(6).fill(""));
     setResendTimer(30);
-    if (onResendOtp) {
-      await onResendOtp(emailValue);
+    const result = onResendOtp
+      ? { success: await onResendOtp(emailValue) }
+      : await resendStudentVerificationOtpAction(emailValue);
+    if (!result.success) {
+      setResendTimer(0);
+      toast.error("message" in result ? result.message : "Failed to resend verification code.");
+      return;
     }
-    toast.info("Verification code resent to your email.");
+    toast.success("message" in result ? result.message : "Verification code resent to your email.");
   };
 
   const onSubmit = (data: VerifyStudentFormValues) => {
@@ -146,7 +154,7 @@ export default function VerifyStudentForm({
         <h2 className="text-2xl font-bold tracking-tight text-slate-50 mb-2">
           Student Verification
         </h2>
-        <p className="text-xs text-slate-400 max-w-[280px] mx-auto leading-relaxed">
+        <p className="text-xs text-slate-400 max-w-70 mx-auto leading-relaxed">
           Enter your student email and the 6-digit OTP code sent by your
           administrator.
         </p>

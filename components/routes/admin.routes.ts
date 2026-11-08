@@ -6,15 +6,19 @@ import {
   Building2Icon,
   Calendar,
   CalendarRange,
+  CalendarDays,
   BadgePercent,
   DoorOpen,
   GraduationCap,
   HeartHandshake,
   LayoutDashboard,
   ListTree,
+  ClipboardList,
   User,
   Users,
   WalletCards,
+  ReceiptText,
+  ClipboardCheck,
 } from "lucide-react";
 
 const prefix = "/admin-dashboard";
@@ -64,6 +68,16 @@ export const adminRoutes: ISidebarGroup[] = [
         icon: DoorOpen,
       },
       {
+        label: "Sections",
+        href: `${prefix}/sections`,
+        icon: ClipboardList,
+      },
+      {
+        label: "Class Schedules",
+        href: `${prefix}/class-schedules`,
+        icon: CalendarDays,
+      },
+      {
         label: "Faculties",
         href: `${prefix}/faculties`,
         icon: Building2Icon,
@@ -89,6 +103,16 @@ export const adminRoutes: ISidebarGroup[] = [
         icon: WalletCards,
       },
       {
+        label: "Invoices",
+        href: `${prefix}/invoices`,
+        icon: ReceiptText,
+      },
+      {
+        label: "Registrations",
+        href: `${prefix}/registrations`,
+        icon: ClipboardCheck,
+      },
+      {
         label: "Scholarships",
         href: `${prefix}/scholarships`,
         icon: BadgePercent,
@@ -97,21 +121,6 @@ export const adminRoutes: ISidebarGroup[] = [
         label: "Student Scholarships",
         href: `${prefix}/student-scholarships`,
         icon: HeartHandshake,
-      },
-    ],
-  },
-  {
-    title: "App Settings",
-    items: [
-      {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
-      },
-      {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
       },
     ],
   },

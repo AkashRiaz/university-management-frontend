@@ -1,5 +1,5 @@
 import { ISidebarGroup } from "@/lib/type";
-import { LayoutDashboard } from "lucide-react";
+import { ClipboardList, CreditCard, FileText, LayoutDashboard, UserRound } from "lucide-react";
 
 const prefix = "/student-dashboard";
 
@@ -13,9 +13,9 @@ export const studentRoutes: ISidebarGroup[] = [
         icon: LayoutDashboard,
       },
       {
-        label: "Approval",
-        href: `${prefix}/approval`,
-        icon: LayoutDashboard,
+        label: "Course Registration",
+        href: `${prefix}/course-registration`,
+        icon: ClipboardList,
       },
     ],
   },
@@ -23,14 +23,19 @@ export const studentRoutes: ISidebarGroup[] = [
     title: "Management",
     items: [
       {
-        label: "Overview",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
+        label: "Registration Status",
+        href: `${prefix}/registration-status`,
+        icon: FileText,
       },
       {
-        label: "Approval",
-        href: `${prefix}`,
-        icon: LayoutDashboard,
+        label: "Payment History",
+        href: `${prefix}/payment-history`,
+        icon: CreditCard,
+      },
+      {
+        label: "My Profile",
+        href: `${prefix}/profile`,
+        icon: UserRound,
       },
     ],
   },

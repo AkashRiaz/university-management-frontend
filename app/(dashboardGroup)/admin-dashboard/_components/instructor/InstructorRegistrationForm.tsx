@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useTransition } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { createInstructorAction } from "../../_actions/instructorActions";
 import {
   createInstructorInput,
@@ -28,7 +29,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import { IDepartment } from "@/types/department.type";
 
 const InstructorRegistrationForm = ({
@@ -36,20 +36,19 @@ const InstructorRegistrationForm = ({
 }: {
   departments: IDepartment[];
 }) => {
-  const [state, formAction, loading] = useActionState(
-    createInstructorAction,
-    null,
-  );
+  const router = useRouter();
+  const [state, formAction] = useActionState(createInstructorAction, null);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (state?.success) {
       toast.success(state.message);
-      redirect("/admin-dashboard/instructors");
+      router.push("/admin-dashboard/instructors");
+      router.refresh();
     } else if (state?.success === false) {
       toast.error(state.message);
     }
-  }, [state]);
+  }, [router, state]);
 
   const defaultValues: createInstructorInput = {
     name: "",

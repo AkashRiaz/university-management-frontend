@@ -15,7 +15,7 @@ import { AlertCircle, DoorOpen, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { CustomPagination } from "@/components/ui/CustomPagination";
 import { SearchBar } from "@/components/ui/SearchBar";
-import { getAllProgramsAction } from "../../_actions/programActions";
+import InstructorDelete from "./InstructorDelete";
 
 type InstructorTableProps = {
   searchParams?: {
@@ -77,7 +77,7 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
       </div>
 
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
-        <Table className="min-w-[760px]">
+        <Table className="min-w-190">
           <TableHeader>
             <TableRow className="bg-gray-50 hover:bg-gray-50">
               <TableHead className="w-15 font-semibold text-gray-700">
@@ -98,6 +98,9 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
               <TableHead className="font-semibold text-gray-700">
                 Office Room
               </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                Status
+              </TableHead>
               <TableHead className="text-right font-semibold text-gray-700">
                 Action
               </TableHead>
@@ -108,7 +111,7 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
             {instructors.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="h-24 text-center text-muted-foreground"
                 >
                   No instructors found.
@@ -159,10 +162,27 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
                     </div>
                   </TableCell>
 
+                  <TableCell>
+                    <Badge variant="outline" className="font-medium">
+                      {instructor.user?.status?.replaceAll("_", " ") || "-"}
+                    </Badge>
+                  </TableCell>
+
                   <TableCell className="text-right">
-                    <button className="rounded-md border px-3 py-1.5 text-sm font-medium transition">
-                      View
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/admin-dashboard/instructors/${instructor.id}`}
+                        className="rounded-md border px-3 py-1.5 text-sm font-medium transition hover:bg-muted"
+                      >
+                        Edit
+                      </Link>
+                      <InstructorDelete
+                        instructorId={instructor.id}
+                        instructorName={
+                          instructor.user?.name || "this instructor"
+                        }
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

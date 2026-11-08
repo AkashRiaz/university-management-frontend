@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateCourseZodSchema } from "@/components/validations/course.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -47,6 +48,7 @@ export const createCourseAction = async (
   _previousState: CourseActionState | null,
   formData: FormData,
 ): Promise<CourseActionState> => {
+  revalidateTag("courses", { expire: 0 });
   const validation = CreateCourseZodSchema.safeParse(
     getCoursePayload(formData),
   );
@@ -109,6 +111,7 @@ export const updateCourseAction = async (
   _previousState: CourseActionState | null,
   formData: FormData,
 ): Promise<CourseActionState> => {
+  revalidateTag("courses", { expire: 0 });
   const courseId = formData.get("id");
   const validation = CreateCourseZodSchema.safeParse(
     getCoursePayload(formData),
@@ -188,6 +191,7 @@ export type CourseDeleteState = {
 export const deleteCourseAction = async (
   courseId: string,
 ): Promise<CourseDeleteState> => {
+  revalidateTag("courses", { expire: 0 });
   if (!courseId) {
     return {
       success: false,
@@ -252,23 +256,13 @@ export const getAllCoursesAction = async ({
   if (limit) params.set("limit", limit);
 
   try {
-    const accessToken = await isAccessTokenExist();
-    if (!accessToken) {
-      return {
-        success: false,
-        message: "Access token not found",
-        statusCode: 401,
-        data: null,
-      };
-    }
-
     const queryString = params.toString();
     const response = await fetch(
       `${process.env.BACKEND_API_URL}/courses${queryString ? `?${queryString}` : ""}`,
       {
         method: "GET",
-        headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["courses"] },
       },
     );
     const result = await response.json();

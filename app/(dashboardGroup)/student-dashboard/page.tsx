@@ -1,11 +1,15 @@
-import React from 'react';
+import { Suspense } from "react";
+import StudentDashboardOverview from "./_components/DashboardOverview/StudentDashboardOverview";
+import StudentDashboardOverviewLoading from "./_components/DashboardOverview/StudentDashboardOverviewLoading";
 
-const StudentDashboard = () => {
-    return (
-        <div>
-            this is student dashboard
-        </div>
-    );
+const StudentDashboardPage = () => {
+  return (
+    <div className="mx-auto max-w-[1600px] p-2 md:p-5">
+      <Suspense fallback={<StudentDashboardOverviewLoading />}>
+        <StudentDashboardOverview />
+      </Suspense>
+    </div>
+  );
 };
 
-export default StudentDashboard;
+export default StudentDashboardPage;

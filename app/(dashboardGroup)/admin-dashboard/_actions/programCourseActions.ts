@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 
 import { CreateProgramCourseZodSchema } from "@/components/validations/program-course.validation";
 import { isAccessTokenExist } from "@/service/refreshToken";
@@ -44,6 +45,7 @@ export const createProgramCourseAction = async (
   _previousState: ProgramCourseActionState | null,
   formData: FormData,
 ): Promise<ProgramCourseActionState> => {
+  revalidateTag("program-courses", { expire: 0 });
   const validation = CreateProgramCourseZodSchema.safeParse(
     getProgramCoursePayload(formData),
   );
@@ -110,6 +112,7 @@ export const updateProgramCourseAction = async (
   _previousState: ProgramCourseActionState | null,
   formData: FormData,
 ): Promise<ProgramCourseActionState> => {
+  revalidateTag("program-courses", { expire: 0 });
   const programCourseId = formData.get("id");
   const validation = CreateProgramCourseZodSchema.safeParse(
     getProgramCoursePayload(formData),
@@ -190,6 +193,7 @@ export type ProgramCourseDeleteState = {
 export const deleteProgramCourseAction = async (
   programCourseId: string,
 ): Promise<ProgramCourseDeleteState> => {
+  revalidateTag("program-courses", { expire: 0 });
   if (!programCourseId) {
     return {
       success: false,
@@ -270,7 +274,8 @@ export const getAllProgramCoursesAction = async ({
       {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 60 * 60, tags: ["program-courses"] },
       },
     );
     const result = await response.json();

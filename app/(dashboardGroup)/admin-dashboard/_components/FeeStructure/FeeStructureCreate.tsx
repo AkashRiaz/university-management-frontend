@@ -241,13 +241,17 @@ const FeeStructureForm = ({
                   >
                     <SelectTrigger className="w-full" aria-invalid={isInvalid}>
                       <SelectValue placeholder="Select program">
-                        {selectedProgram?.name ?? "Select program"}
+                        {selectedProgram
+                          ? `${selectedProgram.name || selectedProgram.code || selectedProgram.id}${selectedProgram.department?.code ? ` (${selectedProgram.department.code})` : ""}`
+                          : "Select program"}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {programs.map((program) => (
                         <SelectItem key={program.id} value={program.id}>
-                          {program.name}
+                          {program.department?.code
+                            ? `${program.name || program.code || program.id} (${program.department.code})`
+                            : program.name || program.code || program.id}
                         </SelectItem>
                       ))}
                     </SelectContent>
