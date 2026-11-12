@@ -16,7 +16,7 @@ const AttendancePage = async ({
 
   if (demoCount) {
     return (
-      <div className="p-4 md:p-6">
+      <div className="flex flex-col gap-6">
         <AttendanceRoster
           sessionId={sessionId}
           students={makeDemoAttendanceStudents(demoCount)}
@@ -30,7 +30,7 @@ const AttendancePage = async ({
   if (!result.success) notFound();
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <AttendanceRoster sessionId={sessionId} students={result.data || []} />
     </div>
   );

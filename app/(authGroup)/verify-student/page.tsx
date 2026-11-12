@@ -1,11 +1,15 @@
+import AuthShell from "../_components/AuthShell";
 import VerifyStudentForm from "../_components/verifyStudent/VerifyStudentForm";
-
 
 const VerifyStudentPage = () => {
   return (
-    <main className="min-h-screen bg-blend-darken flex items-center justify-center p-6 gap-8 flex-wrap">
+    <AuthShell
+      eyebrow="Student onboarding"
+      heading="Welcome to Apex. Let's activate your student account."
+      description="Use the one-time code sent by the registrar's office to confirm your university email and unlock your student dashboard."
+    >
       <VerifyStudentForm />
-    </main>
+    </AuthShell>
   );
 };
 

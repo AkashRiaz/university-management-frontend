@@ -57,7 +57,7 @@ const campusItems: CampusItem[] = [
 
 export default function CampusPreview() {
   return (
-    <section className="relative isolate overflow-hidden border-y py-24 md:py-32">
+    <section className="relative isolate overflow-hidden border-y section-y">
       {/* Base */}
       <div className="absolute inset-0 bg-background" />
 
@@ -82,11 +82,11 @@ export default function CampusPreview() {
       />
 
       {/* Glow */}
-      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
-      <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl" />
 
-      <div className="container relative z-10 mx-auto px-4">
+      <div className="page-container relative z-10">
         <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           {/* Left */}
           <motion.div
@@ -95,26 +95,26 @@ export default function CampusPreview() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400 backdrop-blur">
+            <div className="eyebrow-pill mb-5 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
               Campus Life
             </div>
 
-            <h2 className="max-w-xl text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
+            <h2 className="section-title max-w-xl">
               University life is
-              <span className="block bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 bg-clip-text text-transparent">
+              <span className="block text-gradient-brand">
                 more than classes
               </span>
             </h2>
 
-            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mt-5 max-w-xl">
               Experience a vibrant campus where learning, friendships,
               creativity, leadership and personal growth come together.
             </p>
 
             <Link
               href="/campus-life"
-              className="group mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 font-medium text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5"
+              className="group mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 font-medium text-primary-foreground shadow-lifted transition hover:-translate-y-0.5"
             >
               Explore Campus Life
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -163,24 +163,24 @@ export default function CampusPreview() {
                       overflow-hidden
                       rounded-[28px]
                       border
-                      border-white/10
-                      bg-background/55
+                      border-border
+                      bg-card/70
                       p-6
-                      shadow-xl
+                      shadow-soft
                       backdrop-blur-xl
                       ${offsets[index]}
                     `}
                   >
                     {/* glow inside card */}
-                    <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl transition duration-500 group-hover:bg-cyan-500/20" />
+                    <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/10 blur-3xl transition duration-500 group-hover:bg-gold/15" />
 
                     <div className="relative">
                       <div className="flex items-center justify-between">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
                           <Icon className="h-5 w-5" />
                         </div>
 
-                        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        <span className="rounded-full border bg-muted/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                           {item.label}
                         </span>
                       </div>
@@ -193,14 +193,14 @@ export default function CampusPreview() {
                         </p>
                       </div>
 
-                      <div className="my-6 h-px bg-gradient-to-r from-cyan-500/40 via-border to-transparent" />
+                      <div className="my-6 h-px bg-linear-to-r from-gold/50 via-border to-transparent" />
 
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">
                           Student Experience
                         </span>
 
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 transition-all duration-300 group-hover:bg-cyan-500 group-hover:text-slate-950">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-primary/5 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
                           <ArrowUpRight className="h-4 w-4" />
                         </div>
                       </div>

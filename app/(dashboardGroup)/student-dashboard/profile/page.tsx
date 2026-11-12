@@ -12,7 +12,7 @@ const StudentProfilePage = async () => {
   }
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <StudentProfileForm profile={profile} />
     </div>
   );

@@ -11,7 +11,7 @@ type StudentScholarshipPageProps = {
 const StudentScholarshipPage = async ({
   searchParams,
 }: StudentScholarshipPageProps) => (
-  <div className="flex flex-col gap-4 p-2 md:p-5">
+  <div className="flex flex-col gap-6">
     <Suspense fallback={<StudentScholarshipLoadingTable />}>
       <StudentScholarshipTable searchParams={await searchParams} />
     </Suspense>

@@ -11,7 +11,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const FeeStructureItemLoadingTable = () => (
-  <div className="min-w-0 overflow-hidden shadow-sm">
+  <div className="data-panel">
     <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:mx-0">
       <div>
         <h2 className="text-lg font-semibold">
@@ -35,9 +35,9 @@ const FeeStructureItemLoadingTable = () => (
           <col className="w-40" />
         </colgroup>
         <TableHeader>
-          <TableRow className="bg-gray-50 hover:bg-gray-50">
+          <TableRow>
             {["#", "Name", "Description", "Amount", "Action"].map((heading) => (
-              <TableHead key={heading} className="font-semibold text-gray-700">
+              <TableHead key={heading}>
                 {heading}
               </TableHead>
             ))}

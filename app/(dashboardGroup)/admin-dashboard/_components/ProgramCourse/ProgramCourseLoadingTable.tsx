@@ -11,7 +11,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ProgramCourseLoadingTable = () => (
-  <div className="min-w-0 overflow-hidden shadow-sm">
+  <div className="data-panel">
     <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
       <div>
         <h2 className="text-lg font-semibold">
@@ -30,12 +30,12 @@ const ProgramCourseLoadingTable = () => (
     <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
       <Table className="min-w-[760px]">
         <TableHeader>
-          <TableRow className="bg-gray-50 hover:bg-gray-50">
+          <TableRow>
             {["#", "Program", "Course", "Semester", "Required", "Action"].map(
               (heading) => (
                 <TableHead
                   key={heading}
-                  className="font-semibold text-gray-700"
+                 
                 >
                   {heading}
                 </TableHead>

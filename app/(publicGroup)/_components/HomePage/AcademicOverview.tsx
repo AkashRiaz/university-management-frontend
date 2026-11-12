@@ -9,15 +9,15 @@ import type { LucideIcon } from "lucide-react";
 
 const AcademicOverview = () => {
   return (
-    <section className="relative overflow-hidden py-20 md:py-28">
-      <div className="container mx-auto px-4">
+    <section className="relative overflow-hidden section-y">
+      <div className="page-container">
         <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Academic Structure
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               See how every part of the university
               <span className="block text-primary">connects together</span>
             </h2>

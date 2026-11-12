@@ -79,10 +79,10 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
 
   if (!result?.success) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-10 text-center">
-        <h3 className="font-semibold text-red-700">Failed to load students</h3>
+      <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-10 text-center">
+        <h3 className="font-semibold text-destructive">Failed to load students</h3>
 
-        <p className="mt-1 text-sm text-red-600">
+        <p className="mt-1 text-sm text-destructive/90">
           {result?.message || "Something went wrong while loading students."}
         </p>
       </div>
@@ -90,7 +90,7 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
   }
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       {/* Table Header / Title */}
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
@@ -98,7 +98,7 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
             <TableBackButton />
             {isDeleted ? "Deleted Students" : "Students"}
           </h2>
-          <p className="text-sm">
+          <p className="text-sm text-muted-foreground">
             {isDeleted
               ? "View deleted student records"
               : "Manage all registered students"}
@@ -112,7 +112,7 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
           <div>
             <Link
               href="/admin-dashboard/student-registration"
-              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-white transition hover:bg-primary/90"
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-primary-foreground shadow-sm transition hover:bg-primary/90"
             >
               Add Student
             </Link>
@@ -153,32 +153,32 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Student
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Contact
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Admission Year
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Department
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Program
               </TableHead>
 
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -192,7 +192,7 @@ const StudentTable = async ({ searchParams }: StudentTableProps) => {
               return (
                 <TableRow key={student.id} className="transition-colors ">
                   {/* Number */}
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
 

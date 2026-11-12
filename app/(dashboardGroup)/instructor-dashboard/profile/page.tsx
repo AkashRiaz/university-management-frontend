@@ -10,7 +10,7 @@ const InstructorProfilePage = async () => {
     return <div className="p-4 text-sm text-destructive md:p-6">{result.message}</div>;
   }
 
-  return <div className="p-4 md:p-6"><InstructorProfileForm profile={profile} /></div>;
+  return <div className="flex flex-col gap-6"><InstructorProfileForm profile={profile} /></div>;
 };
 
 export default InstructorProfilePage;

@@ -6,8 +6,8 @@ const InstructorSectionsPage = async () => {
   const sections = result.data || [];
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <div><h1 className="text-2xl font-semibold">My sections</h1><p className="text-sm text-muted-foreground">Sections assigned to you for teaching.</p></div>
+    <div className="flex flex-col gap-6">
+      <div><h1 className="page-title">My sections</h1><p className="text-sm text-muted-foreground">Sections assigned to you for teaching.</p></div>
       {!result.success ? <div className="rounded-lg border border-destructive/30 p-6 text-sm text-destructive">{result.message}</div> : (
         <div className="grid gap-4 md:grid-cols-2">
           {sections.length === 0 ? <p className="text-sm text-muted-foreground">No sections assigned.</p> : sections.map((assignment) => (

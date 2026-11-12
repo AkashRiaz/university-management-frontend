@@ -8,7 +8,7 @@ type FeeStructurePageProps = {
 };
 
 const FeeStructurePage = async ({ searchParams }: FeeStructurePageProps) => (
-  <div className="flex flex-col gap-4 p-2 md:p-5">
+  <div className="flex flex-col gap-6">
     <Suspense fallback={<FeeStructureLoadingTable />}>
       <FeeStructureTable searchParams={await searchParams} />
     </Suspense>

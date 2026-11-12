@@ -14,7 +14,7 @@ import Link from "next/link";
 
 const StudentLoadingTable = () => {
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       {/* Header */}
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
@@ -37,32 +37,32 @@ const StudentLoadingTable = () => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Student
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Contact
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Admission Year
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Department
               </TableHead>
 
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Program
               </TableHead>
 
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>

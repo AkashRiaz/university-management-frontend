@@ -88,11 +88,11 @@ export default function StudentExperience() {
   };
 
   return (
-    <section className="relative overflow-hidden border-y bg-muted/20 py-20 md:py-28">
+    <section className="relative overflow-hidden border-y bg-muted/20 section-y">
       {/* Background glow */}
       <div className="pointer-events-none absolute -left-40 top-20 h-[400px] w-[400px] rounded-full bg-primary/5 blur-3xl" />
 
-      <div className="pointer-events-none absolute -right-40 bottom-10 h-[450px] w-[450px] rounded-full bg-violet-500/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-40 bottom-10 h-[450px] w-[450px] rounded-full bg-gold/5 blur-3xl" />
 
       {/* Grid */}
       <div
@@ -107,17 +107,17 @@ export default function StudentExperience() {
         }}
       />
 
-      <div className="container relative mx-auto px-4">
+      <div className="page-container relative">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-4 inline-flex rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            <div className="eyebrow-pill mb-4">
               Student Experience
             </div>
 
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            <h2 className="section-title">
               Everything students need
-              <span className="block bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="block text-gradient-brand">
                 throughout their journey
               </span>
             </h2>
@@ -219,7 +219,7 @@ export default function StudentExperience() {
                   <div className="relative">
                     {/* top */}
                     <div className="flex items-start justify-between">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary shadow-sm">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-linear-to-br from-primary/15 to-gold/10 text-primary shadow-sm">
                         <Icon className="h-6 w-6" />
                       </div>
 

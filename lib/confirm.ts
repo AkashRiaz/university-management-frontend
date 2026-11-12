@@ -9,7 +9,18 @@ export async function confirmDialog(
   options: SweetAlertOptions,
 ): Promise<SweetAlertResult> {
   const { default: Swal } = await import("sweetalert2");
-  return Swal.fire(options);
+  return Swal.fire({
+    // Theme-aware defaults (CSS variables resolve against the active theme);
+    // anything the caller passes still wins.
+    background: "var(--popover)",
+    color: "var(--popover-foreground)",
+    cancelButtonColor: "var(--muted-foreground)",
+    ...options,
+    customClass: {
+      popup: "app-swal",
+      ...(typeof options.customClass === "object" ? options.customClass : {}),
+    },
+  });
 }
 
 /** Warm the chunk up front (e.g. on hover) so the dialog opens instantly. */

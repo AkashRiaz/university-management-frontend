@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import ProgramCards from "../_components/Program/ProgramCards";
 import ProgramCardsLoading from "../_components/Program/ProgramCardsLoading";
+import BannerPhoto from "../_components/BannerPhoto";
 
 type ProgramsPageProps = {
   searchParams: Promise<{
@@ -16,7 +17,8 @@ const ProgramsPage = async ({ searchParams }: ProgramsPageProps) => {
   return (
     <main className="min-h-screen overflow-hidden">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b py-16 md:py-20">
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground page-hero-y">
+        <BannerPhoto photo="graduation" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -31,17 +33,17 @@ const ProgramsPage = async ({ searchParams }: ProgramsPageProps) => {
 
         <div className="pointer-events-none absolute -left-32 top-0 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
 
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-gold/10 blur-3xl" />
 
-        <div className="container relative mx-auto px-4">
+        <div className="page-container relative">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Academics
             </p>
 
-            <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-6xl">
+            <h1 className="display-title mt-3">
               Academic
-              <span className="ml-3 bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="ml-3 text-gradient-brand">
                 Programs
               </span>
             </h1>
@@ -56,7 +58,7 @@ const ProgramsPage = async ({ searchParams }: ProgramsPageProps) => {
       </section>
 
       {/* Programs */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
+      <section className="page-container section-y">
         <Suspense fallback={<ProgramCardsLoading />}>
           <ProgramCards searchParams={params} />
         </Suspense>

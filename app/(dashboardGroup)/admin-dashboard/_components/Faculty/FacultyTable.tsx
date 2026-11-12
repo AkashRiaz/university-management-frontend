@@ -52,7 +52,7 @@ const FacultyTable = async ({ searchParams }: FacultyTableProps) => {
             <TableBackButton />
             Faculties
           </h2>
-          <p className="text-sm">Manage all registered faculties</p>
+          <p className="text-sm text-muted-foreground">Manage all registered faculties</p>
         </div>
         <div className="flex items-center gap-2">
           <SearchBar />
@@ -63,23 +63,23 @@ const FacultyTable = async ({ searchParams }: FacultyTableProps) => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Faculty
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Code
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Total Departments
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Description
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -97,7 +97,7 @@ const FacultyTable = async ({ searchParams }: FacultyTableProps) => {
             ) : (
               faculties.map((faculty, index) => (
                 <TableRow key={faculty.id} className="transition-colors">
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>

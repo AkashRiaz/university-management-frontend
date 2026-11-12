@@ -51,14 +51,14 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
   }
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Instructors
           </h2>
-          <p className="text-sm">Manage all registered instructors</p>
+          <p className="text-sm text-muted-foreground">Manage all registered instructors</p>
         </div>
 
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
@@ -68,7 +68,7 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
           <div>
             <Link
               href="/admin-dashboard/instructor-registration"
-              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-white transition hover:bg-primary/90"
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-primary-foreground shadow-sm transition hover:bg-primary/90"
             >
               Add Instructor
             </Link>
@@ -79,29 +79,29 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-190">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Instructor
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Contact
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Designation
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Department
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Office Room
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Status
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -120,7 +120,7 @@ const InstructorTable = async ({ searchParams }: InstructorTableProps) => {
             ) : (
               instructors.map((instructor, index) => (
                 <TableRow key={instructor.id} className="transition-colors">
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
 

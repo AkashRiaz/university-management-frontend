@@ -20,6 +20,7 @@ const PUBLIC_ROUTES = [
   "/admissions",
   "/research",
   "/semesters",
+  "/credits",
 ];
 
 type RefreshTokenResponse = {

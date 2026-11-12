@@ -75,14 +75,14 @@ const InvoiceTable = async ({
   };
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Invoices
           </h2>
-          <p className="text-sm">Manage all student invoices</p>
+          <p className="text-sm text-muted-foreground">Manage all student invoices</p>
         </div>
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <SearchBar compact />
@@ -92,15 +92,15 @@ const InvoiceTable = async ({
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[900px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="font-semibold text-gray-700">#</TableHead>
-              <TableHead className="font-semibold text-gray-700">Invoice</TableHead>
-              <TableHead className="font-semibold text-gray-700">Student</TableHead>
-              <TableHead className="font-semibold text-gray-700">Semester</TableHead>
-              <TableHead className="font-semibold text-gray-700">Due Date</TableHead>
-              <TableHead className="font-semibold text-gray-700">Total</TableHead>
-              <TableHead className="font-semibold text-gray-700">Status</TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">Action</TableHead>
+            <TableRow>
+              <TableHead>#</TableHead>
+              <TableHead>Invoice</TableHead>
+              <TableHead>Student</TableHead>
+              <TableHead>Semester</TableHead>
+              <TableHead>Due Date</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

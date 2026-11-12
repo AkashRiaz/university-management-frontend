@@ -10,6 +10,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import BannerPhoto from "../_components/BannerPhoto";
 
 const academicAreas = [
   {
@@ -98,8 +99,8 @@ export default function AcademicsPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-background">
       {/* HERO */}
-      <section className="relative overflow-hidden border-b py-20 md:py-28">
-        <div className="absolute inset-0 bg-background" />
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground page-hero-y">
+        <BannerPhoto photo="libraryHall" />
 
         {/* grid */}
         <div
@@ -117,23 +118,23 @@ export default function AcademicsPage() {
         {/* glows */}
         <div className="pointer-events-none absolute -left-32 top-10 h-[380px] w-[380px] rounded-full bg-primary/10 blur-3xl" />
 
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl" />
 
-        <div className="container relative mx-auto px-4">
+        <div className="page-container relative">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            <div className="eyebrow-pill mb-5">
               <Sparkles className="h-3.5 w-3.5" />
               Academics
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="display-title">
               Build your future through
-              <span className="mt-2 block bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="mt-2 block text-gradient-brand">
                 structured academic learning
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mx-auto mt-5 max-w-2xl">
               Explore departments, programs, courses, semesters, and academic
               pathways designed to guide students through every stage of their
               university journey.
@@ -160,14 +161,14 @@ export default function AcademicsPage() {
       </section>
 
       {/* ACADEMIC AREAS */}
-      <section className="relative py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative section-y">
+        <div className="page-container">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Academic Structure
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               Everything that shapes your
               <span className="text-primary"> academic journey</span>
             </h2>
@@ -199,7 +200,7 @@ export default function AcademicsPage() {
                       <Icon className="h-5 w-5" />
                     </div>
 
-                    <p className="mt-8 text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+                    <p className="eyebrow mt-8">
                       {item.label}
                     </p>
 
@@ -222,16 +223,16 @@ export default function AcademicsPage() {
       </section>
 
       {/* CONNECTED ACADEMIC FLOW */}
-      <section className="relative border-y bg-muted/20 py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative border-y bg-muted/20 section-y">
+        <div className="page-container">
           <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
             {/* LEFT */}
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="eyebrow">
                 Academic Journey
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+              <h2 className="section-title mt-3">
                 See how your studies
                 <span className="block text-primary">connect together</span>
               </h2>
@@ -305,14 +306,14 @@ export default function AcademicsPage() {
       </section>
 
       {/* HIGHLIGHTS */}
-      <section className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="section-y">
+        <div className="page-container">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Academic Experience
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold md:text-5xl">
+            <h2 className="section-title mt-3">
               Designed for meaningful learning
             </h2>
           </div>
@@ -326,7 +327,7 @@ export default function AcademicsPage() {
                   key={item.title}
                   className="group rounded-[26px] border bg-background/70 p-6 transition hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-primary/15 to-gold/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
 
@@ -345,20 +346,20 @@ export default function AcademicsPage() {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-4 pb-20">
-        <div className="relative overflow-hidden rounded-[30px] border bg-gradient-to-br from-primary via-indigo-600 to-violet-600 px-6 py-12 text-center text-primary-foreground shadow-xl md:px-10 md:py-16">
-          <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full border border-white/10" />
+      <section className="page-container pb-16 md:pb-24">
+        <div className="relative overflow-hidden rounded-[30px] border hero-surface border-hero-foreground/10 px-6 py-12 text-center shadow-lifted md:px-10 md:py-16">
+          <div className="absolute -left-20 -top-20 h-60 w-60 rounded-full border border-hero-foreground/10" />
 
-          <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-gold/10 blur-3xl" />
 
           <div className="relative mx-auto max-w-2xl">
             <GraduationCap className="mx-auto h-10 w-10" />
 
-            <h2 className="mt-5 text-3xl font-bold md:text-4xl">
+            <h2 className="section-title mt-3">
               Find the academic path that fits your future
             </h2>
 
-            <p className="mt-4 leading-7 text-white/75">
+            <p className="mt-4 leading-7 text-hero-muted">
               Explore our programs, departments, and courses to better
               understand the opportunities available throughout your university
               journey.
@@ -366,7 +367,7 @@ export default function AcademicsPage() {
 
             <Link
               href="/programs"
-              className="group mt-7 inline-flex h-12 items-center gap-2 rounded-xl bg-white px-6 font-medium text-slate-950 transition hover:bg-white/90"
+              className="group mt-7 inline-flex h-12 items-center gap-2 rounded-xl bg-gold px-6 font-semibold text-gold-foreground shadow-soft transition hover:-translate-y-0.5 hover:bg-gold/90"
             >
               Browse Programs
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

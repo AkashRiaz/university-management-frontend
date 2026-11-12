@@ -33,23 +33,23 @@ const FacultyLoadingTable = () => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Faculty Name
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Faculty Code
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Total Departments
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Total Departments
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>

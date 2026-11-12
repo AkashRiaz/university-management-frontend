@@ -51,16 +51,16 @@ const formatDate = (date?: string) => {
 const statusClass = (status: string) => {
   switch (status) {
     case "APPROVED":
-      return "bg-emerald-500/10 text-emerald-600";
+      return "bg-success/10 text-success";
 
     case "PENDING":
-      return "bg-amber-500/10 text-amber-600";
+      return "bg-warning/10 text-warning";
 
     case "REJECTED":
       return "bg-destructive/10 text-destructive";
 
     case "DRAFT":
-      return "bg-blue-500/10 text-blue-600";
+      return "bg-info/10 text-info";
 
     default:
       return "bg-muted text-muted-foreground";
@@ -232,7 +232,7 @@ const AdminDashboardOverview = async () => {
             {currentSemester ? (
               <>
                 <div className="mt-4">
-                  <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600">
+                  <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
                     {currentSemester.status}
                   </span>
                 </div>

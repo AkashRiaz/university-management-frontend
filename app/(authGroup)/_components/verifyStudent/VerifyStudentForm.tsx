@@ -3,7 +3,14 @@
 import React, { useState, useRef, useEffect, useActionState, useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-import { GraduationCap, Mail, CheckCircle2, RotateCcw } from "lucide-react";
+import {
+  CheckCircle2,
+  GraduationCap,
+  Mail,
+  RotateCcw,
+  ShieldCheck,
+} from "lucide-react";
+import { authStyles } from "../authStyles";
 import {
   resendStudentVerificationOtpAction,
   verifyStudentActions,
@@ -139,69 +146,70 @@ export default function VerifyStudentForm({
   }, [state]);
 
   return (
-    <div
-      className={`relative z-10 w-full max-w-md bg-[#12243a]/90 border border-blue-200/15 rounded-3xl p-8 shadow-2xl shadow-blue-950/30 backdrop-blur-xl flex flex-col justify-between overflow-hidden text-slate-100 font-sans `}
-    >
+    <div className="w-full">
       {/* Top Icon Badge */}
-      <div className="flex justify-center mb-6 pt-2">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-400 text-blue-950 shadow-lg shadow-sky-950/30">
-          <GraduationCap className="h-9 w-9" />
-        </div>
+      <div className="mb-6 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <GraduationCap className="size-6" aria-hidden="true" />
       </div>
 
       {/* Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold tracking-tight text-slate-50 mb-2">
-          Student Verification
-        </h2>
-        <p className="text-xs text-slate-400 max-w-70 mx-auto leading-relaxed">
+      <div className={authStyles.header}>
+        <h2 className={authStyles.title}>Student Verification</h2>
+        <p className={authStyles.subtitle}>
           Enter your student email and the 6-digit OTP code sent by your
           administrator.
         </p>
       </div>
 
-      {/* Form with React Hook Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         {/* Email Field */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-300 pl-1">
+        <div className={authStyles.field}>
+          <label htmlFor="verify-student-email" className={authStyles.label}>
             Student Email
           </label>
-          <div className="relative">
+          <div className={authStyles.inputWrapper}>
             <input
+              id="verify-student-email"
               type="email"
-              // disabled={isSubmitting}
+              autoComplete="email"
               placeholder="student@university.edu"
-              className="w-full rounded-full bg-blue-950/35 border border-blue-200/15 pl-4 pr-10 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-400/60 focus:ring-1 focus:ring-sky-400/40 disabled:opacity-50 transition"
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={errors.email ? "verify-student-email-error" : undefined}
+              className={`${authStyles.input} pr-11`}
               {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Please enter a valid email address",
-                },
-              })}
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Please enter a valid email address",
+                  },
+                })}
             />
-            <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Mail className={`${authStyles.inputIcon} right-4`} aria-hidden="true" />
           </div>
           {errors.email && (
-            <p className="text-xs text-red-400 pl-2">{errors.email.message}</p>
+            <p id="verify-student-email-error" role="alert" className={authStyles.error}>
+              {errors.email.message}
+            </p>
           )}
         </div>
 
         {/* OTP Field */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between px-1">
-            <label className="text-xs font-semibold text-slate-300">
+        <div
+          role="group"
+          aria-labelledby="verify-student-otp-label"
+          className={authStyles.field}
+        >
+          <div className="flex items-center justify-between">
+            <span id="verify-student-otp-label" className={authStyles.label}>
               6-Digit OTP Code
-            </label>
+            </span>
             <button
               type="button"
-              // disabled={resendTimer > 0 || !emailValue || isSubmitting}
               onClick={handleResendCode}
-              className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-100 disabled:opacity-40 disabled:no-underline transition"
+              className={authStyles.textButton}
             >
-              <RotateCcw className="w-3 h-3" />
-              <span>
+              <RotateCcw className="size-3" aria-hidden="true" />
+              <span aria-live="polite">
                 {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend Code"}
               </span>
             </button>
@@ -220,7 +228,7 @@ export default function VerifyStudentForm({
           />
 
           {/* Visible 6 Box Inputs */}
-          <div className="flex justify-between gap-2 pt-1">
+          <div className={authStyles.otpGroup}>
             {otpArray.map((digit, index) => (
               <input
                 key={index}
@@ -231,36 +239,36 @@ export default function VerifyStudentForm({
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={1}
-                // disabled={isSubmitting}
                 value={digit}
                 onPaste={handlePaste}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-11 h-12 text-center text-lg font-bold rounded-xl bg-blue-950/35 border border-blue-200/15 text-slate-100 focus:outline-none focus:border-sky-400/60 focus:ring-1 focus:ring-sky-400/40 disabled:opacity-50 transition"
+                aria-label={`Digit ${index + 1} of 6`}
+                className={authStyles.otpBox}
               />
             ))}
           </div>
           {errors.otp && (
-            <p className="text-xs text-red-400 pl-2">{errors.otp.message}</p>
+            <p role="alert" className={authStyles.error}>
+              {errors.otp.message}
+            </p>
           )}
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          // disabled={isSubmitting}
-          className="w-full rounded-full bg-sky-400 py-3 font-semibold text-blue-950 hover:bg-sky-300 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99] transition shadow-lg shadow-sky-950/30 flex items-center justify-center gap-2 mt-4"
+          className={authStyles.primaryButton}
         >
-          <CheckCircle2 className="w-4 h-4" />
-          {/* <span>{isSubmitting ? "Verifying..." : "Verify Account"}</span> */}
+          <CheckCircle2 className="size-4" aria-hidden="true" />
           <span>Verify Account</span>
         </button>
       </form>
 
-      {/* Bottom Accent Banner */}
-      <div className="mt-8 -mx-8 -mb-8 bg-blue-950/45 border-t border-blue-200/10 p-4 text-slate-300 text-center font-medium text-xs tracking-wide">
+      <p className={authStyles.footnote}>
+        <ShieldCheck className="size-4 text-success" aria-hidden="true" />
         Secure student verification
-      </div>
+      </p>
     </div>
   );
 }

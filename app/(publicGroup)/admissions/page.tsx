@@ -12,6 +12,7 @@ import {
   Sparkles,
   UserCheck,
 } from "lucide-react";
+import BannerPhoto from "../_components/BannerPhoto";
 
 const admissionSteps = [
   {
@@ -88,7 +89,8 @@ export default function AdmissionsPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-background">
       {/* HERO */}
-      <section className="relative overflow-hidden border-b py-20 md:py-28">
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground page-hero-y">
+        <BannerPhoto photo="studentsWalking" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -103,23 +105,23 @@ export default function AdmissionsPage() {
 
         <div className="pointer-events-none absolute -left-32 top-10 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
 
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl" />
 
-        <div className="container relative mx-auto px-4">
+        <div className="page-container relative">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            <div className="eyebrow-pill mb-5">
               <Sparkles className="h-3.5 w-3.5" />
               Admissions
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="display-title">
               Start your
-              <span className="mt-2 block bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="mt-2 block text-gradient-brand">
                 university journey
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mx-auto mt-5 max-w-2xl">
               Explore programs, understand admission requirements, and learn how
               to begin your journey as a student in our university community.
             </p>
@@ -145,14 +147,14 @@ export default function AdmissionsPage() {
       </section>
 
       {/* ADMISSION PROCESS */}
-      <section className="relative py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative section-y">
+        <div className="page-container">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Admission Process
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               Your path from
               <span className="text-primary"> applicant to student</span>
             </h2>
@@ -199,15 +201,15 @@ export default function AdmissionsPage() {
       </section>
 
       {/* REQUIREMENTS */}
-      <section className="relative border-y bg-muted/20 py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative border-y bg-muted/20 section-y">
+        <div className="page-container">
           <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="eyebrow">
                 Admission Requirements
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+              <h2 className="section-title mt-3">
                 Prepare the information needed
                 <span className="block text-primary">for your application</span>
               </h2>
@@ -275,14 +277,14 @@ export default function AdmissionsPage() {
       </section>
 
       {/* STUDY PATHS */}
-      <section className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="section-y">
+        <div className="page-container">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Before You Apply
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               Explore your academic options
             </h2>
 
@@ -302,7 +304,7 @@ export default function AdmissionsPage() {
                   href={item.href}
                   className="group rounded-[26px] border bg-background/70 p-6 transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-primary/15 to-gold/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
 
@@ -324,7 +326,7 @@ export default function AdmissionsPage() {
       </section>
 
       {/* NOTE */}
-      <section className="container mx-auto px-4 pb-12">
+      <section className="page-container pb-16 md:pb-24">
         <div className="flex flex-col gap-5 rounded-[28px] border bg-primary/5 p-6 md:flex-row md:items-center md:justify-between md:p-8">
           <div className="flex gap-4">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">

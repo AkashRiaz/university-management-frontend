@@ -68,7 +68,7 @@ function Ring({
     <mesh ref={ref} position={position} scale={scale} rotation={rotation}>
       <torusGeometry args={[1, 0.008, 8, 150]} />
 
-      <meshBasicMaterial color="#38bdf8" transparent opacity={0.22} />
+      <meshBasicMaterial color="#93a8f4" transparent opacity={0.22} />
     </mesh>
   );
 }
@@ -78,28 +78,28 @@ function SceneContent() {
     <group position={[1.7, 0, 0]}>
       <FloatingOrb
         position={[0, 0, -1]}
-        color="#0ea5e9"
+        color="#4c6ef5"
         scale={1.25}
         speed={0.8}
       />
 
       <FloatingOrb
         position={[-2.4, 1.1, -0.5]}
-        color="#8b5cf6"
+        color="#e0a82e"
         scale={0.4}
         speed={1.1}
       />
 
       <FloatingOrb
         position={[2.5, -1.2, -0.3]}
-        color="#22d3ee"
+        color="#f2c14e"
         scale={0.32}
         speed={1.3}
       />
 
       <FloatingOrb
         position={[2.1, 1.8, -1]}
-        color="#6366f1"
+        color="#3b5bdb"
         scale={0.25}
         speed={0.9}
       />
@@ -114,7 +114,7 @@ function SceneContent() {
         size={1.5}
         speed={0.3}
         opacity={0.55}
-        color="#38bdf8"
+        color="#93a8f4"
       />
     </group>
   );
@@ -135,9 +135,9 @@ export default function CampusScene() {
     >
       <ambientLight intensity={0.5} />
 
-      <pointLight position={[3, 3, 4]} intensity={10} color="#0ea5e9" />
+      <pointLight position={[3, 3, 4]} intensity={10} color="#4c6ef5" />
 
-      <pointLight position={[-3, -2, 3]} intensity={8} color="#8b5cf6" />
+      <pointLight position={[-3, -2, 3]} intensity={8} color="#e0a82e" />
 
       <SceneContent />
     </Canvas>

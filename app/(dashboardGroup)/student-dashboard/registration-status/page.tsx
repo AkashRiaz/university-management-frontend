@@ -5,9 +5,9 @@ import { getMyRegistrationsAction } from "../_actions/registrationActions";
 import type { IRegistration } from "@/types/registration.type";
 
 const statusIcon = (status: IRegistration["status"]) => {
-  if (status === "APPROVED" || status === "COMPLETED") return <CheckCircle2 className="size-5 text-emerald-500" />;
+  if (status === "APPROVED" || status === "COMPLETED") return <CheckCircle2 className="size-5 text-success" />;
   if (status === "REJECTED" || status === "CANCELLED" || status === "DROPPED") return <XCircle className="size-5 text-destructive" />;
-  return <Clock3 className="size-5 text-amber-500" />;
+  return <Clock3 className="size-5 text-warning" />;
 };
 
 export default async function RegistrationStatusPage() {
@@ -15,13 +15,13 @@ export default async function RegistrationStatusPage() {
   const registrations = Array.isArray(result.data) ? (result.data as IRegistration[]) : [];
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <header className="flex items-start gap-3">
         <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <FileText className="size-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold">Registration status</h1>
+          <h1 className="page-title">Registration status</h1>
           <p className="text-sm text-muted-foreground">Track your semester registration requests and approval progress.</p>
         </div>
       </header>

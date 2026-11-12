@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SearchBar } from "@/components/ui/SearchBar";
 
 const InvoiceLoadingTable = () => (
-  <div className="min-w-0 overflow-hidden shadow-sm">
+  <div className="data-panel">
     <div className="flex flex-col gap-3 border-b py-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h2 className="text-lg font-semibold"><TableBackButton /> Invoices</h2>

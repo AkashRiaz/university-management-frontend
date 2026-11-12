@@ -9,7 +9,7 @@ type CoursePageProps = {
 };
 
 const CoursePage = async ({ searchParams }: CoursePageProps) => (
-  <div className="flex flex-col gap-4 p-2 md:p-5">
+  <div className="flex flex-col gap-6">
     <Suspense fallback={<CourseLoadingTable />}>
       <CourseTable searchParams={await searchParams} />
     </Suspense>

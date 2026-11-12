@@ -41,7 +41,7 @@ const StatsSection = () => {
         }}
       />
 
-      <div className="container relative mx-auto px-4">
+      <div className="page-container relative">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((item) => {
             const Icon = item.icon;

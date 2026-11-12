@@ -54,18 +54,18 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="relative overflow-hidden py-20 md:py-28">
+    <section className="relative overflow-hidden section-y">
       <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
 
-      <div className="container relative mx-auto px-4">
+      <div className="page-container relative">
         <div className="mx-auto mb-14 max-w-2xl text-center">
-          <div className="mb-4 inline-flex rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+          <div className="eyebrow-pill mb-4">
             Connected Platform
           </div>
 
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="section-title">
             Everything connected in
-            <span className="block bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+            <span className="block text-gradient-brand">
               one academic ecosystem
             </span>
           </h2>
@@ -91,7 +91,7 @@ const FeaturesSection = () => {
 
                 <div className="relative">
                   <div className="mb-6 flex items-center justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary ring-1 ring-primary/10">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-primary/15 to-gold/10 text-primary ring-1 ring-primary/10">
                       <Icon className="h-6 w-6" />
                     </div>
 

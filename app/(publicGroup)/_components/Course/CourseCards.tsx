@@ -53,11 +53,11 @@ const CourseCards = async ({ searchParams }: CourseCardsProps) => {
       {/* Header */}
       <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+          <p className="eyebrow">
             University Courses
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="section-title mt-3">
             Explore our courses
           </h2>
 
@@ -106,7 +106,7 @@ const CourseCards = async ({ searchParams }: CourseCardsProps) => {
                 <div className="relative">
                   {/* Top */}
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/10 bg-linear-to-br from-primary/15 to-gold/10 text-primary">
                       <BookOpenCheck className="h-5 w-5" />
                     </div>
 
@@ -117,7 +117,7 @@ const CourseCards = async ({ searchParams }: CourseCardsProps) => {
 
                   {/* Course title */}
                   <div className="mt-8">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                    <p className="eyebrow">
                       Course
                     </p>
 

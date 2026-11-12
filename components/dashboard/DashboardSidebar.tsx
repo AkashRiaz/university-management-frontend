@@ -11,7 +11,8 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { ISidebarGroup, NavbarProps } from "@/lib/type";
-import { GraduationCap } from "lucide-react";
+import { Logo } from "@/components/shared/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { adminRoutes, instructorRoutes, studentRoutes } from "../routes";
 import DashboardSidebarNav, {
   SidebarHomeLink,
@@ -49,19 +50,11 @@ export default function DashboardSidebar({ user }: NavbarProps) {
       {/* Sidebar Header */}
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <SidebarHomeLink className="flex items-center gap-3 rounded-xl p-2 transition hover:bg-sidebar-accent">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <GraduationCap size={24} />
-          </div>
-
-          <div className="min-w-0">
-            <p className="truncate text-base font-bold text-sidebar-foreground">
-              Apex University
-            </p>
-
-            <p className="truncate text-xs text-muted-foreground">
-              {role ? `${role} Dashboard` : "Dashboard"}
-            </p>
-          </div>
+          <Logo
+            size="sm"
+            className="text-sidebar-foreground"
+            subtitle={role ? `${role.replace("_", " ")} portal` : "Portal"}
+          />
         </SidebarHomeLink>
       </SidebarHeader>
 
@@ -72,14 +65,25 @@ export default function DashboardSidebar({ user }: NavbarProps) {
 
       {/* Sidebar Footer (static user info, rendered on the server) */}
       <SidebarFooter className="border-t border-sidebar-border p-4">
-        <div className="rounded-xl bg-sidebar-accent p-3">
-          <p className="truncate text-sm font-semibold text-sidebar-foreground">
-            {user?.data?.name || "User"}
-          </p>
+        <div className="flex items-center gap-3 rounded-xl border border-sidebar-border bg-sidebar-accent/60 p-3">
+          <div
+            aria-hidden="true"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 font-heading text-sm font-bold text-primary"
+          >
+            {(user?.data?.name || "U").charAt(0).toUpperCase()}
+          </div>
 
-          <p className="mt-1 truncate text-xs text-muted-foreground">
-            {user?.data?.email || ""}
-          </p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-sidebar-foreground">
+              {user?.data?.name || "User"}
+            </p>
+
+            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+              {user?.data?.email || ""}
+            </p>
+          </div>
+
+          <ThemeToggle className="size-8 bg-sidebar" />
         </div>
       </SidebarFooter>
     </Sidebar>

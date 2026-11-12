@@ -53,14 +53,14 @@ const ProgramTable = async ({ searchParams }: ProgramTableProps) => {
   }
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Programs
           </h2>
-          <p className="text-sm">Manage all registered programs</p>
+          <p className="text-sm text-muted-foreground">Manage all registered programs</p>
         </div>
 
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
@@ -70,7 +70,7 @@ const ProgramTable = async ({ searchParams }: ProgramTableProps) => {
           <div>
             <Link
               href="/admin-dashboard/create-program"
-              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-white transition hover:bg-primary/90"
+              className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-primary-foreground shadow-sm transition hover:bg-primary/90"
             >
               Add Program
             </Link>
@@ -81,23 +81,23 @@ const ProgramTable = async ({ searchParams }: ProgramTableProps) => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Program
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Department
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Duration
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Credits
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -116,7 +116,7 @@ const ProgramTable = async ({ searchParams }: ProgramTableProps) => {
             ) : (
               programs.map((program, index) => (
                 <TableRow key={program.id} className="transition-colors">
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>

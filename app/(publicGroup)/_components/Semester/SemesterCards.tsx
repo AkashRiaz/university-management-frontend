@@ -35,16 +35,16 @@ const formatDate = (date: string) => {
 const getStatusClasses = (status?: string) => {
   switch (status) {
     case "ACTIVE":
-      return "border-emerald-500/20 bg-emerald-500/10 text-emerald-600";
+      return "border-success/20 bg-success/10 text-success";
 
     case "COMPLETED":
-      return "border-blue-500/20 bg-blue-500/10 text-blue-600";
+      return "border-info/20 bg-info/10 text-info";
 
     case "CANCELLED":
       return "border-destructive/20 bg-destructive/10 text-destructive";
 
     default:
-      return "border-amber-500/20 bg-amber-500/10 text-amber-600";
+      return "border-warning/20 bg-warning/10 text-warning";
   }
 };
 
@@ -84,11 +84,11 @@ const SemesterCards = async ({ searchParams }: SemesterCardsProps) => {
       {/* Header */}
       <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+          <p className="eyebrow">
             Academic Semesters
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="section-title mt-3">
             Explore semester schedules
           </h2>
 
@@ -137,7 +137,7 @@ const SemesterCards = async ({ searchParams }: SemesterCardsProps) => {
                 <div className="relative">
                   {/* Top */}
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/10 bg-linear-to-br from-primary/15 to-gold/10 text-primary">
                       <CalendarDays className="h-5 w-5" />
                     </div>
 
@@ -152,7 +152,7 @@ const SemesterCards = async ({ searchParams }: SemesterCardsProps) => {
 
                   {/* Semester title */}
                   <div className="mt-8">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                    <p className="eyebrow">
                       Semester
                     </p>
 

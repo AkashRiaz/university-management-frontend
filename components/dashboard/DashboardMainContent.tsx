@@ -58,9 +58,10 @@ const DashboardMainContent = ({ children }: DashboardMainContentProps) => {
   return (
     <main
       ref={mainReference}
+      id="main-content"
       className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-background"
     >
-      {children}
+      <div className="dashboard-container">{children}</div>
 
       <button
         type="button"
@@ -69,7 +70,7 @@ const DashboardMainContent = ({ children }: DashboardMainContentProps) => {
         onClick={() =>
           mainReference.current?.scrollTo({ top: 0, behavior: "smooth" })
         }
-        className={`fixed right-5 bottom-5 z-30 flex size-10 items-center justify-center rounded-full border bg-background text-foreground shadow-md transition-all duration-200 hover:bg-muted ${
+        className={`fixed right-5 bottom-5 z-30 flex size-10 items-center justify-center rounded-full border bg-card text-foreground shadow-lifted transition-all duration-200 hover:bg-muted ${
           showBackToTop
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none translate-y-2 opacity-0"

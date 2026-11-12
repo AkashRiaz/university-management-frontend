@@ -10,8 +10,8 @@ const RegistrationsPage = async () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 md:p-6">
-      <div><h1 className="text-2xl font-semibold">Registration Approval</h1><p className="text-sm text-muted-foreground">Review submitted student registrations and approve or reject them.</p></div>
+    <div className="flex flex-col gap-6">
+      <div><h1 className="page-title">Registration Approval</h1><p className="text-sm text-muted-foreground">Review submitted student registrations and approve or reject them.</p></div>
       <RegistrationApprovalTable initialRegistrations={Array.isArray(result.data) ? result.data : []} />
     </div>
   );

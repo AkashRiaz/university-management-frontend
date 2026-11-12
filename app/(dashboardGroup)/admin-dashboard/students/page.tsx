@@ -9,7 +9,7 @@ type StudentPageProps = {
 };
 const AllStudentPageForAdmin = async ({ searchParams }: StudentPageProps) => {
   return (
-    <div className="flex flex-col gap-4 p-2 md:p-5">
+    <div className="flex flex-col gap-6">
       <Suspense fallback={<StudentLoadingTable />}>
         <StudentTable searchParams={await searchParams} />
       </Suspense>

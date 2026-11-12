@@ -37,7 +37,7 @@ export default function InstructorProfileForm({ profile }: { profile: Instructor
 
   return (
     <form action={action} className="mx-auto max-w-3xl space-y-6">
-      <div><h1 className="text-2xl font-semibold">Instructor profile</h1><p className="text-sm text-muted-foreground">Update your teaching profile and contact details.</p></div>
+      <div><h1 className="page-title">Instructor profile</h1><p className="text-sm text-muted-foreground">Update your teaching profile and contact details.</p></div>
       <div className="rounded-xl border p-5">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">

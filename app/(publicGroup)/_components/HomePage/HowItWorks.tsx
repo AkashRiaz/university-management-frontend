@@ -36,14 +36,14 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="relative overflow-hidden border-y bg-muted/20 py-20 md:py-28">
-      <div className="container mx-auto px-4">
+    <section className="relative overflow-hidden border-y bg-muted/20 section-y">
+      <div className="page-container">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+          <p className="eyebrow">
             Student Registration Flow
           </p>
 
-          <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+          <h2 className="section-title mt-3">
             A clear path from
             <span className="text-primary"> login to approval</span>
           </h2>
@@ -92,13 +92,13 @@ const HowItWorks = () => {
 
           <span>→</span>
 
-          <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-amber-600">
+          <span className="rounded-full border border-warning/30 bg-warning/10 px-3 py-1.5 text-warning">
             PENDING
           </span>
 
           <span>→</span>
 
-          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-emerald-600">
+          <span className="rounded-full border border-success/30 bg-success/10 px-3 py-1.5 text-success">
             APPROVED
           </span>
         </div>

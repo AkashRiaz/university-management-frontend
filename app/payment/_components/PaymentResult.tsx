@@ -21,8 +21,8 @@ export default async function PaymentResult({
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-5 p-6">
-      <div className={`rounded-lg border p-6 ${tone === "success" ? "border-emerald-500/40 bg-emerald-500/10" : tone === "warning" ? "border-amber-500/40 bg-amber-500/10" : "border-destructive/30 bg-destructive/10"}`}>
-        <h1 className="text-2xl font-semibold">{title}</h1>
+      <div className={`rounded-lg border p-6 ${tone === "success" ? "border-success/40 bg-success/10" : tone === "warning" ? "border-warning/40 bg-warning/10" : "border-destructive/30 bg-destructive/10"}`}>
+        <h1 className="page-title">{title}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
         {tone === "success" && (
           <p className="mt-4 text-sm font-medium">

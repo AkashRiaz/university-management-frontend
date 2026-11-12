@@ -51,14 +51,14 @@ const FeeStructureTable = async ({
   }
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Fee Structures
           </h2>
-          <p className="text-sm">Manage all registered fee structures</p>
+          <p className="text-sm text-muted-foreground">Manage all registered fee structures</p>
         </div>
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <SearchBar />
@@ -76,21 +76,21 @@ const FeeStructureTable = async ({
             <col className="w-40" />
           </colgroup>
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="font-semibold text-gray-700">#</TableHead>
-              <TableHead className="font-semibold text-gray-700">
+            <TableRow>
+              <TableHead>#</TableHead>
+              <TableHead>
                 Name
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Description
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Program
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Semester
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -119,7 +119,7 @@ const FeeStructureTable = async ({
                   : "-";
                 return (
                   <TableRow key={feeStructure.id}>
-                    <TableCell className="font-medium text-gray-500">
+                    <TableCell className="font-medium text-muted-foreground">
                       {(currentPage - 1) * limit + index + 1}
                     </TableCell>
                     <TableCell>

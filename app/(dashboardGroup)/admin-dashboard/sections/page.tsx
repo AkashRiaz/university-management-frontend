@@ -7,7 +7,7 @@ type SectionPageProps = {
 };
 
 const SectionPage = async ({ searchParams }: SectionPageProps) => (
-  <div className="flex flex-col gap-4 p-2 md:p-5">
+  <div className="flex flex-col gap-6">
     <Suspense fallback={<SectionLoadingTable />}>
       <SectionTable searchParams={await searchParams} />
     </Suspense>

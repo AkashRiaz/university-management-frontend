@@ -16,13 +16,13 @@ export default async function PaymentHistoryPage() {
   const payments = Array.isArray(result.data) ? (result.data as Payment[]) : [];
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <header className="flex items-start gap-3">
         <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <CreditCard className="size-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold">Payment history</h1>
+          <h1 className="page-title">Payment history</h1>
           <p className="text-sm text-muted-foreground">Review your bKash payment transactions and statuses.</p>
         </div>
       </header>

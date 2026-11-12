@@ -13,6 +13,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import BannerPhoto from "../_components/BannerPhoto";
 
 const researchAreas = [
   {
@@ -101,7 +102,8 @@ export default function ResearchPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-background">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b py-20 md:py-28">
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground page-hero-y">
+        <BannerPhoto photo="researchLab" />
         {/* Grid */}
         <div
           aria-hidden="true"
@@ -118,23 +120,23 @@ export default function ResearchPage() {
         {/* Glows */}
         <div className="pointer-events-none absolute -left-32 top-0 h-[400px] w-[400px] rounded-full bg-primary/10 blur-3xl" />
 
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-[450px] w-[450px] rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 h-[450px] w-[450px] rounded-full bg-gold/10 blur-3xl" />
 
-        <div className="container relative mx-auto px-4">
+        <div className="page-container relative">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            <div className="eyebrow-pill mb-5">
               <Sparkles className="h-3.5 w-3.5" />
               Research & Innovation
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="display-title">
               Discover ideas that
-              <span className="mt-2 block bg-gradient-to-r from-primary via-violet-500 to-blue-500 bg-clip-text text-transparent">
+              <span className="mt-2 block text-gradient-brand">
                 create new possibilities
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mx-auto mt-5 max-w-2xl">
               Our research environment encourages students and faculty to
               explore new ideas, investigate meaningful problems, and develop
               knowledge that can contribute to society and technology.
@@ -161,14 +163,14 @@ export default function ResearchPage() {
       </section>
 
       {/* Research Areas */}
-      <section id="research-areas" className="relative py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section id="research-areas" className="relative section-y">
+        <div className="page-container">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Research Areas
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               Explore areas of
               <span className="text-primary"> academic discovery</span>
             </h2>
@@ -196,7 +198,7 @@ export default function ResearchPage() {
 
                   <div className="relative">
                     <div className="flex items-start justify-between">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/20 to-violet-500/10 text-primary">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-linear-to-br from-primary/15 to-gold/10 text-primary">
                         <Icon className="h-6 w-6" />
                       </div>
 
@@ -223,14 +225,14 @@ export default function ResearchPage() {
       </section>
 
       {/* Research Process */}
-      <section className="relative border-y bg-muted/20 py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative border-y bg-muted/20 section-y">
+        <div className="page-container">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            <p className="eyebrow">
               Research Journey
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h2 className="section-title mt-3">
               From an idea to
               <span className="text-primary"> meaningful knowledge</span>
             </h2>
@@ -277,16 +279,16 @@ export default function ResearchPage() {
       </section>
 
       {/* Research Opportunities */}
-      <section className="relative py-20 md:py-28">
-        <div className="container mx-auto px-4">
+      <section className="relative section-y">
+        <div className="page-container">
           <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
             {/* Left */}
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="eyebrow">
                 Research Community
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+              <h2 className="section-title mt-3">
                 Research grows through
                 <span className="block text-primary">collaboration</span>
               </h2>
@@ -336,8 +338,8 @@ export default function ResearchPage() {
       </section>
 
       {/* Research Environment */}
-      <section className="container mx-auto px-4 pb-20">
-        <div className="relative overflow-hidden rounded-[30px] border bg-gradient-to-br from-primary via-indigo-600 to-violet-600 px-6 py-12 text-primary-foreground shadow-xl md:px-10 md:py-16">
+      <section className="page-container pb-16 md:pb-24">
+        <div className="relative overflow-hidden rounded-[30px] border hero-surface border-hero-foreground/10 px-6 py-12 shadow-lifted md:px-10 md:py-16">
           <div
             aria-hidden="true"
             className="absolute inset-0 opacity-[0.08]"
@@ -350,18 +352,18 @@ export default function ResearchPage() {
             }}
           />
 
-          <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full border border-white/10" />
+          <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full border border-hero-foreground/10" />
 
-          <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-gold/10 blur-3xl" />
 
           <div className="relative mx-auto max-w-2xl text-center">
             <Microscope className="mx-auto h-11 w-11" />
 
-            <h2 className="mt-5 text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="section-title mt-3">
               Explore, investigate, and create knowledge
             </h2>
 
-            <p className="mx-auto mt-5 max-w-xl leading-7 text-white/75">
+            <p className="mx-auto mt-5 max-w-xl leading-7 text-hero-muted">
               Research is an opportunity to move beyond the classroom,
               investigate important questions, and contribute new ideas to
               academic and professional communities.
@@ -370,7 +372,7 @@ export default function ResearchPage() {
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href="/academics"
-                className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 font-medium text-slate-950 transition hover:bg-white/90"
+                className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 font-semibold text-gold-foreground shadow-soft transition hover:-translate-y-0.5 hover:bg-gold/90"
               >
                 Explore Academics
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -378,7 +380,7 @@ export default function ResearchPage() {
 
               <Link
                 href="/contact"
-                className="inline-flex h-12 items-center justify-center rounded-xl border border-white/20 bg-white/5 px-6 font-medium backdrop-blur transition hover:bg-white/10"
+                className="inline-flex h-12 items-center justify-center rounded-xl border border-hero-foreground/25 bg-hero-foreground/5 px-6 font-medium backdrop-blur transition hover:bg-hero-foreground/10"
               >
                 Contact Us
               </Link>

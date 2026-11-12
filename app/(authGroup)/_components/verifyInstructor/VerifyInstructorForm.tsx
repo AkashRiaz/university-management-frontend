@@ -8,7 +8,8 @@ import {
   useTransition,
 } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { GraduationCap, Mail, RotateCcw } from "lucide-react";
+import { Loader2, Mail, Presentation, RotateCcw, ShieldCheck } from "lucide-react";
+import { authStyles } from "../authStyles";
 import { toast } from "sonner";
 import {
   resendInstructorVerificationOtpAction,
@@ -63,46 +64,136 @@ export default function VerifyInstructorForm() {
   };
 
   return (
-    <div className="relative z-10 flex w-full max-w-md flex-col justify-between overflow-hidden rounded-3xl border border-blue-200/15 bg-[#12243a]/90 p-8 font-sans text-slate-100 shadow-2xl shadow-blue-950/30 backdrop-blur-xl">
-      <div className="mb-6 flex justify-center pt-2">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-400 text-blue-950 shadow-lg shadow-sky-950/30">
-          <GraduationCap className="h-9 w-9" />
-        </div>
+    <div className="w-full">
+      {/* Top Icon Badge */}
+      <div className="mb-6 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Presentation className="size-6" aria-hidden="true" />
       </div>
-      <div className="mb-6 text-center">
-        <h2 className="mb-2 text-2xl font-bold tracking-tight text-slate-50">Instructor Verification</h2>
-        <p className="mx-auto max-w-70 text-xs leading-relaxed text-slate-400">
+
+      {/* Header */}
+      <div className={authStyles.header}>
+        <h2 className={authStyles.title}>Instructor Verification</h2>
+        <p className={authStyles.subtitle}>
           Enter your instructor email and the 6-digit OTP code sent by your administrator.
         </p>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-1.5">
-          <label className="pl-1 text-xs font-semibold text-slate-300">Instructor Email</label>
-          <div className="relative">
-            <input type="email" placeholder="instructor@university.edu" className="w-full rounded-full border border-blue-200/15 bg-blue-950/35 py-3 pl-4 pr-10 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-400/60 focus:outline-none focus:ring-1 focus:ring-sky-400/40" {...register("email", { required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Please enter a valid email address" } })} />
-            <Mail className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        {/* Email Field */}
+        <div className={authStyles.field}>
+          <label htmlFor="verify-instructor-email" className={authStyles.label}>
+            Instructor Email
+          </label>
+          <div className={authStyles.inputWrapper}>
+            <input
+              id="verify-instructor-email"
+              type="email"
+              autoComplete="email"
+              placeholder="instructor@university.edu"
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={errors.email ? "verify-instructor-email-error" : undefined}
+              className={`${authStyles.input} pr-11`}
+              {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Please enter a valid email address",
+                  },
+                })}
+            />
+            <Mail className={`${authStyles.inputIcon} right-4`} aria-hidden="true" />
           </div>
-          {errors.email && <p className="pl-2 text-xs text-red-400">{errors.email.message}</p>}
+          {errors.email && (
+            <p id="verify-instructor-email-error" role="alert" className={authStyles.error}>
+              {errors.email.message}
+            </p>
+          )}
         </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between px-1">
-            <label className="text-xs font-semibold text-slate-300">6-Digit OTP Code</label>
-            <button type="button" onClick={handleResend} disabled={resendTimer > 0 || !emailValue} className="flex items-center gap-1 text-xs text-slate-400 transition hover:text-slate-100 disabled:opacity-40">
-              <RotateCcw className="h-3 w-3" />{resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend Code"}
+
+        {/* OTP Field */}
+        <div
+          role="group"
+          aria-labelledby="verify-instructor-otp-label"
+          className={authStyles.field}
+        >
+          <div className="flex items-center justify-between">
+            <span id="verify-instructor-otp-label" className={authStyles.label}>
+              6-Digit OTP Code
+            </span>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={resendTimer > 0 || !emailValue}
+              className={authStyles.textButton}
+            >
+              <RotateCcw className="size-3" aria-hidden="true" />
+              <span aria-live="polite">
+                {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend Code"}
+              </span>
             </button>
           </div>
-          <input type="hidden" {...register("otp", { required: "OTP code is required", minLength: { value: 6, message: "OTP code must be 6 digits" } })} />
-          <div className="flex justify-between gap-2 pt-1">
+
+          {/* Hidden Registered Input for RHF Validation */}
+          <input
+            type="hidden"
+            {...register("otp", {
+              required: "OTP code is required",
+              minLength: {
+                value: 6,
+                message: "OTP code must be 6 digits",
+              },
+            })}
+          />
+
+          {/* Visible 6 Box Inputs */}
+          <div className={authStyles.otpGroup}>
             {otpArray.map((digit, index) => (
-              <input key={index} ref={(element) => { inputRefs.current[index] = element; }} type="text" inputMode="numeric" maxLength={1} value={digit} onChange={(event) => { const value = event.target.value; if (!/^\d*$/.test(value)) return; const next = [...otpArray]; next[index] = value.slice(-1); updateOtp(next); if (value && index < 5) inputRefs.current[index + 1]?.focus(); }} className="h-12 w-11 rounded-xl border border-blue-200/15 bg-blue-950/35 text-center text-lg font-bold text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-1 focus:ring-sky-400/40" />
+              <input
+                key={index}
+                ref={(element) => {
+                  inputRefs.current[index] = element;
+                }}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={digit}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  if (!/^\d*$/.test(value)) return;
+                  const next = [...otpArray];
+                  next[index] = value.slice(-1);
+                  updateOtp(next);
+                  if (value && index < 5) inputRefs.current[index + 1]?.focus();
+                }}
+                aria-label={`Digit ${index + 1} of 6`}
+                className={authStyles.otpBox}
+              />
             ))}
           </div>
-          {errors.otp && <p className="pl-2 text-xs text-red-400">{errors.otp.message}</p>}
+          {errors.otp && (
+            <p role="alert" className={authStyles.error}>
+              {errors.otp.message}
+            </p>
+          )}
         </div>
-        <button type="submit" disabled={loading || isPending} className="flex h-12 w-full items-center justify-center rounded-full bg-sky-400 font-semibold text-blue-950 transition hover:bg-sky-300 disabled:opacity-50">
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={loading || isPending}
+          className={authStyles.primaryButton}
+        >
+          {(loading || isPending) && (
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+          )}
           {loading || isPending ? "Verifying..." : "Verify Instructor"}
         </button>
       </form>
+
+      <p className={authStyles.footnote}>
+        <ShieldCheck className="size-4 text-success" aria-hidden="true" />
+        Secure instructor verification
+      </p>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   UserCog,
 } from "lucide-react";
+import BannerPhoto from "../_components/BannerPhoto";
 
 const features = [
   {
@@ -73,20 +74,21 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="border-b bg-muted/30">
-        <div className="container mx-auto px-4 py-20 md:py-28">
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground">
+        <BannerPhoto photo="campusMain" />
+        <div className="page-container page-hero-y">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium">
+            <div className="eyebrow-pill mb-6">
               <Building2 className="h-4 w-4" />
               University Management System
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+            <h1 className="display-title">
               Simplifying University
               <span className="block text-primary">Academic Management</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mx-auto mt-5 max-w-2xl">
               Our University Management System brings students, instructors,
               courses, academic programs, registrations, payments, and
               administrative operations together in one organized platform.
@@ -96,14 +98,14 @@ export default function AboutPage() {
       </section>
 
       {/* About Section */}
-      <section className="container mx-auto px-4 py-16 md:py-24">
+      <section className="page-container section-y">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+            <p className="eyebrow mb-3">
               About The Platform
             </p>
 
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="section-title">
               One platform for the complete academic journey
             </h2>
 
@@ -169,13 +171,13 @@ export default function AboutPage() {
 
       {/* Features */}
       <section className="border-y bg-muted/30">
-        <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="page-container section-y">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+            <p className="eyebrow mb-3">
               What We Manage
             </p>
 
-            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="section-title">
               Everything needed for academic management
             </h2>
 
@@ -212,13 +214,13 @@ export default function AboutPage() {
       </section>
 
       {/* User Roles */}
-      <section className="container mx-auto px-4 py-16 md:py-24">
+      <section className="page-container section-y">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+          <p className="eyebrow mb-3">
             Platform Users
           </p>
 
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="section-title">
             Built for every part of the university
           </h2>
         </div>
@@ -248,14 +250,14 @@ export default function AboutPage() {
       </section>
 
       {/* Mission */}
-      <section className="container mx-auto px-4 pb-20">
-        <div className="overflow-hidden rounded-3xl bg-primary px-6 py-12 text-primary-foreground md:px-12 md:py-16">
+      <section className="page-container pb-16 md:pb-24">
+        <div className="hero-surface overflow-hidden rounded-[30px] border border-hero-foreground/10 px-6 py-12 shadow-lifted md:px-12 md:py-16">
           <div className="mx-auto max-w-3xl text-center">
-            <ShieldCheck className="mx-auto mb-5 h-12 w-12" />
+            <ShieldCheck className="mx-auto mb-5 h-12 w-12 text-gold" />
 
-            <h2 className="text-3xl font-bold md:text-4xl">Our Mission</h2>
+            <h2 className="section-title">Our Mission</h2>
 
-            <p className="mt-5 text-base leading-7 text-primary-foreground/80 md:text-lg">
+            <p className="mt-5 text-base leading-7 text-hero-muted md:text-lg">
               Our mission is to create a reliable, secure, and user-friendly
               university management platform that simplifies academic processes,
               improves communication, reduces manual work, and provides students

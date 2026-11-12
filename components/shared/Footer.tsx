@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, GraduationCap, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { Logo } from "@/components/shared/Logo";
 
 const exploreLinks = [
   { label: "About Us", href: "/about" },
@@ -14,7 +15,7 @@ const Footer = () => {
       {/* subtle background glow */}
       <div className="pointer-events-none absolute -left-32 top-0 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
 
-      <div className="pointer-events-none absolute -right-32 bottom-0 h-64 w-64 rounded-full bg-violet-500/5 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-64 w-64 rounded-full bg-gold/5 blur-3xl" />
 
       <div
         aria-hidden="true"
@@ -28,23 +29,13 @@ const Footer = () => {
         }}
       />
 
-      <div className="container relative mx-auto px-4">
+      <div className="page-container relative">
         {/* main footer */}
         <div className="grid gap-8 py-10 md:grid-cols-3 md:py-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20">
-                <GraduationCap className="h-5 w-5" />
-              </div>
-
-              <div>
-                <p className="font-semibold">University</p>
-
-                <p className="text-xs text-muted-foreground">
-                  Management System
-                </p>
-              </div>
+            <Link href="/" aria-label="Apex University home" className="inline-flex">
+              <Logo subtitle="Est. 1924 · Lux et Scientia" />
             </Link>
 
             <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
@@ -101,7 +92,7 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="flex flex-col gap-2 border-t py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} University Management System.</p>
+          <p>© {new Date().getFullYear()} Apex University. All rights reserved.</p>
 
           <div className="flex gap-4">
             <Link
@@ -113,6 +104,10 @@ const Footer = () => {
 
             <Link href="/terms" className="transition hover:text-primary">
               Terms
+            </Link>
+
+            <Link href="/credits" className="transition hover:text-primary">
+              Photo credits
             </Link>
           </div>
         </div>

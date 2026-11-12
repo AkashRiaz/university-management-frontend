@@ -425,7 +425,7 @@ export default function RegistrationWorkspace({
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold">Course Registration</h1>
+        <h1 className="page-title">Course Registration</h1>
         <p className="text-sm text-muted-foreground">Create, complete, and submit your semester registration.</p>
       </div>
       {message && <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"><AlertCircle className="size-4" />{message}</div>}

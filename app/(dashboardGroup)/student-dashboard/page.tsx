@@ -4,7 +4,7 @@ import StudentDashboardOverviewLoading from "./_components/DashboardOverview/Stu
 
 const StudentDashboardPage = () => {
   return (
-    <div className="mx-auto max-w-[1600px] p-2 md:p-5">
+    <div className="flex flex-col gap-6">
       <Suspense fallback={<StudentDashboardOverviewLoading />}>
         <StudentDashboardOverview />
       </Suspense>

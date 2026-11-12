@@ -13,10 +13,10 @@ const SectionPage = async ({ params }: { params: Promise<{ sectionId: string }> 
   if (!assignment) notFound();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <div>
         <p className="text-sm text-muted-foreground">{assignment.section?.course?.code}</p>
-        <h1 className="text-2xl font-semibold">{assignment.section?.course?.title}</h1>
+        <h1 className="page-title">{assignment.section?.course?.title}</h1>
         <p className="text-sm text-muted-foreground">Section {assignment.section?.name} · {assignment.section?.semester?.name}</p>
       </div>
       <AttendanceSessionManager sectionId={sectionId} sessions={sessionsResult.data || []} />

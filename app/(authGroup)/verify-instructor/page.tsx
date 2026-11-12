@@ -1,9 +1,14 @@
+import AuthShell from "../_components/AuthShell";
 import VerifyInstructorForm from "../_components/verifyInstructor/VerifyInstructorForm";
 
 const VerifyInstructorPage = () => (
-  <main className="flex min-h-screen items-center justify-center p-6">
+  <AuthShell
+    eyebrow="Faculty onboarding"
+    heading="Teach, track and inspire — all from one workspace."
+    description="Confirm your instructor email with the one-time code from administration to access your sections, rosters and attendance tools."
+  >
     <VerifyInstructorForm />
-  </main>
+  </AuthShell>
 );
 
 export default VerifyInstructorPage;

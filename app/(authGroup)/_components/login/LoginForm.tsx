@@ -4,7 +4,8 @@ import React, { useState, useEffect, useTransition } from "react";
 import { useActionState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck } from "lucide-react";
+import { authStyles } from "../authStyles";
 import { loginActions } from "../../_actions/authActions";
 
 type LoginFormValues = {
@@ -62,130 +63,136 @@ export default function LoginForm() {
   }, [state]);
 
   return (
-    <div className="relative z-10 w-full max-w-md bg-[#12243a]/90 border border-blue-200/15 rounded-3xl p-8 shadow-2xl shadow-blue-950/30 backdrop-blur-xl flex flex-col justify-between overflow-hidden text-slate-100 font-sans">
-      {/* Background Accent Glow */}
-      <div className="absolute -top-24 -left-24 w-48 h-48 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Main Content */}
-      <div className="w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-50 mb-2">
-            Welcome back
-          </h2>
-          <p className="text-xs text-slate-400 max-w-[280px] mx-auto leading-relaxed">
-            Enter your credentials to access your account and workspace
-          </p>
-        </div>
-
-        {/* Social Authentication */}
-        <div className="flex gap-3 mb-6">
-          <button
-            type="button"
-            disabled={isSubmitting}
-            className="flex-1 flex items-center justify-center gap-2 border border-blue-200/15 rounded-full py-2.5 px-4 bg-blue-950/30 hover:bg-blue-900/40 hover:border-blue-200/30 transition text-sm font-medium text-slate-200 disabled:opacity-50"
-          >
-            <GoogleIcon className="w-4 h-4" />
-            <span>Google</span>
-          </button>
-
-          <button
-            type="button"
-            disabled={isSubmitting}
-            className="flex-1 flex items-center justify-center gap-2 border border-blue-200/15 rounded-full py-2.5 px-4 bg-blue-950/30 hover:bg-blue-900/40 hover:border-blue-200/30 transition text-sm font-medium text-slate-200 disabled:opacity-50"
-          >
-            <AppleIcon className="w-4 h-4 fill-white" />
-            <span>Apple</span>
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="relative flex items-center justify-center mb-6">
-          <div className="w-full border-t border-blue-200/15" />
-          <span className="absolute bg-[#12243a] px-3 text-xs text-slate-500">
-            Or continue with
-          </span>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email Field */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-300 pl-1">
-              Email
-            </label>
-            <div className="relative">
-              <input
-                type="email"
-                disabled={isSubmitting}
-                placeholder="name@example.com"
-                className="w-full rounded-full bg-blue-950/35 border border-blue-200/15 pl-10 pr-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-400/60 focus:ring-1 focus:ring-sky-400/40 disabled:opacity-50 transition"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Please enter a valid email address",
-                  },
-                })}
-              />
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-            </div>
-            {errors.email && (
-              <p className="text-xs text-red-400 pl-2">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-300 pl-1">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                disabled={isSubmitting}
-                placeholder="••••••••"
-                className="w-full rounded-full bg-blue-950/35 border border-blue-200/15 pl-10 pr-11 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-400/60 focus:ring-1 focus:ring-sky-400/40 disabled:opacity-50 transition"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must contain at least 6 characters",
-                  },
-                })}
-              />
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="text-xs text-red-400 pl-2">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-full bg-sky-400 py-3 font-semibold text-blue-950 hover:bg-sky-300 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition mt-3 shadow-md shadow-sky-950/30"
-          >
-            {isSubmitting ? "Logging in..." : "Login"}
-          </button>
-        </form>
+    <div className="w-full">
+      {/* Header */}
+      <div className={authStyles.header}>
+        <h2 className={authStyles.title}>Welcome back</h2>
+        <p className={authStyles.subtitle}>
+          Enter your credentials to access your account and workspace
+        </p>
       </div>
+
+      {/* Social Authentication */}
+      <div className="flex gap-3">
+        <button
+          type="button"
+          disabled={isSubmitting}
+          className={authStyles.socialButton}
+        >
+          <GoogleIcon className="size-4" aria-hidden="true" />
+          <span>Google</span>
+        </button>
+
+        <button
+          type="button"
+          disabled={isSubmitting}
+          className={authStyles.socialButton}
+        >
+          <AppleIcon className="size-4 fill-current" aria-hidden="true" />
+          <span>Apple</span>
+        </button>
+      </div>
+
+      {/* Divider */}
+      <div className={authStyles.divider}>
+        <div className={authStyles.dividerLine} />
+        <span className={authStyles.dividerText}>Or continue with</span>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        {/* Email Field */}
+        <div className={authStyles.field}>
+          <label htmlFor="login-email" className={authStyles.label}>
+            Email
+          </label>
+          <div className={authStyles.inputWrapper}>
+            <input
+              id="login-email"
+              type="email"
+              autoComplete="email"
+              disabled={isSubmitting}
+              placeholder="name@example.com"
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={errors.email ? "login-email-error" : undefined}
+              className={`${authStyles.input} pl-11`}
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Please enter a valid email address",
+                },
+              })}
+            />
+            <Mail className={`${authStyles.inputIcon} left-4`} aria-hidden="true" />
+          </div>
+          {errors.email && (
+            <p id="login-email-error" role="alert" className={authStyles.error}>
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Password Field */}
+        <div className={authStyles.field}>
+          <label htmlFor="login-password" className={authStyles.label}>
+            Password
+          </label>
+          <div className={authStyles.inputWrapper}>
+            <input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              disabled={isSubmitting}
+              placeholder="••••••••"
+              aria-invalid={errors.password ? true : undefined}
+              aria-describedby={errors.password ? "login-password-error" : undefined}
+              className={`${authStyles.input} pl-11 pr-12`}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must contain at least 6 characters",
+                },
+              })}
+            />
+            <Lock className={`${authStyles.inputIcon} left-4`} aria-hidden="true" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="absolute top-1/2 right-2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </button>
+          </div>
+          {errors.password && (
+            <p id="login-password-error" role="alert" className={authStyles.error}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={authStyles.primaryButton}
+        >
+          {isSubmitting && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
+      </form>
+
+      <p className={authStyles.footnote}>
+        <ShieldCheck className="size-4 text-success" aria-hidden="true" />
+        Protected university sign-in
+      </p>
     </div>
   );
 }

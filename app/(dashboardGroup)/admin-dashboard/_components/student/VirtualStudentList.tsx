@@ -30,7 +30,7 @@ const StudentRow = memo(function StudentRow({
   const name = student.user?.name || "Unknown Student";
   return (
     <div className={`${GRID} h-full border-b text-sm transition-colors hover:bg-muted/50`}>
-      <span className="font-medium text-gray-500">{index + 1}</span>
+      <span className="font-medium text-muted-foreground">{index + 1}</span>
       <div className="min-w-0">
         <p className="truncate font-medium">{name}</p>
         <p className="mt-0.5 flex items-center gap-1 truncate text-xs">
@@ -147,7 +147,7 @@ export default function VirtualStudentList({
           {/* Sticky header */}
           <div
             role="row"
-            className={`${GRID} sticky top-0 z-10 h-10 border-b bg-gray-50 text-sm font-semibold text-gray-700 dark:bg-muted dark:text-foreground`}
+            className={`${GRID} sticky top-0 z-10 h-10 border-b bg-muted/50 text-sm font-semibold text-muted-foreground dark:bg-muted dark:text-foreground`}
           >
             <span>#</span>
             <span>Student</span>

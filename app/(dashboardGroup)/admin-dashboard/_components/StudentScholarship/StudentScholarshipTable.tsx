@@ -74,14 +74,14 @@ const StudentScholarshipTable = async ({
   };
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Student Scholarships
           </h2>
-          <p className="text-sm">Manage scholarship assignments</p>
+          <p className="text-sm text-muted-foreground">Manage scholarship assignments</p>
         </div>
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <SearchBar />
@@ -103,7 +103,7 @@ const StudentScholarshipTable = async ({
             <col className="w-40" />
           </colgroup>
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
+            <TableRow>
               {[
                 "#",
                 "Student",
@@ -114,7 +114,7 @@ const StudentScholarshipTable = async ({
               ].map((heading) => (
                 <TableHead
                   key={heading}
-                  className="font-semibold text-gray-700"
+                 
                 >
                   {heading}
                 </TableHead>
@@ -134,7 +134,7 @@ const StudentScholarshipTable = async ({
             ) : (
               records.map((record, index) => (
                 <TableRow key={record.id}>
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>

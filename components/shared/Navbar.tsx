@@ -39,6 +39,8 @@ import {
   X,
 } from "lucide-react";
 import { NavbarProps } from "@/lib/type";
+import { Logo } from "@/components/shared/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 // import { IUser } from "@/lib/type";
 
@@ -97,7 +99,6 @@ const getUserMenuItems = (role?: string): UserMenuItem[] => {
 export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
-  console.log("user in navbar", user);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
@@ -170,9 +171,9 @@ export function Navbar({ user }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95">
+    <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur-md supports-backdrop-filter:bg-background/70">
       <nav aria-label="Main Navigation">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="page-container flex h-20 items-center justify-between gap-3">
           {/* Mobile Menu Button & University Logo */}
           <div className="flex items-center gap-3">
             {/* Mobile Nav Sheet */}
@@ -198,19 +199,8 @@ export function Navbar({ user }: NavbarProps) {
                 >
                   <SheetHeader className="border-b px-5 py-5 text-left">
                     <SheetTitle>
-                      <Link href="/" className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-                          <GraduationCap size={24} />
-                        </div>
-
-                        <div>
-                          <p className="text-lg font-extrabold tracking-tight text-primary">
-                            Apex University
-                          </p>
-                          <p className="text-xs font-medium text-muted-foreground">
-                            Excellence in Education
-                          </p>
-                        </div>
+                      <Link href="/" aria-label="Apex University home">
+                        <Logo />
                       </Link>
                     </SheetTitle>
 
@@ -246,7 +236,7 @@ export function Navbar({ user }: NavbarProps) {
                               className={`flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                                 isActive
                                   ? "bg-primary/10 text-primary font-semibold"
-                                  : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+                                  : "text-foreground/80 hover:bg-muted hover:text-foreground"
                               }`}
                             >
                               {item.label}
@@ -258,7 +248,7 @@ export function Navbar({ user }: NavbarProps) {
 
                     {/* Mobile Bottom User Status */}
                     {!user?.success ? (
-                      <div className="space-y-2 border-t p-4 bg-slate-50 dark:bg-slate-900">
+                      <div className="space-y-2 border-t bg-muted/40 p-4">
                         <SheetClose>
                           <Button
                             render={<Link href="/login" />}
@@ -301,9 +291,9 @@ export function Navbar({ user }: NavbarProps) {
                         </SheetClose>
                       </div>
                     ) : (
-                      <div className="border-t bg-slate-50 p-4 dark:bg-slate-900">
-                        <div className="mb-3 rounded-xl border bg-white p-3 shadow-sm dark:bg-slate-800">
-                          <p className="truncate font-semibold text-slate-900 dark:text-white">
+                      <div className="border-t bg-muted/40 p-4">
+                        <div className="mb-3 rounded-xl border bg-card p-3 shadow-sm">
+                          <p className="truncate font-semibold text-foreground">
                             {user?.data?.name || "User"}
                           </p>
                           <p className="truncate text-xs text-muted-foreground">
@@ -325,7 +315,7 @@ export function Navbar({ user }: NavbarProps) {
                                   onClick={() =>
                                     handleUserMenuAction(item.action)
                                   }
-                                  className="flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-white hover:text-primary dark:text-slate-200 dark:hover:bg-slate-800"
+                                  className="flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-foreground/80 transition hover:bg-card hover:text-primary"
                                 >
                                   <Icon className="mr-3 h-4 w-4" />
                                   {item.label}
@@ -338,7 +328,7 @@ export function Navbar({ user }: NavbarProps) {
                             <button
                               type="button"
                               onClick={() => handleUserMenuAction("logout")}
-                              className="flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950/30"
+                              className="flex w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-destructive transition hover:bg-destructive/10"
                             >
                               <LogOut className="mr-3 h-4 w-4" />
                               Logout
@@ -353,24 +343,17 @@ export function Navbar({ user }: NavbarProps) {
             </div>
 
             {/* University Logo & Title */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
-                <GraduationCap size={26} />
-              </div>
-
-              <div className="hidden sm:block">
-                <span className="block text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                  Apex University
-                </span>
-                <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                  Est. 1924
-                </p>
-              </div>
+            <Link
+              href="/"
+              aria-label="Apex University home"
+              className="text-foreground transition-opacity hover:opacity-90"
+            >
+              <Logo wordmarkClassName="hidden sm:block" />
             </Link>
           </div>
 
           {/* Center: Main Nav Links (Desktop) */}
-          <div className="hidden items-center gap-1 lg:flex">
+          <div className="hidden items-center gap-0.5 lg:flex">
             {navItems.map((item) => {
               const isActive = isActiveMenu(item.href);
 
@@ -379,10 +362,10 @@ export function Navbar({ user }: NavbarProps) {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
+                  className={`relative rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
                       ? "text-primary font-semibold"
-                      : "text-slate-700 hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800"
+                      : "text-foreground/75 hover:bg-muted hover:text-primary"
                   }`}
                 >
                   {item.label}
@@ -395,30 +378,17 @@ export function Navbar({ user }: NavbarProps) {
             })}
           </div>
 
-          {/* Right: Search Input & Portal Login Button */}
+          {/* Right: search, theme, portal login */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Desktop Search Input */}
-            <form onSubmit={handleSearchSubmit} className="hidden xl:block">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search site..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-44 rounded-full pl-9 pr-4 text-xs transition-all focus:w-60 focus:ring-1"
-                />
-              </div>
-            </form>
-
-            {/* Tablet / Small Screen Search Toggle Button */}
+            {/* Search toggle (opens the full-width search bar below) */}
             <Button
               type="button"
               variant="ghost"
               size="icon"
               aria-label="Toggle Search"
+              aria-expanded={isMobileSearchOpen}
               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-              className="rounded-full xl:hidden"
+              className="size-10 rounded-full"
             >
               {isMobileSearchOpen ? (
                 <X className="h-5 w-5" />
@@ -426,6 +396,9 @@ export function Navbar({ user }: NavbarProps) {
                 <Search className="h-5 w-5" />
               )}
             </Button>
+
+            {/* Light / Dark / System theme */}
+            <ThemeToggle />
 
             {/* Portal Login / User Menu */}
             {!user?.success ? (
@@ -506,7 +479,7 @@ export function Navbar({ user }: NavbarProps) {
                   <DropdownMenuGroup>
                     <DropdownMenuLabel className="p-2">
                       <div className="space-y-1">
-                        <p className="truncate font-semibold text-slate-900 dark:text-white">
+                        <p className="truncate font-semibold text-foreground">
                           {user?.data?.name || "User"}
                         </p>
 
@@ -541,7 +514,7 @@ export function Navbar({ user }: NavbarProps) {
                   <DropdownMenuSeparator />
 
                   <DropdownMenuItem
-                    className="cursor-pointer rounded-lg px-3 py-2 font-medium text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/30"
+                    className="cursor-pointer rounded-lg px-3 py-2 font-medium text-destructive focus:bg-destructive/10 focus:text-destructive"
                     onClick={() => handleUserMenuAction("logout")}
                   >
                     <LogOut className="mr-2.5 h-4 w-4" />
@@ -555,7 +528,7 @@ export function Navbar({ user }: NavbarProps) {
 
         {/* Medium Screens Expandable Search Box */}
         {isMobileSearchOpen && (
-          <div className="border-t p-3 xl:hidden bg-slate-50 dark:bg-slate-900">
+          <div className="border-t bg-muted/40 p-3 animate-in fade-in-0 slide-in-from-top-1">
             <form onSubmit={handleSearchSubmit} className="mx-auto max-w-xl">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

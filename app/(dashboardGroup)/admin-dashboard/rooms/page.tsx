@@ -9,7 +9,7 @@ type RoomPageProps = {
 };
 
 const RoomPage = async ({ searchParams }: RoomPageProps) => (
-  <div className="flex flex-col gap-4 p-2 md:p-5">
+  <div className="flex flex-col gap-6">
     <Suspense fallback={<RoomLoadingTable />}>
       <RoomTable searchParams={await searchParams} />
     </Suspense>

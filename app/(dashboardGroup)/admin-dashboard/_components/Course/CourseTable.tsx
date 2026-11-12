@@ -50,14 +50,14 @@ const CourseTable = async ({ searchParams }: CourseTableProps) => {
   }
 
   return (
-    <div className="min-w-0 overflow-hidden shadow-sm">
+    <div className="data-panel">
       <div className="mx-1 flex flex-col gap-3 border-b py-4 sm:mx-2 sm:flex-row sm:items-center sm:justify-between md:mx-0">
         <div>
           <h2 className="text-lg font-semibold">
             <TableBackButton />
             Courses
           </h2>
-          <p className="text-sm">Manage all registered courses</p>
+          <p className="text-sm text-muted-foreground">Manage all registered courses</p>
         </div>
         <div className="flex min-w-0 w-full flex-nowrap items-center gap-2 sm:w-auto sm:justify-end">
           <SearchBar compact />
@@ -68,26 +68,26 @@ const CourseTable = async ({ searchParams }: CourseTableProps) => {
       <div className="mx-1 overflow-x-auto sm:mx-2 md:mx-0">
         <Table className="min-w-[760px]">
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead className="w-15 font-semibold text-gray-700">
+            <TableRow>
+              <TableHead className="w-15">
                 #
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Course
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Department
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Credit
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Type
               </TableHead>
-              <TableHead className="font-semibold text-gray-700">
+              <TableHead>
                 Level
               </TableHead>
-              <TableHead className="text-right font-semibold text-gray-700">
+              <TableHead className="text-right">
                 Action
               </TableHead>
             </TableRow>
@@ -105,7 +105,7 @@ const CourseTable = async ({ searchParams }: CourseTableProps) => {
             ) : (
               courses.map((course, index) => (
                 <TableRow key={course.id}>
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     {(currentPage - 1) * limit + index + 1}
                   </TableCell>
                   <TableCell>

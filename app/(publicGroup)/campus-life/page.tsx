@@ -12,6 +12,7 @@ import {
   Utensils,
   Wifi,
 } from "lucide-react";
+import BannerPhoto from "../_components/BannerPhoto";
 
 const campusHighlights = [
   {
@@ -106,20 +107,21 @@ export default function CampusLifePage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="border-b bg-muted/30">
-        <div className="container mx-auto px-4 py-20 md:py-28">
+      <section className="dark relative isolate overflow-hidden border-b bg-background text-foreground">
+        <BannerPhoto photo="studentsCampus" />
+        <div className="page-container page-hero-y">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium">
+            <div className="eyebrow-pill mb-6">
               <GraduationCap className="h-4 w-4 text-primary" />
               Student Experience
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+            <h1 className="display-title">
               More Than Just
               <span className="block text-primary">Academic Life</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+            <p className="section-lead mx-auto mt-5 max-w-2xl">
               Campus life is where learning, friendship, creativity, leadership,
               and personal growth come together. Explore the activities,
               facilities, and experiences that make university life meaningful.
@@ -129,7 +131,7 @@ export default function CampusLifePage() {
       </section>
 
       {/* Quick Overview */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="page-container section-y">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {quickInfo.map((item) => {
             const Icon = item.icon;
@@ -153,13 +155,13 @@ export default function CampusLifePage() {
       </section>
 
       {/* Main Highlights */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
+      <section className="page-container section-y">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+          <p className="eyebrow mb-3">
             Campus Experience
           </p>
 
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="section-title">
             Discover life beyond the classroom
           </h2>
 
@@ -196,14 +198,14 @@ export default function CampusLifePage() {
 
       {/* Student Journey */}
       <section className="border-y bg-muted/30">
-        <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="page-container section-y">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+              <p className="eyebrow mb-3">
                 Student Journey
               </p>
 
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+              <h2 className="section-title">
                 Your university experience in one connected environment
               </h2>
 
@@ -251,13 +253,13 @@ export default function CampusLifePage() {
       </section>
 
       {/* Facilities */}
-      <section className="container mx-auto px-4 py-16 md:py-24">
+      <section className="page-container section-y">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
+          <p className="eyebrow mb-3">
             Campus Facilities
           </p>
 
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+          <h2 className="section-title">
             Spaces designed for student success
           </h2>
         </div>
@@ -289,15 +291,15 @@ export default function CampusLifePage() {
       </section>
 
       {/* Callout */}
-      <section className="container mx-auto px-4 pb-20">
-        <div className="rounded-3xl bg-primary px-6 py-12 text-center text-primary-foreground md:px-12 md:py-16">
-          <Users className="mx-auto mb-5 h-12 w-12" />
+      <section className="page-container pb-16 md:pb-24">
+        <div className="hero-surface rounded-[30px] border border-hero-foreground/10 px-6 py-12 text-center shadow-lifted md:px-12 md:py-16">
+          <Users className="mx-auto mb-5 h-12 w-12 text-gold" />
 
-          <h2 className="text-3xl font-bold md:text-4xl">
+          <h2 className="section-title">
             Be Part of the Campus Community
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-primary-foreground/80 md:text-lg">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-hero-muted md:text-lg">
             University is a place to learn, connect, explore new interests,
             develop skills, and create experiences that go beyond academic
             achievement.

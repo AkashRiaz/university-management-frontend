@@ -9,7 +9,7 @@ type AcademicYearPageProps = {
 };
 const AcademicYearPage = async ({ searchParams }: AcademicYearPageProps) => {
   return (
-    <div className="flex flex-col gap-4 p-2 md:p-5">
+    <div className="flex flex-col gap-6">
       <Suspense fallback={<AcademicYearLoadingTable />}>
         <AcademicYearTable searchParams={await searchParams} />
       </Suspense>
