@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { jwtUtils } from "./utils/jwt";
-import { JwtPayload } from "jsonwebtoken";
+import { jwtVerify, type JWTPayload } from "jose";
 
 const AUTH_ROUTES = [
   "/login",
@@ -29,6 +28,10 @@ type RefreshTokenResponse = {
     accessToken?: string;
   };
   message?: string;
+};
+
+type AccessTokenPayload = JWTPayload & {
+  role?: string;
 };
 
 const getDashboardPath = (role: string | null) => {
@@ -107,21 +110,40 @@ const setAccessTokenCookie = (response: NextResponse, accessToken: string) => {
 };
 
 const clearAuthenticationCookies = (response: NextResponse) => {
-  response.cookies.set("accessToken", "", {
+  const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     expires: new Date(0),
     path: "/",
-  });
+  };
 
-  response.cookies.set("refreshToken", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    expires: new Date(0),
-    path: "/",
-  });
+  response.cookies.set("accessToken", "", options);
+  response.cookies.set("refreshToken", "", options);
+};
+
+const verifyToken = async (
+  token: string,
+  secret: string | undefined,
+  tokenType: string,
+): Promise<AccessTokenPayload | null> => {
+  if (!secret) {
+    console.error(`${tokenType} secret is not configured`);
+    return null;
+  }
+
+  try {
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret),
+      { algorithms: ["HS256"] },
+    );
+
+    return payload;
+  } catch (error) {
+    console.error(`${tokenType} verification failed:`, error);
+    return null;
+  }
 };
 
 export async function proxy(request: NextRequest) {
@@ -131,19 +153,21 @@ export async function proxy(request: NextRequest) {
 
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  const accessSecret = process.env.JWT_ACCESS_SECRET;
+  let decodedAccessToken = accessToken
+    ? await verifyToken(
+        accessToken,
+        process.env.JWT_ACCESS_SECRET,
+        "Access token",
+      )
+    : null;
 
-  const refreshSecret = process.env.JWT_REFRESH_SECRET;
-
-  let decodedAccessToken =
-    accessToken && accessSecret
-      ? jwtUtils.verifyToken(accessToken, accessSecret)
-      : null;
-
-  const decodedRefreshToken =
-    refreshToken && refreshSecret
-      ? jwtUtils.verifyToken(refreshToken, refreshSecret)
-      : null;
+  const decodedRefreshToken = refreshToken
+    ? await verifyToken(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET,
+        "Refresh token",
+      )
+    : null;
 
   let refreshedAccessToken: string | null = null;
 
@@ -154,18 +178,15 @@ export async function proxy(request: NextRequest) {
    * but refresh token is still valid.
    */
 
-  if (
-    !decodedAccessToken?.success &&
-    decodedRefreshToken?.success &&
-    refreshToken
-  ) {
+  if (!decodedAccessToken && decodedRefreshToken && refreshToken) {
     refreshedAccessToken = await refreshAccessToken(refreshToken);
   }
 
-  if (refreshedAccessToken && accessSecret) {
-    decodedAccessToken = jwtUtils.verifyToken(
+  if (refreshedAccessToken) {
+    decodedAccessToken = await verifyToken(
       refreshedAccessToken,
-      accessSecret,
+      process.env.JWT_ACCESS_SECRET,
+      "Access token",
     );
     accessToken = refreshedAccessToken;
     /*
@@ -173,7 +194,7 @@ export async function proxy(request: NextRequest) {
      * to the current request.
      */
     request.cookies.set("accessToken", refreshedAccessToken);
-  } else if (!decodedAccessToken?.success) {
+  } else if (!decodedAccessToken) {
     accessToken = undefined;
     decodedAccessToken = null;
     shouldClearCookies = true;
@@ -184,7 +205,7 @@ export async function proxy(request: NextRequest) {
    * refresh operation succeeded.
    */
 
-  if (accessToken && !decodedAccessToken?.success) {
+  if (accessToken && !decodedAccessToken) {
     accessToken = undefined;
     shouldClearCookies = true;
   }
@@ -193,8 +214,8 @@ export async function proxy(request: NextRequest) {
 
   //   console.log("Decoded access token:", decodedAccessToken);
 
-  if (decodedAccessToken?.success && decodedAccessToken.data) {
-    userRole = (decodedAccessToken.data as JwtPayload).role || null;
+  if (decodedAccessToken) {
+    userRole = decodedAccessToken.role || null;
   }
   //   console.log("User role:", userRole);
 

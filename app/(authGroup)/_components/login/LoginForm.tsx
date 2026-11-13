@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useTransition } from "react";
 import { useActionState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck } from "lucide-react";
@@ -14,6 +15,7 @@ type LoginFormValues = {
 };
 
 export default function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   // defaultValues: {
@@ -57,10 +59,13 @@ export default function LoginForm() {
 
     if (state.success) {
       toast.success(state.message || "Login successful");
+      if (state.data?.targetPath) {
+        router.replace(state.data.targetPath);
+      }
     } else {
       toast.error(state.message || "Something went wrong");
     }
-  }, [state]);
+  }, [router, state]);
 
   return (
     <div className="w-full">

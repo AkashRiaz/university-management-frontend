@@ -1,16 +1,15 @@
 "use server";
 
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 import { redirect } from "next/navigation";
+import { jwtVerify } from "jose";
 
 type LoginState = {
   success: boolean;
   statusCode: number;
   message: string;
   data: {
-    accessToken: string;
-    refreshToken: string;
+    targetPath: string;
   } | null;
 };
 
@@ -23,18 +22,36 @@ type verifyStudentState = {
 
 export type VerifyInstructorState = verifyStudentState;
 
+const getAccessSecret = () => {
+  const secret = process.env.JWT_ACCESS_SECRET;
+
+  if (!secret) {
+    throw new Error("JWT_ACCESS_SECRET is not configured");
+  }
+
+  return new TextEncoder().encode(secret);
+};
+
+const getDashboardPath = (role: unknown) => {
+  if (role === "ADMIN" || role === "SUPER_ADMIN") {
+    return "/admin-dashboard";
+  }
+
+  if (role === "INSTRUCTOR") {
+    return "/instructor-dashboard";
+  }
+
+  if (role === "STUDENT") {
+    return "/student-dashboard";
+  }
+
+  return "/home";
+};
+
 export const loginActions = async (
-  prevState: LoginState | null,
+  _prevState: LoginState | null,
   formData: FormData,
-): Promise<LoginState | never> => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  const payload = {
-    email,
-    password,
-  };
-
+): Promise<LoginState> => {
   const base = process.env.BACKEND_API_URL;
   if (!base) {
     throw new Error("BACKEND_API_URL is not defined in environment variables");
@@ -45,57 +62,57 @@ export const loginActions = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    }),
+    cache: "no-store",
   });
 
   const result = await response.json();
 
-  if (!result?.success) {
+  if (!response.ok || !result?.success) {
     return result;
   }
 
-  if (result?.success) {
-    const cookieStore = await cookies();
+  const accessToken = result.data?.accessToken;
+  const refreshToken = result.data?.refreshToken;
 
-    cookieStore.set("accessToken", result.data.accessToken, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 1,
-      sameSite: "lax",
-    });
-
-    cookieStore.set("refreshToken", result.data.refreshToken, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
-      sameSite: "lax",
-    });
-
-    // redirect outside try/catch
-    const decodedToken = jwt.decode(result.data.accessToken);
-
-    if (
-      decodedToken &&
-      typeof decodedToken === "object" &&
-      "role" in decodedToken
-    ) {
-      const role = decodedToken.role;
-
-      if (role === "ADMIN" || role === "SUPER_ADMIN") {
-        redirect("/admin-dashboard");
-      }
-
-      if (role === "INSTRUCTOR") {
-        redirect("/instructor-dashboard");
-      }
-
-      if (role === "STUDENT") {
-        redirect("/student-dashboard");
-      }
-
-      redirect("/home");
-    }
+  if (typeof accessToken !== "string" || typeof refreshToken !== "string") {
+    throw new Error("Login response did not contain valid tokens");
   }
 
-  redirect("/home");
+  const cookieStore = await cookies();
+  const isProduction = process.env.NODE_ENV === "production";
+
+  cookieStore.set("accessToken", accessToken, {
+    httpOnly: true,
+    secure: isProduction,
+    maxAge: 60 * 60 * 24,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  cookieStore.set("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: isProduction,
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  const { payload } = await jwtVerify(accessToken, getAccessSecret(), {
+    algorithms: ["HS256"],
+  });
+
+  return {
+    success: true,
+    statusCode: result.statusCode ?? response.status,
+    message: result.message ?? "Login successful",
+    data: {
+      targetPath: getDashboardPath(payload.role),
+    },
+  };
 };
 
 export const verifyStudentActions = async (
@@ -132,40 +149,27 @@ export const verifyStudentActions = async (
 
     cookieStore.set("accessToken", result.data.accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 1,
       sameSite: "lax",
+      path: "/",
     });
 
     cookieStore.set("refreshToken", result.data.refreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "lax",
+      path: "/",
     });
 
-    // redirect outside try/catch
-    const decodedToken = jwt.decode(result.data.accessToken);
+    const { payload } = await jwtVerify(
+      result.data.accessToken,
+      getAccessSecret(),
+      { algorithms: ["HS256"] },
+    );
 
-    if (
-      decodedToken &&
-      typeof decodedToken === "object" &&
-      "role" in decodedToken
-    ) {
-      const role = decodedToken.role;
-
-      if (role === "ADMIN" || role === "SUPER_ADMIN") {
-        redirect("/admin-dashboard");
-      }
-
-      if (role === "INSTRUCTOR") {
-        redirect("/instructor-dashboard");
-      }
-
-      if (role === "STUDENT") {
-        redirect("/student-dashboard");
-      }
-
-      redirect("/home");
-    }
+    redirect(getDashboardPath(payload.role));
   }
 
   redirect("/home");
@@ -212,13 +216,17 @@ export const verifyInstructorActions = async (
   const cookieStore = await cookies();
   cookieStore.set("accessToken", result.data.accessToken, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24,
     sameSite: "lax",
+    path: "/",
   });
   cookieStore.set("refreshToken", result.data.refreshToken, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7,
     sameSite: "lax",
+    path: "/",
   });
 
   redirect("/instructor-dashboard");
