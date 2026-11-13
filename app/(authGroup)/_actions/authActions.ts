@@ -1,8 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
-import { jwtVerify } from "jose";
 
 type LoginState = {
   success: boolean;
@@ -29,7 +29,19 @@ const getAccessSecret = () => {
     throw new Error("JWT_ACCESS_SECRET is not configured");
   }
 
-  return new TextEncoder().encode(secret);
+  return secret;
+};
+
+const verifyAccessToken = (token: string): JwtPayload => {
+  const verifiedToken = jwt.verify(token, getAccessSecret(), {
+    algorithms: ["HS256"],
+  });
+
+  if (typeof verifiedToken === "string") {
+    throw new Error("Access token payload is invalid");
+  }
+
+  return verifiedToken;
 };
 
 const getDashboardPath = (role: unknown) => {
@@ -101,16 +113,14 @@ export const loginActions = async (
     path: "/",
   });
 
-  const { payload } = await jwtVerify(accessToken, getAccessSecret(), {
-    algorithms: ["HS256"],
-  });
+  const verifiedToken = verifyAccessToken(accessToken);
 
   return {
     success: true,
     statusCode: result.statusCode ?? response.status,
     message: result.message ?? "Login successful",
     data: {
-      targetPath: getDashboardPath(payload.role),
+      targetPath: getDashboardPath(verifiedToken.role),
     },
   };
 };
@@ -163,13 +173,9 @@ export const verifyStudentActions = async (
       path: "/",
     });
 
-    const { payload } = await jwtVerify(
-      result.data.accessToken,
-      getAccessSecret(),
-      { algorithms: ["HS256"] },
-    );
+    const verifiedToken = verifyAccessToken(result.data.accessToken);
 
-    redirect(getDashboardPath(payload.role));
+    redirect(getDashboardPath(verifiedToken.role));
   }
 
   redirect("/home");
