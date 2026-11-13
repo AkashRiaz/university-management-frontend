@@ -35,7 +35,12 @@ export const loginActions = async (
     password,
   };
 
-  const response = await fetch(`${process.env.BACKEND_API_URL}/auth/login`, {
+  const base = process.env.BACKEND_API_URL;
+  if (!base) {
+    throw new Error("BACKEND_API_URL is not defined in environment variables");
+  }
+
+  const response = await fetch(`${base}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
